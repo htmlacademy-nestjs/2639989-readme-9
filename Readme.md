@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
 * Студент: [Георгий](https://up.htmlacademy.ru/nodejs-2/9/user/2639989).
-* Наставник: `Неизвестно`.
+* Наставник: [Владислав Поклонский](https://htmlacademy.ru/profile/id2210683).
 
 ---
 
