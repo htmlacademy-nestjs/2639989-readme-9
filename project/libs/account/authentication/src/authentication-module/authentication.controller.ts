@@ -1,4 +1,4 @@
-import {Body, Controller, Post} from '@nestjs/common';
+import {Body, Controller, Get, Param, Post} from '@nestjs/common';
 import {AuthenticationService} from "./authentication.service";
 import {CreateUserDto} from "../dto/create-user.dto";
 import {LoginUserDto} from "../dto/login-user.dto";
@@ -17,5 +17,11 @@ export class AuthenticationController {
   public async login(@Body() dto: LoginUserDto) {
     const verifiedUser = await this.authenticationService.verifyUser(dto);
     return verifiedUser.toPOJO();
+  }
+
+  @Get(':id')
+  public async show(@Param('id') id: string) {
+    const existUser = await this.authenticationService.getUser(id);
+    return existUser.toPOJO();
   }
 }
