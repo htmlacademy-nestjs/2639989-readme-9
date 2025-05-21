@@ -2,7 +2,7 @@ import {ConflictException, Injectable, NotFoundException, UnauthorizedException}
 import {BlogUserEntity, BlogUserRepository} from "@project/blog-user";
 import {CreateUserDto} from "../dto/create-user.dto";
 import {UserRole} from "@project/core";
-import * as dayjs from "dayjs";
+import dayjs from 'dayjs';
 import {AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG} from "./authentication.constant";
 import {LoginUserDto} from "../dto/login-user.dto";
 
