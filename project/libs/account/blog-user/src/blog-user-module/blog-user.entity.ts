@@ -1,6 +1,6 @@
 import {AuthUser, Entity, StorableEntity, UserRole} from "@project/core";
 import {compare, genSalt, hash} from "bcrypt";
-import { SALT_ROUNDS } from "./blog-user.constrains";
+import { SALT_ROUNDS } from "./blog-user.constant";
 
 export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
   public email: string;
