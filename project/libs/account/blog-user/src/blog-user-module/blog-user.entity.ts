@@ -1,4 +1,4 @@
-import {AuthUser, Entity, StorableEntity, UserRole} from "@project/core";
+import {AuthUser, Entity, StorableEntity} from "@project/core";
 import {compare, genSalt, hash} from "bcrypt";
 import { SALT_ROUNDS } from "./blog-user.constant";
 
@@ -7,7 +7,6 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
   public firstname: string;
   public lastname: string;
   public dateOfBirth: Date;
-  public role: UserRole;
   public passwordHash: string;
 
   constructor(user?: AuthUser) {
@@ -26,7 +25,6 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
     this.firstname = user.firstname;
     this.lastname = user.lastname;
     this.passwordHash = user.passwordHash;
-    this.role = user.role;
   }
 
   public toPOJO(): AuthUser {
@@ -36,7 +34,6 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
       firstname: this.firstname,
       lastname: this.lastname,
       dateOfBirth: this.dateOfBirth,
-      role: this.role,
       passwordHash: this.passwordHash,
     }
   }
