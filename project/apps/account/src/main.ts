@@ -2,16 +2,20 @@ import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
+import {ConfigService} from "@nestjs/config";
 
 const GLOBAL_PREFIX = 'api';
-const PORT = process.env.PORT || 3000;
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix(GLOBAL_PREFIX);
 
-  if(IS_DEVELOPMENT){
+  const configService = app.get(ConfigService);
+  const port = configService.get('application.port');
+  const environment = configService.get('application.environment');
+  const isDev = environment === 'development';
+
+  if(isDev){
     const config = new DocumentBuilder()
         .setTitle('API сервис для пользователей')
         .setDescription('API сервис для пользователей')
@@ -21,13 +25,13 @@ async function bootstrap() {
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup(GLOBAL_PREFIX, app, documentFactory);
     Logger.log(
-        `🚀 Swagger for Accounts API is running on: http://localhost:${PORT}/${GLOBAL_PREFIX}`
+        `🚀 Swagger for Accounts API is running on: http://localhost:${port}/${GLOBAL_PREFIX}`
     );
   }
 
-  await app.listen(PORT);
+  await app.listen(port);
   Logger.log(
-      `🚀 Accounts API is running on: http://localhost:${PORT}/${GLOBAL_PREFIX}`
+      `🚀 Accounts API is running on: http://localhost:${port}/${GLOBAL_PREFIX}`
   );
 }
 
