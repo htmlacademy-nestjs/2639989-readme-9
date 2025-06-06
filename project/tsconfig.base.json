@@ -20,6 +20,9 @@
       "@project/blog-comment": ["libs/blog/blog-comment/src/index.ts"],
       "@project/blog-like": ["libs/blog/blog-like/src/index.ts"],
       "@project/blog-models": ["libs/blog/models/src/index.ts"],
+      "@project/blog-subscription": [
+        "libs/blog/blog-subscription/src/index.ts"
+      ],
       "@project/blog-tag": ["libs/blog/blog-tag/src/index.ts"],
       "@project/blog-user": ["libs/account/blog-user/src/index.ts"],
       "@project/core": ["libs/shared/core/src/index.ts"],
