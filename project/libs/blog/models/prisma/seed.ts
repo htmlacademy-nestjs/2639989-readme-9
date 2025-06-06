@@ -1,4 +1,4 @@
-import { PrismaClient, PostType, PostStatus } from '@prisma/client';
+import {PostStatus, PostType, PrismaClient} from '@prisma/client';
 
 const FIRST_USER_ID  = '658170cbb954e9f5b905ccf4';
 const SECOND_USER_ID = '6581762309c030b503e30512';
