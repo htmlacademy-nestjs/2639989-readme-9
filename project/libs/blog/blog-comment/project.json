@@ -1,0 +1,20 @@
+{
+  "name": "blog-comment",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/blog/blog-comment/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/blog/blog-comment",
+        "tsConfig": "libs/blog/blog-comment/tsconfig.lib.json",
+        "packageJson": "libs/blog/blog-comment/package.json",
+        "main": "libs/blog/blog-comment/src/index.ts",
+        "assets": ["libs/blog/blog-comment/*.md"]
+      }
+    }
+  }
+}
