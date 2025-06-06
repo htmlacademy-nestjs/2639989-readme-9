@@ -24,6 +24,9 @@
       "@project/authentication": [
         "libs/account/authentication/src/index.ts"
       ],
+      "@project/blog-tag": [
+        "libs/blog/blog-tag/src/index.ts"
+      ],
       "@project/blog-models": [
         "libs/blog/models/src/index.ts"
       ],
