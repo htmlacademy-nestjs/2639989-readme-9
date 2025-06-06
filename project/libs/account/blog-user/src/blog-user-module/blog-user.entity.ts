@@ -1,6 +1,6 @@
 import {AuthUser, Entity, StorableEntity} from "@project/core";
 import {compare, genSalt, hash} from "bcrypt";
-import { SALT_ROUNDS } from "./blog-user.constant";
+import {SALT_ROUNDS} from "./blog-user.constant";
 
 export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
   public email: string;
@@ -15,7 +15,7 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
   }
 
   public populate(user?: AuthUser): void {
-    if (! user) {
+    if (!user) {
       return;
     }
 

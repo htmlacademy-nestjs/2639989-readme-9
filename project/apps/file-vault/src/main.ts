@@ -1,6 +1,6 @@
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import {Logger} from '@nestjs/common';
+import {NestFactory} from '@nestjs/core';
+import {AppModule} from './app/app.module';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 
 const GLOBAL_PREFIX = 'api';
@@ -11,7 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix(GLOBAL_PREFIX);
 
-  if(IS_DEVELOPMENT){
+  if (IS_DEVELOPMENT) {
     const config = new DocumentBuilder()
       .setTitle('API сервис для файлов')
       .setDescription('API сервис для файлов')

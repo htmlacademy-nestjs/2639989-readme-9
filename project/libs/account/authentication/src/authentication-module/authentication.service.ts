@@ -4,7 +4,7 @@ import {CreateUserDto} from "../dto/create-user.dto";
 import dayjs from 'dayjs';
 import {AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG} from "./authentication.constant";
 import {LoginUserDto} from "../dto/login-user.dto";
-import { dbConfig } from '@project/account-config';
+import {dbConfig} from '@project/account-config';
 import {ConfigType} from "@nestjs/config";
 
 @Injectable()
@@ -13,7 +13,8 @@ export class AuthenticationService {
     private readonly blogUserRepository: BlogUserRepository,
     @Inject(dbConfig.KEY)
     private readonly databaseConfig: ConfigType<typeof dbConfig>,
-    ) { }
+  ) {
+  }
 
   public async register(dto: CreateUserDto): Promise<BlogUserEntity> {
     const {email, firstname, lastname, password} = dto;
@@ -57,7 +58,7 @@ export class AuthenticationService {
   public async getUser(id: string): Promise<BlogUserEntity> {
     const user = await this.blogUserRepository.findById(id);
 
-    if (! user) {
+    if (!user) {
       throw new NotFoundException(AUTH_USER_NOT_FOUND);
     }
 

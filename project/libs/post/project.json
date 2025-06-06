@@ -7,13 +7,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/post",
         "tsConfig": "libs/post/tsconfig.lib.json",
         "packageJson": "libs/post/package.json",
         "main": "libs/post/src/index.ts",
-        "assets": ["libs/post/*.md"]
+        "assets": [
+          "libs/post/*.md"
+        ]
       }
     }
   }

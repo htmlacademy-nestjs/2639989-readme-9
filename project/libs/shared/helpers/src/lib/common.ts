@@ -1,4 +1,4 @@
-import { ClassTransformOptions, plainToInstance } from 'class-transformer';
+import {ClassTransformOptions, plainToInstance} from 'class-transformer';
 
 type PlainObject = Record<string, unknown>;
 
