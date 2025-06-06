@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id              String      @id @default(uuid())
+  userId          String
+  type            PostType
+  payload         Json
+  createdAt       DateTime    @default(now())
+  publishedAt     DateTime
+  status          PostStatus  @default(PUBLISHED)
+  isRepost        Boolean     @default(false)
+  originalPostId  String?     @unique
+  originalPost    Post?       @relation("Repost", fields: [originalPostId], references: [id])
+  reposts         Post[]      @relation("Repost")
+
+  tags            Tag[]       @relation("PostTags")
+  likes           Like[]
+  comments        Comment[]
+}
+
+model Tag {
+  id    String   @id @default(uuid())
+  name  String   @unique
+
+  posts Post[]   @relation("PostTags")
+}
+
+model Like {
+  userId String
+  postId String
+
+  post   Post    @relation(fields: [postId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@id([userId, postId])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String
+  postId    String
+  text      String
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id])
+}
+
+model Subscription {
+  followerId  String
+  followingId String
+
+  @@id([followerId, followingId])
+}
+
+enum PostType {
+  TEXT
+  VIDEO
+  QUOTE
+  PHOTO
+  LINK
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
