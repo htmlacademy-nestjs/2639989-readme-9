@@ -2,12 +2,12 @@ import {Tag} from "./tag.interface";
 import {Like} from "./like.interface";
 
 export interface Post {
-  id: string;
+  id?: string;
   userId: string;
   type: PostType;
   payload: Record<string, any>;
-  createdAt: Date;
-  publishedAt: Date;
+  createdAt?: Date;
+  publishedAt?: Date;
   status: PostStatus;
   isRepost: boolean;
   originalPostId?: string;
