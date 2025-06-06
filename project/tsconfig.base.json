@@ -22,7 +22,7 @@
       "@project/data-access": ["libs/shared/data-access/src/index.ts"],
       "@project/file": ["libs/file/src/index.ts"],
       "@project/helpers": ["libs/shared/helpers/src/index.ts"],
-      "@project/models": ["libs/blog/models/src/index.ts"],
+      "@project/blog-models": ["libs/blog/models/src/index.ts"],
       "@project/post": ["libs/post/src/index.ts"]
     }
   },
