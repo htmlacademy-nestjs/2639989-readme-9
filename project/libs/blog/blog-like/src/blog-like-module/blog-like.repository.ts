@@ -1,14 +1,10 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException
-} from '@nestjs/common';
-import { PrismaClientService } from '@project/blog-models';
-import { Like } from '@project/core';
-import { BasePostgresRepository } from '@project/data-access';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {PrismaClientService} from '@project/blog-models';
+import {Like} from '@project/core';
+import {BasePostgresRepository} from '@project/data-access';
 
-import { BlogLikeEntity } from './blog-like.entity';
-import { BlogLikeFactory } from './blog-like.factory';
+import {BlogLikeEntity} from './blog-like.entity';
+import {BlogLikeFactory} from './blog-like.factory';
 
 @Injectable()
 export class BlogLikeRepository extends BasePostgresRepository<BlogLikeEntity, Like> {
@@ -36,8 +32,8 @@ export class BlogLikeRepository extends BasePostgresRepository<BlogLikeEntity, L
 
   public async findAllByPost(postId: string): Promise<BlogLikeEntity[]> {
     const rawLikes = await this.client.like.findMany({
-      where: { postId },
-      orderBy: { createdAt: 'desc' }
+      where: {postId},
+      orderBy: {createdAt: 'desc'}
     });
     return rawLikes.map(item => this.entityFactory.create(item));
   }
@@ -48,7 +44,7 @@ export class BlogLikeRepository extends BasePostgresRepository<BlogLikeEntity, L
         data: {
           userId: entity.userId,
           post: {
-            connect: { id: entity.postId }
+            connect: {id: entity.postId}
           }
         }
       });
@@ -65,7 +61,7 @@ export class BlogLikeRepository extends BasePostgresRepository<BlogLikeEntity, L
     await this.findByUserAndPost(userId, postId);
     await this.client.like.delete({
       where: {
-        userId_postId: { userId, postId }
+        userId_postId: {userId, postId}
       }
     });
   }

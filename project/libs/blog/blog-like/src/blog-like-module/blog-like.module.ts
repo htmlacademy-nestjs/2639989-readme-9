@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { BlogLikeController } from './blog-like.controller';
-import { BlogLikeService } from './blog-like.service';
-import { BlogLikeRepository } from './blog-like.repository';
-import { BlogLikeFactory } from './blog-like.factory';
-import { PrismaClientModule } from '@project/blog-models';
+import {Module} from '@nestjs/common';
+import {BlogLikeController} from './blog-like.controller';
+import {BlogLikeService} from './blog-like.service';
+import {BlogLikeRepository} from './blog-like.repository';
+import {BlogLikeFactory} from './blog-like.factory';
+import {PrismaClientModule} from '@project/blog-models';
 
 @Module({
   imports: [PrismaClientModule],
@@ -15,4 +15,5 @@ import { PrismaClientModule } from '@project/blog-models';
   ],
   exports: [BlogLikeService]
 })
-export class BlogLikeModule {}
+export class BlogLikeModule {
+}

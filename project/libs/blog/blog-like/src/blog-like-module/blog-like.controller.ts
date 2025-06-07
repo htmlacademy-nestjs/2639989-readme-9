@@ -1,23 +1,15 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-} from '@nestjs/common';
-import { fillDto } from '@project/helpers';
-import { BlogLikeService } from './blog-like.service';
-import { CreateBlogLikeDto } from './dto/create-blog-like.dto';
-import { BlogLikeRdo } from './rdo/blog-like.rdo';
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post,} from '@nestjs/common';
+import {fillDto} from '@project/helpers';
+import {BlogLikeService} from './blog-like.service';
+import {CreateBlogLikeDto} from './dto/create-blog-like.dto';
+import {BlogLikeRdo} from './rdo/blog-like.rdo';
 
 @Controller('likes')
 export class BlogLikeController {
   constructor(
     private readonly blogLikeService: BlogLikeService
-  ) {}
+  ) {
+  }
 
   @Post('/')
   public async create(

@@ -1,4 +1,4 @@
-import {Tag, Entity, StorableEntity} from '@project/core';
+import {Entity, StorableEntity, Tag} from '@project/core';
 
 export class BlogTagEntity extends Entity implements StorableEntity<Tag> {
   public name: string;

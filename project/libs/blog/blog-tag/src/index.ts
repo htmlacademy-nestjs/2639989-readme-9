@@ -1,1 +1,1 @@
-export { BlogTagModule } from './blog-tag-module/blog-tag.module';
+export {BlogTagModule} from './blog-tag-module/blog-tag.module';

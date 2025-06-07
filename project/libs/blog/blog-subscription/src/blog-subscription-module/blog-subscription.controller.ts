@@ -1,23 +1,15 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post
-} from '@nestjs/common';
-import { fillDto } from '@project/helpers';
-import { BlogSubscriptionService } from './blog-subscription.service';
-import { CreateBlogSubscriptionDto } from './dto/create-blog-subscription.dto';
-import { BlogSubscriptionRdo } from './rdo/blog-subscription.rdo';
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post} from '@nestjs/common';
+import {fillDto} from '@project/helpers';
+import {BlogSubscriptionService} from './blog-subscription.service';
+import {CreateBlogSubscriptionDto} from './dto/create-blog-subscription.dto';
+import {BlogSubscriptionRdo} from './rdo/blog-subscription.rdo';
 
 @Controller('subscriptions')
 export class BlogSubscriptionController {
   constructor(
     private readonly blogSubscriptionService: BlogSubscriptionService
-  ) {}
+  ) {
+  }
 
   @Post('/')
   public async create(

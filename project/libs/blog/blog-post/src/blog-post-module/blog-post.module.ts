@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
+import {Module} from '@nestjs/common';
 
-import { BlogPostController } from './blog-post.controller';
-import { BlogPostService } from './blog-post.service';
-import { BlogPostRepository } from './blog-post.repository';
-import { BlogPostFactory } from './blog-post.factory';
+import {BlogPostController} from './blog-post.controller';
+import {BlogPostService} from './blog-post.service';
+import {BlogPostRepository} from './blog-post.repository';
+import {BlogPostFactory} from './blog-post.factory';
 import {PrismaClientModule} from "@project/blog-models";
 
 @Module({
@@ -16,4 +16,5 @@ import {PrismaClientModule} from "@project/blog-models";
   ],
   exports: [BlogPostService],
 })
-export class BlogPostModule {}
+export class BlogPostModule {
+}

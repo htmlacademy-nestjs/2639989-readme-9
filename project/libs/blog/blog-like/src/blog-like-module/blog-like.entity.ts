@@ -1,5 +1,4 @@
-import { Entity, StorableEntity } from '@project/core';
-import { Like } from '@project/core';
+import {Entity, Like, StorableEntity} from '@project/core';
 
 export class BlogLikeEntity extends Entity implements StorableEntity<Like> {
   public userId!: string;

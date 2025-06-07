@@ -1,18 +1,14 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-  InternalServerErrorException
-} from '@nestjs/common';
-import { BlogSubscriptionRepository } from './blog-subscription.repository';
-import { BlogSubscriptionEntity } from './blog-subscription.entity';
-import { CreateBlogSubscriptionDto } from './dto/create-blog-subscription.dto';
+import {BadRequestException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
+import {BlogSubscriptionRepository} from './blog-subscription.repository';
+import {BlogSubscriptionEntity} from './blog-subscription.entity';
+import {CreateBlogSubscriptionDto} from './dto/create-blog-subscription.dto';
 
 @Injectable()
 export class BlogSubscriptionService {
   constructor(
     private readonly blogSubscriptionRepository: BlogSubscriptionRepository
-  ) {}
+  ) {
+  }
 
   public async subscribe(dto: CreateBlogSubscriptionDto): Promise<BlogSubscriptionEntity> {
     try {

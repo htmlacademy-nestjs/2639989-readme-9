@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import {Prisma} from '@prisma/client';
 import {PostStatus, PostType} from "@project/core";
 
 export interface BlogPostFilter {

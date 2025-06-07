@@ -1,13 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { PrismaClientService } from '@project/blog-models';
-import { Post } from '@project/core';
-import { BasePostgresRepository } from '@project/data-access';
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {PrismaClientService} from '@project/blog-models';
+import {Post} from '@project/core';
+import {BasePostgresRepository} from '@project/data-access';
 
-import { BlogPostEntity } from './blog-post.entity';
-import { BlogPostFactory } from './blog-post.factory';
-import { BlogPostFilter, postFilterToPrismaFilter } from './blog-post.filter';
-import { MAX_POSTS_LIMIT } from './blog-post.constant';
-import { Prisma } from '@prisma/client';
+import {BlogPostEntity} from './blog-post.entity';
+import {BlogPostFactory} from './blog-post.factory';
+import {BlogPostFilter, postFilterToPrismaFilter} from './blog-post.filter';
+import {MAX_POSTS_LIMIT} from './blog-post.constant';
+import {Prisma} from '@prisma/client';
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, Post> {
@@ -24,7 +24,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     const records = await this.client.post.findMany({
       where,
       take: MAX_POSTS_LIMIT,
-      orderBy: { createdAt: 'desc' }
+      orderBy: {createdAt: 'desc'}
     });
 
     return records.map((record) => this.createEntityFromDocument(record));
@@ -32,7 +32,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async findById(id: string): Promise<BlogPostEntity> {
     const record = await this.client.post.findUnique({
-      where: { id }
+      where: {id}
     });
 
     if (!record) {
@@ -45,18 +45,18 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   public async save(postEntity: BlogPostEntity): Promise<void> {
     try {
       const data: Prisma.PostCreateInput = {
-        userId:       postEntity.userId,
-        type:         postEntity.type,
-        payload:      postEntity.payload,
-        publishedAt:  postEntity.publishedAt,
-        status:       postEntity.status,
-        isRepost:     postEntity.isRepost,
+        userId: postEntity.userId,
+        type: postEntity.type,
+        payload: postEntity.payload,
+        publishedAt: postEntity.publishedAt,
+        status: postEntity.status,
+        isRepost: postEntity.isRepost,
         originalPost: postEntity.originalPostId
-          ? { connect: { id: postEntity.originalPostId } }
+          ? {connect: {id: postEntity.originalPostId}}
           : undefined,
       };
 
-      const created = await this.client.post.create({ data });
+      const created = await this.client.post.create({data});
 
       postEntity.id = created.id;
       postEntity.createdAt = created.createdAt;
@@ -68,21 +68,21 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   public async update(postEntity: BlogPostEntity): Promise<void> {
     try {
       const data: Prisma.PostCreateInput = {
-        id:           postEntity.id,
-        userId:       postEntity.userId,
-        type:         postEntity.type,
-        payload:      postEntity.payload,
-        createdAt:    postEntity.createdAt,
-        publishedAt:  postEntity.publishedAt,
-        status:       postEntity.status,
-        isRepost:     postEntity.isRepost,
+        id: postEntity.id,
+        userId: postEntity.userId,
+        type: postEntity.type,
+        payload: postEntity.payload,
+        createdAt: postEntity.createdAt,
+        publishedAt: postEntity.publishedAt,
+        status: postEntity.status,
+        isRepost: postEntity.isRepost,
         originalPost: postEntity.originalPostId
-          ? { connect: { id: postEntity.originalPostId } }
+          ? {connect: {id: postEntity.originalPostId}}
           : undefined,
       };
 
       await this.client.post.update({
-        where: { id: postEntity.id },
+        where: {id: postEntity.id},
         data,
       });
     } catch (err) {
@@ -94,7 +94,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     try {
       console.log(id);
       await this.client.post.delete({
-        where: { id }
+        where: {id}
       });
     } catch (err) {
       console.error(err);

@@ -8,7 +8,9 @@ Content-Type: application/json
 {
   "userId": "b1a2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
   "type": "TEXT",
-  "payload": { "text": "Первый пост!" },
+  "payload": {
+    "text": "Первый пост!"
+  },
   "publishedAt": "2025-06-07T12:00:00.000Z",
   "status": "PUBLISHED",
   "isRepost": false
@@ -23,7 +25,9 @@ Content-Type: application/json
 
 {
   "type": "TEXT",
-  "payload": { "text": "Нет userId" },
+  "payload": {
+    "text": "Нет userId"
+  },
   "publishedAt": "2025-06-07T12:00:00.000Z"
 }
 
@@ -36,7 +40,9 @@ Content-Type: application/json
 
 {
   "userId": "b1a2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
-  "payload": { "text": "Нет type" },
+  "payload": {
+    "text": "Нет type"
+  },
   "publishedAt": "2025-06-07T12:00:00.000Z"
 }
 
@@ -92,7 +98,9 @@ PATCH http://localhost:3000/api/posts/6d308040-96a2-4162-bea6-2338e9976540
 Content-Type: application/json
 
 {
-  "payload": { "text": "Обновлённый текст" },
+  "payload": {
+    "text": "Обновлённый текст"
+  },
   "status": "DRAFT"
 }
 

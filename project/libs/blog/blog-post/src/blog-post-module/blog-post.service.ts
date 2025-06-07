@@ -8,7 +8,8 @@ import {PostStatus, PostType} from "@project/core";
 
 @Injectable()
 export class BlogPostService {
-  constructor(private readonly blogPostRepository: BlogPostRepository) {}
+  constructor(private readonly blogPostRepository: BlogPostRepository) {
+  }
 
   public async getPosts(filter?: {
     userId?: string;

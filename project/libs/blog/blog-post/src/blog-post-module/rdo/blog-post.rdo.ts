@@ -1,5 +1,5 @@
-import { Expose } from 'class-transformer';
-import { PostType, PostStatus } from '@prisma/client';
+import {Expose} from 'class-transformer';
+import {PostStatus, PostType} from '@prisma/client';
 
 export class BlogPostRdo {
   @Expose()

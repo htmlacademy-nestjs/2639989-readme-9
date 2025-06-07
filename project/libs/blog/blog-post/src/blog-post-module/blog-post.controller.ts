@@ -1,26 +1,16 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Patch,
-  Query,
-  Post,
-} from '@nestjs/common';
-import { fillDto } from '@project/helpers';
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query,} from '@nestjs/common';
+import {fillDto} from '@project/helpers';
 
-import { BlogPostService } from './blog-post.service';
-import { CreateBlogPostDto } from './dto/create-blog-post.dto';
-import { UpdateBlogPostDto } from './dto/update-blog-post.dto';
-import { BlogPostRdo } from './rdo/blog-post.rdo';
-import { PostType, PostStatus } from '@prisma/client';
+import {BlogPostService} from './blog-post.service';
+import {CreateBlogPostDto} from './dto/create-blog-post.dto';
+import {UpdateBlogPostDto} from './dto/update-blog-post.dto';
+import {BlogPostRdo} from './rdo/blog-post.rdo';
+import {PostStatus, PostType} from '@prisma/client';
 
 @Controller('posts')
 export class BlogPostController {
-  constructor(private readonly blogPostService: BlogPostService) {}
+  constructor(private readonly blogPostService: BlogPostService) {
+  }
 
   @Get('/')
   public async index(

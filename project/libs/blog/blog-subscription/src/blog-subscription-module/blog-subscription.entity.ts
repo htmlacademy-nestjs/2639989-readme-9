@@ -1,5 +1,4 @@
-import { Entity, StorableEntity } from '@project/core';
-import { Subscription } from '@project/core';
+import {Entity, StorableEntity, Subscription} from '@project/core';
 
 export class BlogSubscriptionEntity extends Entity implements StorableEntity<Subscription> {
   public followerId!: string;

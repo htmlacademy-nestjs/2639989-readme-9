@@ -1,11 +1,11 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { PrismaClientService } from '@project/blog-models';
-import { Comment } from '@project/core';
-import { BasePostgresRepository } from '@project/data-access';
+import {ForbiddenException, Injectable, NotFoundException} from '@nestjs/common';
+import {PrismaClientService} from '@project/blog-models';
+import {Comment} from '@project/core';
+import {BasePostgresRepository} from '@project/data-access';
 
-import { BlogCommentEntity } from './blog-comment.entity';
-import { BlogCommentFactory } from './blog-comment.factory';
-import { BlogCommentFilter, commentFilterToPrismaFilter } from './blog-comment.filter';
+import {BlogCommentEntity} from './blog-comment.entity';
+import {BlogCommentFactory} from './blog-comment.factory';
+import {BlogCommentFilter, commentFilterToPrismaFilter} from './blog-comment.filter';
 
 @Injectable()
 export class BlogCommentRepository extends BasePostgresRepository<BlogCommentEntity, Comment> {
@@ -18,7 +18,7 @@ export class BlogCommentRepository extends BasePostgresRepository<BlogCommentEnt
 
   public async findById(commentId: string): Promise<BlogCommentEntity> {
     const found = await this.client.comment.findUnique({
-      where: { id: commentId }
+      where: {id: commentId}
     });
 
     if (!found) {
@@ -30,8 +30,8 @@ export class BlogCommentRepository extends BasePostgresRepository<BlogCommentEnt
   public async findByPostId(filter: BlogCommentFilter): Promise<BlogCommentEntity[]> {
     const prismaFilter = commentFilterToPrismaFilter(filter);
     const rawComments = await this.client.comment.findMany({
-      where: { postId: prismaFilter.postId },
-      orderBy: { createdAt: 'desc' },
+      where: {postId: prismaFilter.postId},
+      orderBy: {createdAt: 'desc'},
       take: prismaFilter.take,
       skip: prismaFilter.skip
     });
@@ -39,14 +39,14 @@ export class BlogCommentRepository extends BasePostgresRepository<BlogCommentEnt
   }
 
   public async save(entity: BlogCommentEntity): Promise<void> {
-    const { userId, postId, text } = entity.toPOJO();
+    const {userId, postId, text} = entity.toPOJO();
 
     const record = await this.client.comment.create({
       data: {
         userId,
         text,
         post: {
-          connect: { id: postId }
+          connect: {id: postId}
         }
       }
     });
@@ -74,7 +74,7 @@ export class BlogCommentRepository extends BasePostgresRepository<BlogCommentEnt
 
   public async ensureOwnsComment(commentId: string, userId: string): Promise<void> {
     const exists = await this.client.comment.findFirst({
-      where: { id: commentId, userId }
+      where: {id: commentId, userId}
     });
     if (!exists) {
       throw new ForbiddenException(`Вы не можете изменить/удалить этот комментарий`);

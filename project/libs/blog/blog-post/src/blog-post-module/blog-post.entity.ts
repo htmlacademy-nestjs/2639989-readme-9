@@ -1,4 +1,4 @@
-import {Post, Entity, StorableEntity, PostType, PostStatus} from '@project/core';
+import {Entity, Post, PostStatus, PostType, StorableEntity} from '@project/core';
 import {Prisma} from "@prisma/client";
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {

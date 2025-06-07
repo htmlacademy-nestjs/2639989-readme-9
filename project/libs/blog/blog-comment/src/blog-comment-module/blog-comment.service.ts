@@ -1,19 +1,16 @@
-import {
-  BadRequestException,
-  Injectable,
-  InternalServerErrorException
-} from '@nestjs/common';
-import { BlogCommentRepository } from './blog-comment.repository';
-import { BlogCommentEntity } from './blog-comment.entity';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
+import {BadRequestException, Injectable, InternalServerErrorException} from '@nestjs/common';
+import {BlogCommentRepository} from './blog-comment.repository';
+import {BlogCommentEntity} from './blog-comment.entity';
+import {CreateCommentDto} from './dto/create-comment.dto';
+import {UpdateCommentDto} from './dto/update-comment.dto';
 import {MAX_COMMENT_LENGTH, MIN_COMMENT_LENGTH} from "./blog-comment.constant";
 
 @Injectable()
 export class CommentService {
   constructor(
     private readonly BlogCommentRepository: BlogCommentRepository
-  ) {}
+  ) {
+  }
 
   public async createComment(dto: CreateCommentDto): Promise<BlogCommentEntity> {
     if (!dto.postId) {
@@ -24,7 +21,7 @@ export class CommentService {
       throw new BadRequestException('userId обязателен');
     }
 
-    if(dto.text.length < MIN_COMMENT_LENGTH || dto.text.length > MAX_COMMENT_LENGTH) {
+    if (dto.text.length < MIN_COMMENT_LENGTH || dto.text.length > MAX_COMMENT_LENGTH) {
       throw new BadRequestException(`Комментарий должен быть от ${MIN_COMMENT_LENGTH} до ${MAX_COMMENT_LENGTH} символов`);
     }
 
@@ -45,7 +42,7 @@ export class CommentService {
   public async updateComment(userId: string, commentId: string, dto: UpdateCommentDto): Promise<BlogCommentEntity> {
     await this.BlogCommentRepository.ensureOwnsComment(commentId, userId);
 
-    if(dto.text.length < MIN_COMMENT_LENGTH || dto.text.length > MAX_COMMENT_LENGTH) {
+    if (dto.text.length < MIN_COMMENT_LENGTH || dto.text.length > MAX_COMMENT_LENGTH) {
       throw new BadRequestException(`Комментарий должен быть от ${MIN_COMMENT_LENGTH} до ${MAX_COMMENT_LENGTH} символов`);
     }
 
@@ -74,6 +71,6 @@ export class CommentService {
   }
 
   public async getCommentsByPost(postId: string, limit = 50, offset = 0): Promise<BlogCommentEntity[]> {
-    return this.BlogCommentRepository.findByPostId({ postId, limit, offset });
+    return this.BlogCommentRepository.findByPostId({postId, limit, offset});
   }
 }

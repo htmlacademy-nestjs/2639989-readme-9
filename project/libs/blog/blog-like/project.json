@@ -7,13 +7,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/blog/blog-like",
         "tsConfig": "libs/blog/blog-like/tsconfig.lib.json",
         "packageJson": "libs/blog/blog-like/package.json",
         "main": "libs/blog/blog-like/src/index.ts",
-        "assets": ["libs/blog/blog-like/*.md"]
+        "assets": [
+          "libs/blog/blog-like/*.md"
+        ]
       }
     }
   }

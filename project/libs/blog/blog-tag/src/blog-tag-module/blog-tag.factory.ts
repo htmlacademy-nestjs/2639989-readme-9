@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 
-import {Tag, EntityFactory} from '@project/core';
+import {EntityFactory, Tag} from '@project/core';
 import {BlogTagEntity} from './blog-tag.entity';
 
 @Injectable()

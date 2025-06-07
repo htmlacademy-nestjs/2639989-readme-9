@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import {Prisma} from '@prisma/client';
 
 export interface BlogCommentFilter {
   postId: string;
@@ -6,7 +6,10 @@ export interface BlogCommentFilter {
   offset?: number;
 }
 
-export function commentFilterToPrismaFilter(filter: BlogCommentFilter): Prisma.CommentWhereInput & { skip?: number; take?: number } {
+export function commentFilterToPrismaFilter(filter: BlogCommentFilter): Prisma.CommentWhereInput & {
+  skip?: number;
+  take?: number
+} {
   const prismaFilter: Prisma.CommentWhereInput & { skip?: number; take?: number } = {
     postId: filter.postId
   };

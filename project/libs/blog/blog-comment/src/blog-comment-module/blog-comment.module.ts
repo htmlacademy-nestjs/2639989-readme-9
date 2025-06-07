@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { BlogCommentController } from './blog-comment.controller';
-import { CommentService } from './blog-comment.service';
-import { BlogCommentRepository } from './blog-comment.repository';
-import { BlogCommentFactory } from './blog-comment.factory';
-import { PrismaClientModule } from '@project/blog-models';
+import {Module} from '@nestjs/common';
+import {BlogCommentController} from './blog-comment.controller';
+import {CommentService} from './blog-comment.service';
+import {BlogCommentRepository} from './blog-comment.repository';
+import {BlogCommentFactory} from './blog-comment.factory';
+import {PrismaClientModule} from '@project/blog-models';
 
 @Module({
   imports: [PrismaClientModule],
@@ -15,4 +15,5 @@ import { PrismaClientModule } from '@project/blog-models';
   controllers: [BlogCommentController],
   exports: [CommentService]
 })
-export class BlogCommentModule {}
+export class BlogCommentModule {
+}

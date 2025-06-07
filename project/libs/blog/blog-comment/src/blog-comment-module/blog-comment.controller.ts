@@ -1,26 +1,16 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Patch,
-  Post,
-  Query
-} from '@nestjs/common';
-import { fillDto } from '@project/helpers';
-import { CommentService } from './blog-comment.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { UpdateCommentDto } from './dto/update-comment.dto';
-import { CommentRdo } from './rdo/comment.rdo';
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query} from '@nestjs/common';
+import {fillDto} from '@project/helpers';
+import {CommentService} from './blog-comment.service';
+import {CreateCommentDto} from './dto/create-comment.dto';
+import {UpdateCommentDto} from './dto/update-comment.dto';
+import {CommentRdo} from './rdo/comment.rdo';
 
 @Controller('comments')
 export class BlogCommentController {
   constructor(
     private readonly commentService: CommentService
-  ) {}
+  ) {
+  }
 
   @Post('/')
   public async create(

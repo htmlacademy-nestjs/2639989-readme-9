@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { BlogCommentEntity } from './blog-comment.entity';
+import {Injectable} from '@nestjs/common';
+import {BlogCommentEntity} from './blog-comment.entity';
 import {Comment, EntityFactory} from '@project/core';
 
 @Injectable()

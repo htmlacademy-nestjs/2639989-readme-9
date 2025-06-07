@@ -1,4 +1,4 @@
-import { Comment, Entity, StorableEntity } from '@project/core';
+import {Comment, Entity, StorableEntity} from '@project/core';
 
 export class BlogCommentEntity extends Entity implements StorableEntity<Comment> {
   public userId: string;

@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { PostStatus, PostType } from '@prisma/client';
+import {ApiProperty} from '@nestjs/swagger';
+import {PostStatus, PostType} from '@prisma/client';
 
 export class CreateBlogPostDto {
   @ApiProperty({
@@ -16,7 +16,7 @@ export class CreateBlogPostDto {
 
   @ApiProperty({
     description: 'Произвольный JSON-payload для поста',
-    example: { text: 'Привет, мир!' }
+    example: {text: 'Привет, мир!'}
   })
   public payload: any;
 

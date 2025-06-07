@@ -7,13 +7,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/blog/blog-comment",
         "tsConfig": "libs/blog/blog-comment/tsconfig.lib.json",
         "packageJson": "libs/blog/blog-comment/package.json",
         "main": "libs/blog/blog-comment/src/index.ts",
-        "assets": ["libs/blog/blog-comment/*.md"]
+        "assets": [
+          "libs/blog/blog-comment/*.md"
+        ]
       }
     }
   }

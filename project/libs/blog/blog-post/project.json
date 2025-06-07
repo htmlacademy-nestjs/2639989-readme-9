@@ -7,13 +7,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/blog/blog-post",
         "tsConfig": "libs/blog/blog-post/tsconfig.lib.json",
         "packageJson": "libs/blog/blog-post/package.json",
         "main": "libs/blog/blog-post/src/index.ts",
-        "assets": ["libs/blog/blog-post/*.md"]
+        "assets": [
+          "libs/blog/blog-post/*.md"
+        ]
       }
     }
   }

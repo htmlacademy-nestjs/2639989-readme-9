@@ -1,18 +1,14 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-  InternalServerErrorException
-} from '@nestjs/common';
-import { BlogLikeRepository } from './blog-like.repository';
-import { BlogLikeEntity } from './blog-like.entity';
-import { CreateBlogLikeDto } from './dto/create-blog-like.dto';
+import {BadRequestException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
+import {BlogLikeRepository} from './blog-like.repository';
+import {BlogLikeEntity} from './blog-like.entity';
+import {CreateBlogLikeDto} from './dto/create-blog-like.dto';
 
 @Injectable()
 export class BlogLikeService {
   constructor(
     private readonly blogLikeRepository: BlogLikeRepository
-  ) {}
+  ) {
+  }
 
   public async likePost(dto: CreateBlogLikeDto): Promise<BlogLikeEntity> {
     try {

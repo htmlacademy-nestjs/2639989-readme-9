@@ -1,5 +1,4 @@
-
-import { Expose } from 'class-transformer';
+import {Expose} from 'class-transformer';
 
 export class CommentRdo {
   @Expose()

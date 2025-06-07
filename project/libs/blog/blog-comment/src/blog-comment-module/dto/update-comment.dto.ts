@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, Length } from 'class-validator';
-import { MIN_COMMENT_LENGTH, MAX_COMMENT_LENGTH } from '../blog-comment.constant';
+import {ApiProperty} from '@nestjs/swagger';
+import {IsNotEmpty, IsString, Length} from 'class-validator';
+import {MAX_COMMENT_LENGTH, MIN_COMMENT_LENGTH} from '../blog-comment.constant';
 
 export class UpdateCommentDto {
   @ApiProperty({
