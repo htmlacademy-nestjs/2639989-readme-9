@@ -1,8 +1,8 @@
-import { Document, Model } from 'mongoose';
-import { NotFoundException } from '@nestjs/common';
+import {Document, Model} from 'mongoose';
+import {NotFoundException} from '@nestjs/common';
 
-import { Entity, StorableEntity, EntityFactory } from '@project/core';
-import { Repository } from './repository.interface';
+import {Entity, EntityFactory, StorableEntity} from '@project/core';
+import {Repository} from './repository.interface';
 
 export abstract class BaseMongoRepository<
   T extends Entity & StorableEntity<ReturnType<T['toPOJO']>>,
@@ -12,16 +12,7 @@ export abstract class BaseMongoRepository<
   constructor(
     protected entityFactory: EntityFactory<T>,
     protected readonly model: Model<DocumentType>,
-  ) {}
-
-
-  protected createEntityFromDocument(document: DocumentType): T | null {
-    if (!document) {
-      return null;
-    }
-
-    const plainObject = document.toObject({ versionKey: false }) as ReturnType<T['toPOJO']>;
-    return this.entityFactory.create(plainObject);
+  ) {
   }
 
   public async findById(id: T['id']): Promise<T> {
@@ -40,19 +31,28 @@ export abstract class BaseMongoRepository<
     const updatedDocument = await this.model.findByIdAndUpdate(
       entity.id,
       entity.toPOJO(),
-      { new: true, runValidators: true }
+      {new: true, runValidators: true}
     )
       .exec();
 
-    if (! updatedDocument) {
+    if (!updatedDocument) {
       throw new NotFoundException(`Entity with id ${entity.id} not found`);
     }
   }
 
   public async deleteById(id: T['id']): Promise<void> {
     const deletedDocument = await this.model.findByIdAndDelete(id).exec();
-    if (! deletedDocument) {
+    if (!deletedDocument) {
       throw new NotFoundException(`Entity with id ${id} not found.`);
     }
+  }
+
+  protected createEntityFromDocument(document: DocumentType): T | null {
+    if (!document) {
+      return null;
+    }
+
+    const plainObject = document.toObject({versionKey: false}) as ReturnType<T['toPOJO']>;
+    return this.entityFactory.create(plainObject);
   }
 }

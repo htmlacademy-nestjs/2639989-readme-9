@@ -1,0 +1,38 @@
+# Get all tags
+GET http://localhost:3000/api/tags HTTP/1.1
+
+###
+
+# Get tag by Id
+
+GET http://localhost:3000/api/tags/39614113-7ad5-45b6-8093-06455437e1e2 HTTP/1.1
+
+###
+
+# Create a new tag
+
+POST http://localhost:3000/api/tags HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Журналы"
+}
+
+###
+
+# Delete a tag by id
+
+DELETE http://localhost:3000/api/tags/164a3285-2d70-49c5-8e2c-28d9ce860990 HTTP/1.1
+
+###
+
+# Update a tag by id
+
+PATCH http://localhost:3000/api/tags/164a3285-2d70-49c5-8e2c-28d9ce860990 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "This is new name"
+}
+
+###

@@ -5,12 +5,13 @@ import {LoginUserDto} from "../dto/login-user.dto";
 import {ApiResponse, ApiTags} from "@nestjs/swagger";
 import {AuthenticationResponseMessage} from "./authentication.constant";
 import {LoggedUserRdo} from "../rdo/logged-user.rdo";
-import { UserRdo } from '../rdo/user.rdo';
+import {UserRdo} from '../rdo/user.rdo';
 
 @ApiTags('authentication')
 @Controller('auth')
 export class AuthenticationController {
-  constructor(private readonly authenticationService: AuthenticationService) {}
+  constructor(private readonly authenticationService: AuthenticationService) {
+  }
 
   @ApiResponse({
     status: HttpStatus.CREATED,

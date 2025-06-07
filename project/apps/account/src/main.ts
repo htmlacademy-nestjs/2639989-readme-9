@@ -1,6 +1,6 @@
-import { Logger } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import {Logger} from '@nestjs/common';
+import {NestFactory} from '@nestjs/core';
+import {AppModule} from './app/app.module';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 import {ConfigService} from "@nestjs/config";
 
@@ -15,23 +15,23 @@ async function bootstrap() {
   const environment = configService.get('application.environment');
   const isDev = environment === 'development';
 
-  if(isDev){
+  if (isDev) {
     const config = new DocumentBuilder()
-        .setTitle('API сервис для пользователей')
-        .setDescription('API сервис для пользователей')
-        .setVersion('1.0')
-        .addTag('account')
-        .build();
+      .setTitle('API сервис для пользователей')
+      .setDescription('API сервис для пользователей')
+      .setVersion('1.0')
+      .addTag('account')
+      .build();
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup(GLOBAL_PREFIX, app, documentFactory);
     Logger.log(
-        `🚀 Swagger for Accounts API is running on: http://localhost:${port}/${GLOBAL_PREFIX}`
+      `🚀 Swagger for Accounts API is running on: http://localhost:${port}/${GLOBAL_PREFIX}`
     );
   }
 
   await app.listen(port);
   Logger.log(
-      `🚀 Accounts API is running on: http://localhost:${port}/${GLOBAL_PREFIX}`
+    `🚀 Accounts API is running on: http://localhost:${port}/${GLOBAL_PREFIX}`
   );
 }
 

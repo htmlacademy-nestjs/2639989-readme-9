@@ -1,0 +1,58 @@
+### ================================
+### Тесты для blog-subscriptions модуля
+### ================================
+
+### 1. Оформить подписку (успешно)
+POST http://localhost:3000/api/subscriptions
+Content-Type: application/json
+
+{
+  "followerId": "658170cbb954e9f5b905ccf4",
+  "followingId": "6581762309c030b503e30512"
+}
+
+###
+
+### 2. Оформить подписку повторно (400 Bad Request)
+POST http://localhost:3000/api/subscriptions
+Content-Type: application/json
+
+{
+  "followerId": "658170cbb954e9f5b905ccf4",
+  "followingId": "6581762309c030b503e30512"
+}
+
+###
+
+### 3. Получить всех, на кого подписан пользователь (200 OK)
+GET http://localhost:3000/api/subscriptions/follower/658170cbb954e9f5b905ccf4
+
+###
+
+### 4. Получить всех, на кого подписан несуществующий пользователь (пустой массив 200 OK)
+GET http://localhost:3000/api/subscriptions/follower/00000000-0000-0000-0000-000000000000
+
+###
+
+### 5. Получить всех подписчиков заданного пользователя (200 OK)
+GET http://localhost:3000/api/subscriptions/following/6581762309c030b503e30512
+
+###
+
+### 6. Проверить существующую подписку (200 OK, объект)
+GET http://localhost:3000/api/subscriptions/658170cbb954e9f5b905ccf4/6581762309c030b503e30512
+
+###
+
+### 7. Проверить несуществующую подписку (404 Not Found)
+GET http://localhost:3000/api/subscriptions/658170cbb954e9f5b905ccf4/abcdef00-0000-0000-0000-000000000000
+
+###
+
+### 8. Отписаться (204 No Content)
+DELETE http://localhost:3000/api/subscriptions/658170cbb954e9f5b905ccf4/6581762309c030b503e30512
+
+###
+
+### 9. Отписаться от несуществующей подписки (404 Not Found)
+DELETE http://localhost:3000/api/subscriptions/658170cbb954e9f5b905ccf4/abcdef00-0000-0000-0000-000000000000

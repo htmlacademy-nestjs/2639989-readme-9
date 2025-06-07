@@ -1,0 +1,1 @@
+export const MAX_LIKES_PER_POST = 1000000;

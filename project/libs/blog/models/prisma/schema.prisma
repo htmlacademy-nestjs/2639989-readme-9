@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Post {
+  id             String     @id @default(uuid())
+  userId         String     @map("user_id")
+  type           PostType
+  payload        Json
+  createdAt      DateTime   @default(now()) @map("created_at")
+  publishedAt    DateTime   @map("published_at")
+  status         PostStatus @default(PUBLISHED)
+  isRepost       Boolean    @default(false) @map("is_repost")
+  originalPostId String?    @unique @map("original_post_id")
+  originalPost   Post?      @relation("Repost", fields: [originalPostId], references: [id], onDelete: Cascade)
+  reposts        Post[]     @relation("Repost")
+
+  tags     Tag[]     @relation("PostTags")
+  likes    Like[]    @relation("PostLikes")
+  comments Comment[] @relation("PostComments")
+}
+
+model Tag {
+  id   String @id @default(uuid())
+  name String @unique
+
+  posts Post[] @relation("PostTags")
+}
+
+model Like {
+  userId String @map("user_id")
+  postId String @map("post_id")
+
+  post Post @relation("PostLikes", fields: [postId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@id([userId, postId])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  postId    String   @map("post_id")
+  text      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post Post @relation("PostComments", fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  followerId  String @map("follower_id")
+  followingId String @map("following_id")
+
+  @@id([followerId, followingId])
+}
+
+enum PostType {
+  TEXT
+  VIDEO
+  QUOTE
+  PHOTO
+  LINK
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}

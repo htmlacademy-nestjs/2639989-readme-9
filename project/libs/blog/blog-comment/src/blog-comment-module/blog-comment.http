@@ -1,0 +1,120 @@
+### -----------------------------------------------
+### Создание комментария (успешно)
+# Передаём userId и postId как части пути.
+# Ожидаем: 201 Created и тело — объект CommentRdo
+
+POST http://localhost:3000/api/comments/
+Content-Type: application/json
+
+{
+  "userId": "658170cbb954e9f5b905ccf4",
+  "postId": "6d308040-96a2-4162-bea6-2338e9976540",
+  "text": "Очень познавательно, спасибо!"
+}
+
+### Попытка создать комментарий без текста (ошибка валидации)
+# Ожидаем: 400 Bad Request (валидация по длине)
+POST http://localhost:3000/api/comments/
+Content-Type: application/json
+
+{
+  "userId": "658170cbb954e9f5b905ccf4",
+  "postId": "6d308040-96a2-4162-bea6-2338e9976540",
+  "text": ""
+}
+
+### Попытка создать комментарий без userId (ошибка валидации)
+# Ожидаем: 400 Bad Request
+POST http://localhost:3000/api/comments/
+Content-Type: application/json
+
+{
+  "postId": "6d308040-96a2-4162-bea6-2338e9976540",
+  "text": "Очень познавательно, спасибо!"
+}
+
+### Попытка создать комментарий без postId (ошибка валидации)
+# Ожидаем: 400 Bad Request
+POST http://localhost:3000/api/comments/
+Content-Type: application/json
+
+{
+  "userId": "658170cbb954e9f5b905ccf4",
+  "text": "Очень познавательно, спасибо!"
+}
+
+### -----------------------------------------------
+### Получить список комментариев для поста (успешно)
+# GET /comments/post/:postId
+# Ожидаем: 200 OK, массив CommentRdo (userId не требуется)
+GET http://localhost:3000/api/comments/post/6d308040-96a2-4162-bea6-2338e9976540?limit=10&offset=0
+Accept: application/json
+
+### Получить список комментариев без указания поста (404)
+# Ожидаем: 404 Not Found
+GET http://localhost:3000/api/comments/post/
+Accept: application/json
+
+### -----------------------------------------------
+### Получить конкретный комментарий (успешно)
+# GET /comments/:id
+# Ожидаем: 200 OK, объект CommentRdo
+GET http://localhost:3000/api/comments/99e6005f-a36d-4222-a1cd-acf39c308dab
+Accept: application/json
+
+### Получить несуществующий комментарий (404)
+# Ожидаем: 404 Not Found
+GET http://localhost:3000/api/comments/99e6005f-a36d-4222-a1cd-acf39c308da3
+Accept: application/json
+
+### -----------------------------------------------
+### Обновить комментарий (успешно)
+# Передаём userId и id комментария в пути
+# Ожидаем: 200 OK, объект CommentRdo
+PATCH http://localhost:3000/api/comments/99e6005f-a36d-4222-a1cd-acf39c308dab/658170cbb954e9f5b905ccf4
+Content-Type: application/json
+
+{
+  "text": "Обновлённый текст комментария"
+}
+
+### Обновить комментарий некорректным текстом (ошибка валидации)
+# Ожидаем: 400 Bad Request
+PATCH http://localhost:3000/api/comments/99e6005f-a36d-4222-a1cd-acf39c308dab/658170cbb954e9f5b905ccf4
+Content-Type: application/json
+
+{
+  "text": ""
+}
+
+### Обновить комментарий чужим userId (403)
+# Ожидаем: 403 Forbidden
+PATCH http://localhost:3000/api/comments/99e6005f-a36d-4222-a1cd-acf39c308dab/6581762309c030b503e30512
+Content-Type: application/json
+
+{
+  "text": "Неавторизованное обновление"
+}
+
+### Обновить несуществующий комментарий (403)
+# Ожидаем: 403 Forbidden
+PATCH http://localhost:3000/api/comments/99e6005f-a36d-4222-a1cd-acf39c308daa/658170cbb954e9f5b905ccf4
+Content-Type: application/json
+
+{
+  "text": "Текст"
+}
+
+### -----------------------------------------------
+### Удалить комментарий (успешно)
+# DELETE /comments/:id/:userId
+# Ожидаем: 204 No Content
+DELETE http://localhost:3000/api/comments/df359465-4e00-4696-8ca5-8e31f9e39006/658170cbb954e9f5b905ccf4
+
+### Попытка удалить чужой комментарий (403)
+# Ожидаем: 403 Forbidden
+DELETE http://localhost:3000/api/comments/99e6005f-a36d-4222-a1cd-acf39c308dab/6581762309c030b503e30512
+
+### Удалить несуществующий комментарий (403)
+# Ожидаем: 403 Forbidden
+DELETE http://localhost:3000/api/comments/99e6005f-a36d-4222-a1cd-acf39c308dab/658170cbb954e9f5b905ccf4
