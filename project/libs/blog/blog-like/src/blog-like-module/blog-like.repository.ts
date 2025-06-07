@@ -42,7 +42,7 @@ export class BlogLikeRepository extends BasePostgresRepository<BlogLikeEntity, L
     return rawLikes.map(item => this.entityFactory.create(item));
   }
 
-  public async create(entity: BlogLikeEntity): Promise<BlogLikeEntity> {
+  public async save(entity: BlogLikeEntity): Promise<void> {
     try {
       const created = await this.client.like.create({
         data: {
@@ -52,7 +52,7 @@ export class BlogLikeRepository extends BasePostgresRepository<BlogLikeEntity, L
           }
         }
       });
-      return this.entityFactory.create(created);
+      entity.createdAt = created.createdAt;
     } catch (e) {
       if (e.code === 'P2002') {
         throw new BadRequestException(`Пользователь ${entity.userId} уже лайкнул публикацию ${entity.postId}`);

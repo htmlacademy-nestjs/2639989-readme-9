@@ -21,7 +21,8 @@ export class BlogLikeService {
         postId: dto.postId,
         createdAt: new Date()
       });
-      return await this.blogLikeRepository.create(entity);
+      await this.blogLikeRepository.save(entity);
+      return entity;
     } catch (e) {
       if (e instanceof BadRequestException) {
         throw e;

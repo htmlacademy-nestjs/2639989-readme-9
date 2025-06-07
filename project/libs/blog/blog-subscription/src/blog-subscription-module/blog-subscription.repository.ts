@@ -28,7 +28,7 @@ export class BlogSubscriptionRepository extends BasePostgresRepository<BlogSubsc
     if (!found) {
       throw new NotFoundException(`Подписка от пользователя ${followerId} на ${followingId} не найдена`);
     }
-    return this.entityFactory.create(found);
+    return this.createEntityFromDocument(found);
   }
 
   public async findAllByFollower(followerId: string): Promise<BlogSubscriptionEntity[]> {
@@ -45,15 +45,14 @@ export class BlogSubscriptionRepository extends BasePostgresRepository<BlogSubsc
     return raw.map(item => this.entityFactory.create(item));
   }
 
-  public async create(entity: BlogSubscriptionEntity): Promise<BlogSubscriptionEntity> {
+  public async save(entity: BlogSubscriptionEntity): Promise<void> {
     try {
-      const created = await this.client.subscription.create({
+      await this.client.subscription.create({
         data: {
           followerId:  entity.followerId,
           followingId: entity.followingId
         }
       });
-      return this.entityFactory.create(created);
     } catch (e) {
       if (e.code === 'P2002') {
         throw new BadRequestException(`Пользователь ${entity.followerId} уже подписан на ${entity.followingId}`);

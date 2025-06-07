@@ -16,7 +16,6 @@ export class BlogSubscriptionEntity extends Entity implements StorableEntity<Sub
     }
     this.followerId = subscription.followerId;
     this.followingId = subscription.followingId;
-    this.id = `${subscription.followerId}_${subscription.followingId}`;
   }
 
   public toPOJO(): Subscription {

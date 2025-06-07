@@ -18,7 +18,6 @@ export class BlogLikeEntity extends Entity implements StorableEntity<Like> {
     this.userId = like.userId;
     this.postId = like.postId;
     this.createdAt = like.createdAt!;
-    this.id = `${like.userId}_${like.postId}`;
   }
 
   public toPOJO(): Like {

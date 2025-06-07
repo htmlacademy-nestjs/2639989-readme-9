@@ -20,7 +20,10 @@ export class BlogSubscriptionService {
         followerId: dto.followerId,
         followingId: dto.followingId
       });
-      return await this.blogSubscriptionRepository.create(entity);
+
+      await this.blogSubscriptionRepository.save(entity);
+
+      return entity;
     } catch (e) {
       if (e instanceof BadRequestException) {
         throw e;
