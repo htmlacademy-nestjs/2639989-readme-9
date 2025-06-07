@@ -1,15 +1,16 @@
 import {Tag} from "./tag.interface";
 import {Like} from "./like.interface";
+import {Prisma} from "@prisma/client";
 
 export interface Post {
   id?: string;
   userId: string;
   type: PostType;
-  payload: Record<string, any>;
+  payload: Prisma.JsonValue;
   createdAt?: Date;
   publishedAt?: Date;
   status: PostStatus;
-  isRepost: boolean;
+  isRepost?: boolean;
   originalPostId?: string;
   reposts?: Post[];
   tags?: Tag[];

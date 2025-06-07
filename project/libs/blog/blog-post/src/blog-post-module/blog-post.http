@@ -1,0 +1,128 @@
+### 1. Создание поста (успешно)
+
+# Ожидаем: 201 Created и тело — объект PostRdo
+
+POST http://localhost:3000/api/posts
+Content-Type: application/json
+
+{
+  "userId": "b1a2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+  "type": "TEXT",
+  "payload": { "text": "Первый пост!" },
+  "publishedAt": "2025-06-07T12:00:00.000Z",
+  "status": "PUBLISHED",
+  "isRepost": false
+}
+
+### 2. Создание поста без userId (ошибка валидации)
+
+# Ожидаем: 500 Internal Server Error
+
+POST http://localhost:3000/api/posts
+Content-Type: application/json
+
+{
+  "type": "TEXT",
+  "payload": { "text": "Нет userId" },
+  "publishedAt": "2025-06-07T12:00:00.000Z"
+}
+
+### 3. Создание поста без type (ошибка валидации)
+
+# Ожидаем: 500 Internal Server Error
+
+POST http://localhost:3000/api/posts
+Content-Type: application/json
+
+{
+  "userId": "b1a2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6",
+  "payload": { "text": "Нет type" },
+  "publishedAt": "2025-06-07T12:00:00.000Z"
+}
+
+### -----------------------------------------------
+
+### 4. Получить список постов с фильтрацией (успешно)
+
+# GET /posts?userId=...\&type=...\&status=...
+
+# Ожидаем: 200 OK, массив PostRdo
+
+GET http://localhost:3000/api/posts?userId=b1a2c3d4-e5f6-7a8b-9c0d-e1f2a3b4c5d6&type=TEXT&status=PUBLISHED
+Accept: application/json
+
+### 5. Получить список всех постов (успешно)
+
+# GET /posts
+
+# Ожидаем: 200 OK, массив PostRdo
+
+GET http://localhost:3000/api/posts
+Accept: application/json
+
+### -----------------------------------------------
+
+### 6. Получить конкретный пост (успешно)
+
+# GET /posts/:id
+
+# Ожидаем: 200 OK, объект PostRdo
+
+GET http://localhost:3000/api/posts/6d308040-96a2-4162-bea6-2338e9976540
+Accept: application/json
+
+### 7. Получить несуществующий пост (404)
+
+# GET /posts/:id
+
+# Ожидаем: 404 Not Found
+
+GET http://localhost:3000/api/posts/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+### -----------------------------------------------
+
+### 8. Обновить пост (успешно)
+
+# PATCH /posts/:id
+
+# Ожидаем: 200 OK, объект PostRdo
+
+PATCH http://localhost:3000/api/posts/6d308040-96a2-4162-bea6-2338e9976540
+Content-Type: application/json
+
+{
+  "payload": { "text": "Обновлённый текст" },
+  "status": "DRAFT"
+}
+
+### 9. Обновить несуществующий пост (404)
+
+# PATCH /posts/:id
+
+# Ожидаем: 404 Not Found
+
+PATCH http://localhost:3000/api/posts/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+
+{
+  "status": "PUBLISHED"
+}
+
+### -----------------------------------------------
+
+### 10. Удалить пост (успешно)
+
+# DELETE /posts/:id
+
+# Ожидаем: 204 No Content
+
+DELETE http://localhost:3000/api/posts/6d308040-96a2-4162-bea6-2338e9976540
+
+### 11. Удалить несуществующий пост (404)
+
+# DELETE /posts/:id
+
+# Ожидаем: 404 Not Found
+
+DELETE http://localhost:3000/api/posts/00000000-0000-0000-0000-000000000000
