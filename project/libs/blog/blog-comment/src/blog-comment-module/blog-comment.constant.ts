@@ -1,2 +1,4 @@
-export const MIN_COMMENT_LENGTH = 10;
-export const MAX_COMMENT_LENGTH = 300;
+export enum CommentLength {
+  MIN = 10,
+  MAX = 300,
+}

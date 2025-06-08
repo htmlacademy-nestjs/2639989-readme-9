@@ -3,7 +3,7 @@ import {BlogCommentRepository} from './blog-comment.repository';
 import {BlogCommentEntity} from './blog-comment.entity';
 import {CreateCommentDto} from './dto/create-comment.dto';
 import {UpdateCommentDto} from './dto/update-comment.dto';
-import {MAX_COMMENT_LENGTH, MIN_COMMENT_LENGTH} from "./blog-comment.constant";
+import {CommentLength} from "./blog-comment.constant";
 
 @Injectable()
 export class CommentService {
@@ -21,8 +21,8 @@ export class CommentService {
       throw new BadRequestException('userId обязателен');
     }
 
-    if (dto.text.length < MIN_COMMENT_LENGTH || dto.text.length > MAX_COMMENT_LENGTH) {
-      throw new BadRequestException(`Комментарий должен быть от ${MIN_COMMENT_LENGTH} до ${MAX_COMMENT_LENGTH} символов`);
+    if (dto.text.length < CommentLength.MIN || dto.text.length > CommentLength.MAX) {
+      throw new BadRequestException(`Комментарий должен быть от ${CommentLength.MIN} до ${CommentLength.MAX} символов`);
     }
 
     try {
@@ -42,8 +42,8 @@ export class CommentService {
   public async updateComment(userId: string, commentId: string, dto: UpdateCommentDto): Promise<BlogCommentEntity> {
     await this.BlogCommentRepository.ensureOwnsComment(commentId, userId);
 
-    if (dto.text.length < MIN_COMMENT_LENGTH || dto.text.length > MAX_COMMENT_LENGTH) {
-      throw new BadRequestException(`Комментарий должен быть от ${MIN_COMMENT_LENGTH} до ${MAX_COMMENT_LENGTH} символов`);
+    if (dto.text.length < CommentLength.MIN || dto.text.length > CommentLength.MAX) {
+      throw new BadRequestException(`Комментарий должен быть от ${CommentLength.MIN} до ${CommentLength.MAX} символов`);
     }
 
     const blogTagEntity = new BlogCommentEntity(dto);
