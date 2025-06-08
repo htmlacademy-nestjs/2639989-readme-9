@@ -1,4 +1,4 @@
-import { registerAs } from '@nestjs/config';
+import {registerAs} from '@nestjs/config';
 import * as Joi from 'joi';
 import {DEFAULT_PORT, ENVIRONMENTS} from '../account.config.constant';
 
@@ -15,7 +15,7 @@ const validationSchema = Joi.object({
 });
 
 function validateConfig(config: ApplicationConfig): void {
-  const { error } = validationSchema.validate(config, { abortEarly: true });
+  const {error} = validationSchema.validate(config, {abortEarly: true});
   if (error) {
     throw new Error(`[Ошибка при валидации конфигурации приложения]: ${error.message}`);
   }

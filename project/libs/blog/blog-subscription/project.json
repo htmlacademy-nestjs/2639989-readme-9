@@ -1,0 +1,24 @@
+{
+  "name": "blog-subscription",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/blog/blog-subscription/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/blog/blog-subscription",
+        "tsConfig": "libs/blog/blog-subscription/tsconfig.lib.json",
+        "packageJson": "libs/blog/blog-subscription/package.json",
+        "main": "libs/blog/blog-subscription/src/index.ts",
+        "assets": [
+          "libs/blog/blog-subscription/*.md"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+### ===========================
+### Тесты для blog-like модуля
+### ===========================
+
+### 1. Поставить лайк (успешно)
+POST http://localhost:3000/api/likes
+Content-Type: application/json
+
+{
+  "userId": "658170cbb954e9f5b905ccf4",
+  "postId": "6d308040-96a2-4162-bea6-2338e9976540"
+}
+
+###
+
+### 2. Поставить лайк повторно (400 Bad Request)
+POST http://localhost:3000/api/likes
+Content-Type: application/json
+
+{
+  "userId": "658170cbb954e9f5b905ccf4",
+  "postId": "6d308040-96a2-4162-bea6-2338e9976540"
+}
+
+###
+
+### 3. Поставить лайк с невалидным postId (500 Internal Server Error)
+POST http://localhost:3000/api/likes
+Content-Type: application/json
+
+{
+  "userId": "658170cbb954e9f5b905ccf4",
+  "postId": "invalid-uuid"
+}
+
+###
+
+### 4. Получить всех лайкнувших пост (200 OK)
+GET http://localhost:3000/api/likes/post/6d308040-96a2-4162-bea6-2338e9976540
+
+###
+
+### 5. Получить всех лайкнувших несуществующий пост (пустой массив 200 OK)
+GET http://localhost:3000/api/likes/post/00000000-0000-0000-0000-000000000000
+
+###
+
+### 6. Проверить существующий лайк (200 OK, объект)
+GET http://localhost:3000/api/likes/658170cbb954e9f5b905ccf4/6d308040-96a2-4162-bea6-2338e9976540
+
+###
+
+### 7. Проверить несуществующий лайк (404 Not Found)
+GET http://localhost:3000/api/likes/658170cbb954e9f5b905ccf4/abcdef00-0000-0000-0000-000000000000
+
+###
+
+### 8. Снять существующий лайк (204 No Content)
+DELETE http://localhost:3000/api/likes/658170cbb954e9f5b905ccf4/6d308040-96a2-4162-bea6-2338e9976540
+
+###
+
+### 9. Снять несуществующий лайк (404 Not Found)
+DELETE http://localhost:3000/api/likes/658170cbb954e9f5b905ccf4/abcdef00-0000-0000-0000-000000000000

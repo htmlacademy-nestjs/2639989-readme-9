@@ -1,0 +1,1 @@
+export const MAX_SUBSCRIPTIONS_PER_USER = 10000;
