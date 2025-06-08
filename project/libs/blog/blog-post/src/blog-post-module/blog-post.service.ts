@@ -5,6 +5,7 @@ import {BlogPostEntity} from './blog-post.entity';
 import {CreateBlogPostDto} from './dto/create-blog-post.dto';
 import {UpdateBlogPostDto} from './dto/update-blog-post.dto';
 import {PostStatus, PostType} from "@project/core";
+import {BlogPostFilter} from "./blog-post.filter";
 
 @Injectable()
 export class BlogPostService {
@@ -96,5 +97,14 @@ export class BlogPostService {
 
   public async deletePost(id: string): Promise<void> {
     await this.blogPostRepository.deleteById(id);
+  }
+
+  public buildFilter(userId?: string, type?: PostType, status?: PostStatus, isRepost?: boolean) {
+    return {
+      userId,
+      type,
+      status,
+      isRepost
+    }
   }
 }

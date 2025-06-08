@@ -17,22 +17,9 @@ export class BlogPostController {
     @Query('userId') userId?: string,
     @Query('type') type?: PostType,
     @Query('status') status?: PostStatus,
-    @Query('isRepost') isRepost?: string
+    @Query('isRepost') isRepost?: boolean
   ) {
-    const filter: any = {};
-    if (userId) {
-      filter.userId = userId;
-    }
-    if (type) {
-      filter.type = type;
-    }
-    if (status) {
-      filter.status = status;
-    }
-    if (isRepost !== undefined) {
-      filter.isRepost = isRepost === 'true';
-    }
-
+    const filter = this.blogPostService.buildFilter(userId, type, status, isRepost);
     const posts = await this.blogPostService.getPosts(filter);
     return posts.map((post) => fillDto(BlogPostRdo, post.toPOJO()));
   }
