@@ -1,48 +1,61 @@
-import {BadRequestException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
-import {BlogLikeRepository} from './blog-like.repository';
-import {BlogLikeEntity} from './blog-like.entity';
-import {CreateBlogLikeDto} from './dto/create-blog-like.dto';
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException
+} from '@nestjs/common';
+import { BlogLikeRepository } from './blog-like.repository';
+import { CreateBlogLikeDto } from './dto/create-blog-like.dto';
+import { BlogLikeExceptionMessage } from './blog-like.constant';
+import { BlogLikeEntity } from './blog-like.entity';
 
 @Injectable()
 export class BlogLikeService {
   constructor(
-    private readonly blogLikeRepository: BlogLikeRepository
-  ) {
-  }
+    private readonly blogLikeRepository: BlogLikeRepository,
+  ) {}
 
-  public async likePost(dto: CreateBlogLikeDto): Promise<BlogLikeEntity> {
+  public async likePost(userId: string, dto: CreateBlogLikeDto): Promise<void> {
+    //TODO: Добавить проверку на статус поста
+
+    const existingLike = await this.blogLikeRepository.findByUserAndPost(userId, dto.postId);
+    if (existingLike) {
+      throw new ForbiddenException(BlogLikeExceptionMessage.AlreadyExists);
+    }
+
     try {
       const entity = new BlogLikeEntity({
-        userId: dto.userId,
+        userId: userId,
         postId: dto.postId,
         createdAt: new Date()
       });
       await this.blogLikeRepository.save(entity);
-      return entity;
     } catch (e) {
-      if (e instanceof BadRequestException) {
-        throw e;
-      }
-      throw new InternalServerErrorException('Не удалось поставить лайк');
+      throw new InternalServerErrorException(BlogLikeExceptionMessage.CreateFailed);
     }
   }
 
   public async unlikePost(userId: string, postId: string): Promise<void> {
+    const like = await this.blogLikeRepository.findByUserAndPost(userId, postId);
+
+    if (!like) {
+      throw new NotFoundException(BlogLikeExceptionMessage.LikeNotFound);
+    }
+
     try {
-      await this.blogLikeRepository.deleteByUserAndPost(userId, postId);
+      await this.blogLikeRepository.deleteById(like.id);
     } catch (e) {
-      if (e instanceof NotFoundException) {
-        throw e;
-      }
-      throw new InternalServerErrorException('Не удалось снять лайк');
+      throw new InternalServerErrorException(BlogLikeExceptionMessage.DeleteFailed);
     }
   }
 
-  public async getLike(userId: string, postId: string): Promise<BlogLikeEntity> {
-    return this.blogLikeRepository.findByUserAndPost(userId, postId);
+  public async getLikesByPost(postId: string): Promise<number> {
+    const like = await this.blogLikeRepository.findAllByPost(postId);
+
+    return like.length;
   }
 
-  public async getLikesByPost(postId: string): Promise<BlogLikeEntity[]> {
-    return this.blogLikeRepository.findAllByPost(postId);
+  public async checkUserLike(userId: string, postId: string): Promise<boolean> {
+    return !!(await this.blogLikeRepository.findByUserAndPost(userId, postId));
   }
 }

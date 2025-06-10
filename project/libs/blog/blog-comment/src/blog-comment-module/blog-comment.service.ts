@@ -1,76 +1,89 @@
-import {BadRequestException, Injectable, InternalServerErrorException} from '@nestjs/common';
-import {BlogCommentRepository} from './blog-comment.repository';
-import {BlogCommentEntity} from './blog-comment.entity';
-import {CreateCommentDto} from './dto/create-comment.dto';
-import {UpdateCommentDto} from './dto/update-comment.dto';
-import {CommentLength} from "./blog-comment.constant";
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  ForbiddenException
+} from '@nestjs/common';
+import { BlogCommentRepository } from './blog-comment.repository';
+import { BlogCommentEntity } from './blog-comment.entity';
+import { CreateCommentDto } from './dto/create-comment.dto';
+import {
+  CommentLength,
+  BlogCommentExceptionMessage
+} from './blog-comment.constant';
 
 @Injectable()
 export class CommentService {
   constructor(
-    private readonly BlogCommentRepository: BlogCommentRepository
-  ) {
-  }
+    private readonly blogCommentRepository: BlogCommentRepository,
+  ) {}
 
-  public async createComment(dto: CreateCommentDto): Promise<BlogCommentEntity> {
-    if (!dto.postId) {
-      throw new BadRequestException('postId обязателен');
-    }
-
-    if (!dto.userId) {
-      throw new BadRequestException('userId обязателен');
-    }
-
-    if (dto.text.length < CommentLength.MIN || dto.text.length > CommentLength.MAX) {
-      throw new BadRequestException(`Комментарий должен быть от ${CommentLength.MIN} до ${CommentLength.MAX} символов`);
-    }
-
+  public async createComment(userId: string, dto: CreateCommentDto): Promise<BlogCommentEntity> {
     try {
       const entity = new BlogCommentEntity({
-        userId: dto.userId,
+        userId,
         postId: dto.postId,
         text: dto.text,
       });
-      await this.BlogCommentRepository.save(entity);
 
+      await this.blogCommentRepository.save(entity);
       return entity;
-    } catch (e) {
-      throw new InternalServerErrorException('Не удалось создать комментарий');
-    }
-  }
-
-  public async updateComment(userId: string, commentId: string, dto: UpdateCommentDto): Promise<BlogCommentEntity> {
-    await this.BlogCommentRepository.ensureOwnsComment(commentId, userId);
-
-    if (dto.text.length < CommentLength.MIN || dto.text.length > CommentLength.MAX) {
-      throw new BadRequestException(`Комментарий должен быть от ${CommentLength.MIN} до ${CommentLength.MAX} символов`);
-    }
-
-    const blogTagEntity = new BlogCommentEntity(dto);
-    blogTagEntity.id = commentId;
-
-    try {
-      await this.BlogCommentRepository.update(blogTagEntity);
-      return blogTagEntity;
-    } catch (e) {
-      throw new InternalServerErrorException('Не удалось обновить комментарий');
+    } catch (error) {
+      throw new InternalServerErrorException(
+        BlogCommentExceptionMessage.CreateFailed,
+        { cause: error }
+      );
     }
   }
 
   public async deleteComment(userId: string, commentId: string): Promise<void> {
-    await this.BlogCommentRepository.ensureOwnsComment(commentId, userId);
+    const comment = await this.getCommentById(commentId);
+
+    if (comment.userId !== userId) {
+      throw new ForbiddenException(BlogCommentExceptionMessage.Forbidden);
+    }
+
     try {
-      await this.BlogCommentRepository.deleteById(commentId);
-    } catch (e) {
-      throw new InternalServerErrorException('Не удалось удалить комментарий');
+      await this.blogCommentRepository.deleteById(commentId);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        BlogCommentExceptionMessage.DeleteFailed,
+        { cause: error }
+      );
     }
   }
 
   public async getCommentById(commentId: string): Promise<BlogCommentEntity> {
-    return this.BlogCommentRepository.findById(commentId);
+    const comment = await this.blogCommentRepository.findById(commentId);
+
+    if (!comment) {
+      throw new NotFoundException(BlogCommentExceptionMessage.CommentNotFound);
+    }
+
+    return comment;
   }
 
-  public async getCommentsByPost(postId: string, limit = 50, offset = 0): Promise<BlogCommentEntity[]> {
-    return this.BlogCommentRepository.findByPostId({postId, limit, offset});
+  public async getCommentsByPost(
+    postId: string,
+    limit: number = CommentLength.DEFAULT_LIMIT,
+    offset = 0
+  ): Promise<BlogCommentEntity[]> {
+    const validatedLimit = Math.min(
+      Math.max(limit, 1),
+      CommentLength.MAX_LIMIT
+    );
+
+    try {
+      return await this.blogCommentRepository.findByPostId({
+        postId,
+        limit: validatedLimit,
+        offset
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(
+        BlogCommentExceptionMessage.GetFailed,
+        { cause: error }
+      );
+    }
   }
 }

@@ -1,42 +1,96 @@
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post,} from '@nestjs/common';
-import {fillDto} from '@project/helpers';
-import {BlogLikeService} from './blog-like.service';
-import {CreateBlogLikeDto} from './dto/create-blog-like.dto';
-import {BlogLikeRdo} from './rdo/blog-like.rdo';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Req,
+  UseGuards
+} from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BlogLikeService } from './blog-like.service';
+import { CreateBlogLikeDto } from './dto/create-blog-like.dto';
+import { BlogLikeResponseMessage, BlogLikeExceptionMessage } from './blog-like.constant';
 
+@ApiTags('likes')
 @Controller('likes')
 export class BlogLikeController {
   constructor(
     private readonly blogLikeService: BlogLikeService
-  ) {
-  }
+  ) {}
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: BlogLikeResponseMessage.Created
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogLikeExceptionMessage.PostNotFound
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: BlogLikeExceptionMessage.AlreadyExists
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogLikeResponseMessage.LoggedError
+  })
+  //@UseGuards(JwtAuthGuard)
   @Post('/')
   public async create(
+    @Param('userId') userId: string,
     @Body() dto: CreateBlogLikeDto
   ) {
-    const newLike = await this.blogLikeService.likePost(dto);
-    return fillDto(BlogLikeRdo, newLike.toPOJO());
+    await this.blogLikeService.likePost(userId, dto);
   }
 
-  @Get('/post/:postId')
-  public async findAllByPost(
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Количество лайков',
+    type: Number
+  })
+  @Get('/post/:postId/count')
+  public async countByPost(
     @Param('postId') postId: string
   ) {
-    const likes = await this.blogLikeService.getLikesByPost(postId);
-    return likes.map(item => fillDto(BlogLikeRdo, item.toPOJO()));
+    return this.blogLikeService.getLikesByPost(postId);
   }
 
-  @Get('/:userId/:postId')
-  public async findOne(
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Статус лайка пользователя',
+    type: Boolean
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogLikeResponseMessage.LoggedError
+  })
+  //@UseGuards(JwtAuthGuard)
+  @Get('/post/:postId/status')
+  public async getLikeStatus(
     @Param('userId') userId: string,
     @Param('postId') postId: string
   ) {
-    const like = await this.blogLikeService.getLike(userId, postId);
-    return fillDto(BlogLikeRdo, like.toPOJO());
+    return this.blogLikeService.checkUserLike(userId, postId);
   }
 
-  @Delete('/:userId/:postId')
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: BlogLikeResponseMessage.Deleted
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogLikeExceptionMessage.LikeNotFound
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogLikeResponseMessage.LoggedError
+  })
+  //@UseGuards(JwtAuthGuard)
+  @Delete('/post/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(
     @Param('userId') userId: string,

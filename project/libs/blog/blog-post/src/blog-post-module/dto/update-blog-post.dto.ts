@@ -24,7 +24,7 @@ export class UpdateBlogPostDto {
     description: 'Дата и время публикации',
     example: '2025-06-07T18:30:00.000Z'
   })
-  public publishedAt?: Date;
+  public publishedAt?: string;
 
   @ApiPropertyOptional({
     description: 'Статус поста (DRAFT или PUBLISHED)',
