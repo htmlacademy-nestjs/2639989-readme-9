@@ -5,7 +5,6 @@ import {BlogPostEntity} from './blog-post.entity';
 import {CreateBlogPostDto} from './dto/create-blog-post.dto';
 import {UpdateBlogPostDto} from './dto/update-blog-post.dto';
 import {PostStatus, PostType} from "@project/core";
-import {BlogPostFilter} from "./blog-post.filter";
 
 @Injectable()
 export class BlogPostService {
