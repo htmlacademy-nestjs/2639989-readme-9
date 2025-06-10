@@ -1,6 +1,7 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {
-  AuthenticationUserNameLength, AuthenticationUserPasswordLength,
+  AuthenticationUserNameLength,
+  AuthenticationUserPasswordLength,
   AuthenticationValidateMessage
 } from "../authentication-module/authentication.constant";
 import {IsEmail, IsISO8601, IsNotEmpty, IsString, Length} from "class-validator";
@@ -10,7 +11,7 @@ export class CreateUserDto {
     description: 'Уникальный адрес пользователя',
     example: 'user@user.ru'
   })
-  @IsEmail({}, { message: AuthenticationValidateMessage.EmailNotValid })
+  @IsEmail({}, {message: AuthenticationValidateMessage.EmailNotValid})
   @IsNotEmpty({message: AuthenticationValidateMessage.EmailRequired})
   public email: string;
 
@@ -18,7 +19,7 @@ export class CreateUserDto {
     description: 'Дата создания аккаунта пользователя',
     example: '1981-03-12',
   })
-  @IsISO8601({}, { message: AuthenticationValidateMessage.DateBirthNotValid })
+  @IsISO8601({}, {message: AuthenticationValidateMessage.DateBirthNotValid})
   @IsNotEmpty({message: AuthenticationValidateMessage.DateBirthRequired})
   public dateOfBirth: string;
 

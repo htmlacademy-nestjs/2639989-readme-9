@@ -1,19 +1,15 @@
-import {
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException
-} from '@nestjs/common';
-import { BlogLikeRepository } from './blog-like.repository';
-import { CreateBlogLikeDto } from './dto/create-blog-like.dto';
-import { BlogLikeExceptionMessage } from './blog-like.constant';
-import { BlogLikeEntity } from './blog-like.entity';
+import {ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
+import {BlogLikeRepository} from './blog-like.repository';
+import {CreateBlogLikeDto} from './dto/create-blog-like.dto';
+import {BlogLikeExceptionMessage} from './blog-like.constant';
+import {BlogLikeEntity} from './blog-like.entity';
 
 @Injectable()
 export class BlogLikeService {
   constructor(
     private readonly blogLikeRepository: BlogLikeRepository,
-  ) {}
+  ) {
+  }
 
   public async likePost(userId: string, dto: CreateBlogLikeDto): Promise<void> {
     //TODO: Добавить проверку на статус поста

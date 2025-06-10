@@ -11,24 +11,21 @@ import {
   Post,
   Query
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { fillDto } from '@project/helpers';
-import { BlogTagService } from './blog-tag.service';
-import { CreateTagDto } from './dto/create-tag.dto';
-import { UpdateTagDto } from './dto/update-tag.dto';
-import { TagRdo } from './rdo/tag.rdo';
-import {
-  TAGS_LIMIT,
-  TagExceptionMessage,
-  TagResponseMessage
-} from './blog-tag.constant';
+import {ApiResponse, ApiTags} from '@nestjs/swagger';
+import {fillDto} from '@project/helpers';
+import {BlogTagService} from './blog-tag.service';
+import {CreateTagDto} from './dto/create-tag.dto';
+import {UpdateTagDto} from './dto/update-tag.dto';
+import {TagRdo} from './rdo/tag.rdo';
+import {TagExceptionMessage, TagResponseMessage, TAGS_LIMIT} from './blog-tag.constant';
 
 @ApiTags('Tags')
 @Controller('tags')
 export class BlogTagController {
   constructor(
     private readonly blogTagService: BlogTagService
-  ) {}
+  ) {
+  }
 
   @ApiResponse({
     status: HttpStatus.OK,

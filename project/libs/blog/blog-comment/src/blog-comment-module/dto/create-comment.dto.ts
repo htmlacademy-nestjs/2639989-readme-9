@@ -1,14 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsString,
-  IsUUID,
-  Length
-} from 'class-validator';
-import {
-  BlogCommentValidateMessage,
-  CommentLength
-} from '../blog-comment.constant';
+import {ApiProperty} from '@nestjs/swagger';
+import {IsNotEmpty, IsString, IsUUID, Length} from 'class-validator';
+import {BlogCommentValidateMessage, CommentLength} from '../blog-comment.constant';
 
 export class CreateCommentDto {
   @ApiProperty({
@@ -36,7 +28,7 @@ export class CreateCommentDto {
   @Length(
     CommentLength.MIN,
     CommentLength.MAX,
-    { message: BlogCommentValidateMessage.TextLengthNotValid }
+    {message: BlogCommentValidateMessage.TextLengthNotValid}
   )
   public text!: string;
 }

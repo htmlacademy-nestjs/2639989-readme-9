@@ -1,26 +1,16 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  Post,
-  Req,
-  UseGuards
-} from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { BlogLikeService } from './blog-like.service';
-import { CreateBlogLikeDto } from './dto/create-blog-like.dto';
-import { BlogLikeResponseMessage, BlogLikeExceptionMessage } from './blog-like.constant';
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post} from '@nestjs/common';
+import {ApiResponse, ApiTags} from '@nestjs/swagger';
+import {BlogLikeService} from './blog-like.service';
+import {CreateBlogLikeDto} from './dto/create-blog-like.dto';
+import {BlogLikeExceptionMessage, BlogLikeResponseMessage} from './blog-like.constant';
 
 @ApiTags('likes')
 @Controller('likes')
 export class BlogLikeController {
   constructor(
     private readonly blogLikeService: BlogLikeService
-  ) {}
+  ) {
+  }
 
   @ApiResponse({
     status: HttpStatus.CREATED,

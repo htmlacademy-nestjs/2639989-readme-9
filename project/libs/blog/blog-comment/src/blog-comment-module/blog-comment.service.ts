@@ -1,22 +1,15 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  ForbiddenException
-} from '@nestjs/common';
-import { BlogCommentRepository } from './blog-comment.repository';
-import { BlogCommentEntity } from './blog-comment.entity';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import {
-  CommentLength,
-  BlogCommentExceptionMessage
-} from './blog-comment.constant';
+import {ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
+import {BlogCommentRepository} from './blog-comment.repository';
+import {BlogCommentEntity} from './blog-comment.entity';
+import {CreateCommentDto} from './dto/create-comment.dto';
+import {BlogCommentExceptionMessage, CommentLength} from './blog-comment.constant';
 
 @Injectable()
 export class CommentService {
   constructor(
     private readonly blogCommentRepository: BlogCommentRepository,
-  ) {}
+  ) {
+  }
 
   public async createComment(userId: string, dto: CreateCommentDto): Promise<BlogCommentEntity> {
     try {
@@ -31,7 +24,7 @@ export class CommentService {
     } catch (error) {
       throw new InternalServerErrorException(
         BlogCommentExceptionMessage.CreateFailed,
-        { cause: error }
+        {cause: error}
       );
     }
   }
@@ -48,7 +41,7 @@ export class CommentService {
     } catch (error) {
       throw new InternalServerErrorException(
         BlogCommentExceptionMessage.DeleteFailed,
-        { cause: error }
+        {cause: error}
       );
     }
   }
@@ -82,7 +75,7 @@ export class CommentService {
     } catch (error) {
       throw new InternalServerErrorException(
         BlogCommentExceptionMessage.GetFailed,
-        { cause: error }
+        {cause: error}
       );
     }
   }

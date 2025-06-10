@@ -1,15 +1,14 @@
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query} from '@nestjs/common';
+import {ApiResponse, ApiTags} from '@nestjs/swagger';
+import {fillDto} from '@project/helpers';
+import {CommentService} from './blog-comment.service';
+import {CreateCommentDto} from './dto/create-comment.dto';
+import {CommentRdo} from './rdo/comment.rdo';
 import {
-  Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query, UseGuards
-} from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { fillDto } from '@project/helpers';
-import { CommentService } from './blog-comment.service';
-import { CreateCommentDto } from './dto/create-comment.dto';
-import { CommentRdo } from './rdo/comment.rdo';
-import {
-  BlogCommentResponseMessage,
   BlogCommentExceptionMessage,
-  CommentLength, BlogCommentValidateMessage
+  BlogCommentResponseMessage,
+  BlogCommentValidateMessage,
+  CommentLength
 } from './blog-comment.constant';
 
 @ApiTags('comments')
@@ -17,7 +16,8 @@ import {
 export class BlogCommentController {
   constructor(
     private readonly commentService: CommentService
-  ) {}
+  ) {
+  }
 
   @ApiResponse({
     status: HttpStatus.CREATED,

@@ -5,24 +5,18 @@ import {
   InternalServerErrorException,
   NotFoundException
 } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { BlogTagRepository } from './blog-tag.repository';
-import { BlogTagEntity } from './blog-tag.entity';
-import { CreateTagDto } from './dto/create-tag.dto';
-import { UpdateTagDto } from './dto/update-tag.dto';
-import {
-  TagExceptionMessage, TAGS_LIMIT,
-  TagValidation
-} from './blog-tag.constant';
+import {Prisma} from '@prisma/client';
+import {BlogTagRepository} from './blog-tag.repository';
+import {BlogTagEntity} from './blog-tag.entity';
+import {CreateTagDto} from './dto/create-tag.dto';
+import {UpdateTagDto} from './dto/update-tag.dto';
+import {TagExceptionMessage, TAGS_LIMIT, TagValidation} from './blog-tag.constant';
 
 @Injectable()
 export class BlogTagService {
   constructor(
     private readonly blogTagRepository: BlogTagRepository
-  ) {}
-
-  private normalizeTagName(name: string): string {
-    return name.trim().toLowerCase();
+  ) {
   }
 
   public validateTagName(name: string): boolean {
@@ -50,7 +44,7 @@ export class BlogTagService {
     } catch (e) {
       throw new InternalServerErrorException(
         TagExceptionMessage.GetFailed,
-        { cause: e }
+        {cause: e}
       );
     }
   }
@@ -75,7 +69,7 @@ export class BlogTagService {
     } catch (e) {
       throw new InternalServerErrorException(
         TagExceptionMessage.CreateFailed,
-        { cause: e }
+        {cause: e}
       );
     }
   }
@@ -98,14 +92,14 @@ export class BlogTagService {
     }
 
     try {
-      const updatedTag = new BlogTagEntity({ ...tag, name });
+      const updatedTag = new BlogTagEntity({...tag, name});
       await this.blogTagRepository.update(updatedTag);
 
       return updatedTag;
     } catch (e) {
       throw new InternalServerErrorException(
         TagExceptionMessage.UpdateFailed,
-        { cause: e }
+        {cause: e}
       );
     }
   }
@@ -124,21 +118,21 @@ export class BlogTagService {
         if (e.code === 'P2003') {
           throw new ConflictException(
             TagExceptionMessage.UsedInPosts,
-            { cause: e }
+            {cause: e}
           );
         }
 
         if (e.code === 'P2025') {
           throw new NotFoundException(
             TagExceptionMessage.NotFound,
-            { cause: e }
+            {cause: e}
           );
         }
       }
 
       throw new InternalServerErrorException(
         TagExceptionMessage.DeleteFailed,
-        { cause: e }
+        {cause: e}
       );
     }
   }
@@ -164,8 +158,12 @@ export class BlogTagService {
     } catch (e) {
       throw new InternalServerErrorException(
         TagExceptionMessage.GetFailed,
-        { cause: e }
+        {cause: e}
       );
     }
+  }
+
+  private normalizeTagName(name: string): string {
+    return name.trim().toLowerCase();
   }
 }

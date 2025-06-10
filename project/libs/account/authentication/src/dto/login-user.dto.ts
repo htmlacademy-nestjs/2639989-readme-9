@@ -11,7 +11,7 @@ export class LoginUserDto {
     description: 'Уникальный адрес пользователя',
     example: 'user@user.ru'
   })
-  @IsEmail({}, { message: AuthenticationValidateMessage.EmailNotValid })
+  @IsEmail({}, {message: AuthenticationValidateMessage.EmailNotValid})
   @IsNotEmpty({message: AuthenticationValidateMessage.EmailRequired})
   public email: string;
 
