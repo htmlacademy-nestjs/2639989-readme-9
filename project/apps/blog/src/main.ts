@@ -1,4 +1,4 @@
-import {Logger} from '@nestjs/common';
+import {Logger, ValidationPipe} from '@nestjs/common';
 import {NestFactory} from '@nestjs/core';
 import {AppModule} from './app/app.module';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
@@ -24,6 +24,8 @@ async function bootstrap() {
       `🚀 Swagger for Blog API is running on: http://localhost:${PORT}/${GLOBAL_PREFIX}`
     );
   }
+
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(PORT);
   Logger.log(
