@@ -2,7 +2,7 @@ import {ApiProperty} from '@nestjs/swagger';
 import {IsNotEmpty, IsString, IsUUID, Length} from 'class-validator';
 import {BlogCommentValidateMessage, CommentLength} from '../blog-comment.constant';
 
-export class CreateCommentDto {
+export class CreateBlogCommentDto {
   @ApiProperty({
     description: 'UUID публикации',
     example: '6d308040-96a2-4162-bea6-2338e9976540'

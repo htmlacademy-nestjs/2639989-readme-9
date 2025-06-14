@@ -1,9 +1,9 @@
 import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query} from '@nestjs/common';
 import {ApiResponse, ApiTags} from '@nestjs/swagger';
 import {fillDto} from '@project/helpers';
-import {CommentService} from './blog-comment.service';
-import {CreateCommentDto} from './dto/create-comment.dto';
-import {CommentRdo} from './rdo/comment.rdo';
+import {BlogCommentService} from './blog-comment.service';
+import {CreateBlogCommentDto} from './dto/create-blog-comment.dto';
+import {BlogCommentRdo} from './rdo/blog-comment.rdo';
 import {
   BlogCommentExceptionMessage,
   BlogCommentResponseMessage,
@@ -15,14 +15,14 @@ import {
 @Controller('comments')
 export class BlogCommentController {
   constructor(
-    private readonly commentService: CommentService
+    private readonly commentService: BlogCommentService
   ) {
   }
 
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: BlogCommentResponseMessage.CommentCreated,
-    type: CommentRdo,
+    type: BlogCommentRdo,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -40,16 +40,16 @@ export class BlogCommentController {
   @Post('/')
   public async create(
     @Param('userId') userId: string,
-    @Body() dto: CreateCommentDto,
+    @Body() dto: CreateBlogCommentDto,
   ) {
     const newComment = await this.commentService.createComment(userId, dto);
-    return fillDto(CommentRdo, newComment.toPOJO());
+    return fillDto(BlogCommentRdo, newComment.toPOJO());
   }
 
   @ApiResponse({
     status: HttpStatus.OK,
     description: BlogCommentResponseMessage.CommentsFound,
-    type: [CommentRdo],
+    type: [BlogCommentRdo],
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -70,13 +70,13 @@ export class BlogCommentController {
       actualPage * actualLimit
     );
 
-    return comments.map(c => fillDto(CommentRdo, c.toPOJO()));
+    return comments.map(c => fillDto(BlogCommentRdo, c.toPOJO()));
   }
 
   @ApiResponse({
     status: HttpStatus.OK,
     description: BlogCommentResponseMessage.CommentFound,
-    type: CommentRdo,
+    type: BlogCommentRdo,
   })
   @ApiResponse({
     status: HttpStatus.NOT_FOUND,
@@ -85,7 +85,7 @@ export class BlogCommentController {
   @Get('/:id')
   public async findOne(@Param('id') id: string) {
     const comment = await this.commentService.getCommentById(id);
-    return fillDto(CommentRdo, comment.toPOJO());
+    return fillDto(BlogCommentRdo, comment.toPOJO());
   }
 
   @ApiResponse({

@@ -1,47 +1,32 @@
-import {Prisma} from '@prisma/client';
-import {PostStatus, PostType} from "@project/core";
+import { Prisma } from '@prisma/client';
+import { PostType } from '@project/core';
 
-export interface BlogPostFilter {
-  id?: string;
-  userId?: string;
-  type?: PostType;
-  status?: PostStatus;
-  isRepost?: boolean;
-  tagNames?: string[];
+interface BlogPostFilter {
+  postTypes?: PostType[];
+  authorId?: string;
+  tagIds?: string[];
+  sortDirection?: 'asc' | 'desc';
+  page?: number;
+  limit?: number;
+  includeReposts?: boolean;
 }
 
-export function postFilterToPrismaFilter(filter: BlogPostFilter): Prisma.PostWhereInput | undefined {
-  if (!filter) {
-    return undefined;
-  }
-
+export const postFilterToPrismaFilter = (filter: BlogPostFilter): Prisma.PostWhereInput => {
   const where: Prisma.PostWhereInput = {};
 
-  if (filter.id) {
-    where.id = filter.id;
-  }
-  if (filter.userId) {
-    where.userId = filter.userId;
-  }
-  if (filter.type) {
-    where.type = filter.type;
-  }
-  if (filter.status) {
-    where.status = filter.status;
-  }
-  if (typeof filter.isRepost === 'boolean') {
-    where.isRepost = filter.isRepost;
+  if (filter.authorId) {
+    where.userId = filter.authorId;
   }
 
-  if (filter.tagNames && filter.tagNames.length > 0) {
+  if (filter.tagIds && filter.tagIds.length > 0) {
     where.tags = {
       some: {
-        name: {
-          in: filter.tagNames,
-        },
-      },
+        id: { in: filter.tagIds }
+      }
     };
   }
 
   return where;
-}
+};
+
+export { BlogPostFilter };

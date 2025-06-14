@@ -1,17 +1,17 @@
 import {ForbiddenException, Injectable, InternalServerErrorException, NotFoundException} from '@nestjs/common';
 import {BlogCommentRepository} from './blog-comment.repository';
 import {BlogCommentEntity} from './blog-comment.entity';
-import {CreateCommentDto} from './dto/create-comment.dto';
+import {CreateBlogCommentDto} from './dto/create-blog-comment.dto';
 import {BlogCommentExceptionMessage, CommentLength} from './blog-comment.constant';
 
 @Injectable()
-export class CommentService {
+export class BlogCommentService {
   constructor(
     private readonly blogCommentRepository: BlogCommentRepository,
   ) {
   }
 
-  public async createComment(userId: string, dto: CreateCommentDto): Promise<BlogCommentEntity> {
+  public async createComment(userId: string, dto: CreateBlogCommentDto): Promise<BlogCommentEntity> {
     try {
       const entity = new BlogCommentEntity({
         userId,
