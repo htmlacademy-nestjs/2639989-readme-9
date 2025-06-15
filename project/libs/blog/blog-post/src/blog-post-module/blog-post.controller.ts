@@ -11,14 +11,14 @@ import {
   Query,
   UseGuards
 } from '@nestjs/common';
-import { fillDto } from '@project/helpers';
+import {fillDto} from '@project/helpers';
 
-import { BlogPostService } from './blog-post.service';
-import { BlogPostRdo } from './rdo/blog-post.rdo';
-import { BlogPostQuery } from './blog-post.query';
-import { BlogPostWithPaginationRdo } from './rdo/blog-post-with-pagination.rdo';
-import { CreateBlogPostDto } from './dto/create-blog-post.dto';
-import { UpdateBlogPostDto } from './dto/update-blog-post.dto';
+import {BlogPostService} from './blog-post.service';
+import {BlogPostRdo} from './rdo/blog-post.rdo';
+import {BlogPostQuery} from './blog-post.query';
+import {BlogPostWithPaginationRdo} from './rdo/blog-post-with-pagination.rdo';
+import {CreateBlogPostDto} from './dto/create-blog-post.dto';
+import {UpdateBlogPostDto} from './dto/update-blog-post.dto';
 import {JwtAuthGuard} from "@project/authentication";
 import {TokenPayload, UserDecorator} from "@project/core";
 
@@ -26,7 +26,8 @@ import {TokenPayload, UserDecorator} from "@project/core";
 export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService,
-  ) {}
+  ) {
+  }
 
   @Get('/')
   public async index(

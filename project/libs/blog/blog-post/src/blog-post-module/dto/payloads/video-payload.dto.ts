@@ -1,16 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  MinLength,
-  MaxLength,
-  IsUrl,
-  Matches
-} from 'class-validator';
-import {
-  TitleLength,
-  VideoValidation,
-  PostValidateMessage
-} from '../../blog-post.constant';
+import {ApiProperty} from '@nestjs/swagger';
+import {IsString, IsUrl, Matches, MaxLength, MinLength} from 'class-validator';
+import {PostValidateMessage, TitleLength, VideoValidation} from '../../blog-post.constant';
 
 export class VideoPayloadDto {
   @ApiProperty({
@@ -18,7 +8,7 @@ export class VideoPayloadDto {
     maxLength: TitleLength.Max,
     example: 'Обзор нового JavaScript фреймворка'
   })
-  @IsString({ message: PostValidateMessage.TitleRequired })
+  @IsString({message: PostValidateMessage.TitleRequired})
   @MinLength(TitleLength.Min, {
     message: PostValidateMessage.TitleMinLengthNotValid
   })
@@ -30,7 +20,7 @@ export class VideoPayloadDto {
   @ApiProperty({
     example: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
   })
-  @IsUrl({}, { message: PostValidateMessage.URLNotValid })
+  @IsUrl({}, {message: PostValidateMessage.URLNotValid})
   @Matches(VideoValidation.YoutubeRegex, {
     message: PostValidateMessage.YouTubeURLNotValid
   })

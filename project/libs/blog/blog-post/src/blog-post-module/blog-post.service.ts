@@ -1,6 +1,7 @@
 import {
   BadRequestException,
-  ConflictException, ForbiddenException,
+  ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -20,7 +21,8 @@ export class BlogPostService {
   constructor(
     private readonly blogPostRepository: BlogPostRepository,
     private readonly blogTagService: BlogTagService
-  ) {}
+  ) {
+  }
 
   public async getPosts(
     query: BlogPostQuery = {},
@@ -73,7 +75,7 @@ export class BlogPostService {
 
     const tags = [];
     if (dto.tags && dto.tags.length > 0) {
-      for(const tag of dto.tags){
+      for (const tag of dto.tags) {
         this.blogTagService.validateTagName(tag);
       }
       const dbTags = await this.blogTagService.getTagsByIds(dto.tags);
@@ -105,7 +107,7 @@ export class BlogPostService {
     }
 
     if (dto.tags && dto.tags.length > 0) {
-      for(const tag of dto.tags){
+      for (const tag of dto.tags) {
         this.blogTagService.validateTagName(tag);
       }
       existing.tags = await this.blogTagService.getTagsByIds(dto.tags);

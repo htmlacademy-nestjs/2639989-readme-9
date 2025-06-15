@@ -1,14 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  MinLength,
-  MaxLength,
-  IsUrl
-} from 'class-validator';
-import {
-  TitleLength,
-  PostValidateMessage
-} from '../../blog-post.constant';
+import {ApiProperty} from '@nestjs/swagger';
+import {IsString, IsUrl, MaxLength, MinLength} from 'class-validator';
+import {PostValidateMessage, TitleLength} from '../../blog-post.constant';
 
 export class PhotoPayloadDto {
   @ApiProperty({
@@ -16,7 +8,7 @@ export class PhotoPayloadDto {
     maxLength: TitleLength.Max,
     example: 'Мои зимние фотографии'
   })
-  @IsString({ message: PostValidateMessage.TitleRequired })
+  @IsString({message: PostValidateMessage.TitleRequired})
   @MinLength(TitleLength.Min, {
     message: PostValidateMessage.TitleMinLengthNotValid
   })
@@ -28,6 +20,6 @@ export class PhotoPayloadDto {
   @ApiProperty({
     example: 'https://example.com/photo.jpg'
   })
-  @IsUrl({}, { message: PostValidateMessage.URLNotValid })
+  @IsUrl({}, {message: PostValidateMessage.URLNotValid})
   public photoUrl: string;
 }

@@ -1,28 +1,22 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import {ApiPropertyOptional} from '@nestjs/swagger';
 import {
-  IsEnum,
-  IsOptional,
+  ArrayMaxSize,
   IsArray,
   IsBoolean,
-  ValidateNested,
+  IsEnum,
+  IsOptional,
   Matches,
-  ArrayMaxSize,
+  MaxLength,
   MinLength,
-  MaxLength
+  ValidateNested
 } from 'class-validator';
-import { Type } from 'class-transformer';
-import {
-  AvailablePostStatus,
-  PostValidateMessage,
-  TAG_REGEX,
-  TagLength,
-  MAX_TAGS_PER_POST
-} from '../blog-post.constant';
-import { UpdateTextPayloadDto } from './payloads/update-text-payload.dto';
-import { UpdateVideoPayloadDto } from './payloads/update-video-payload.dto';
-import { UpdateQuotePayloadDto } from './payloads/update-quote-payload.dto';
-import { UpdatePhotoPayloadDto } from './payloads/update-photo-payload.dto';
-import { UpdateLinkPayloadDto } from './payloads/update-link-payload.dto';
+import {Type} from 'class-transformer';
+import {AvailablePostStatus, MAX_TAGS_PER_POST, PostValidateMessage, TAG_REGEX, TagLength} from '../blog-post.constant';
+import {UpdateTextPayloadDto} from './payloads/update-text-payload.dto';
+import {UpdateVideoPayloadDto} from './payloads/update-video-payload.dto';
+import {UpdateQuotePayloadDto} from './payloads/update-quote-payload.dto';
+import {UpdatePhotoPayloadDto} from './payloads/update-photo-payload.dto';
+import {UpdateLinkPayloadDto} from './payloads/update-link-payload.dto';
 import {PostStatus} from "@project/core";
 
 export class UpdateBlogPostDto {
@@ -31,15 +25,21 @@ export class UpdateBlogPostDto {
   })
   @ValidateNested()
   @IsOptional()
-  @Type(({ object }) => {
+  @Type(({object}) => {
     if (!object || !object.type) return null;
     switch (object.type) {
-      case 'TEXT': return UpdateTextPayloadDto;
-      case 'VIDEO': return UpdateVideoPayloadDto;
-      case 'QUOTE': return UpdateQuotePayloadDto;
-      case 'PHOTO': return UpdatePhotoPayloadDto;
-      case 'LINK': return UpdateLinkPayloadDto;
-      default: return null;
+      case 'TEXT':
+        return UpdateTextPayloadDto;
+      case 'VIDEO':
+        return UpdateVideoPayloadDto;
+      case 'QUOTE':
+        return UpdateQuotePayloadDto;
+      case 'PHOTO':
+        return UpdatePhotoPayloadDto;
+      case 'LINK':
+        return UpdateLinkPayloadDto;
+      default:
+        return null;
     }
   })
   public payload?:

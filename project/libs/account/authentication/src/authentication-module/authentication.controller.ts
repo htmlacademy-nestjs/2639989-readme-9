@@ -27,7 +27,7 @@ export class AuthenticationController {
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authenticationService.register(dto);
     const userToken = await this.authenticationService.createUserToken(newUser);
-    return fillDto(LoggedUserRdo, { ...newUser.toPOJO(), ...userToken });
+    return fillDto(LoggedUserRdo, {...newUser.toPOJO(), ...userToken});
   }
 
   @ApiResponse({
@@ -43,7 +43,7 @@ export class AuthenticationController {
   public async login(@Body() dto: LoginUserDto) {
     const verifiedUser = await this.authenticationService.verifyUser(dto);
     const userToken = await this.authenticationService.createUserToken(verifiedUser);
-    return fillDto(LoggedUserRdo, { ...verifiedUser.toPOJO(), ...userToken });
+    return fillDto(LoggedUserRdo, {...verifiedUser.toPOJO(), ...userToken});
   }
 
   @ApiResponse({

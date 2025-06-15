@@ -1,15 +1,9 @@
-import {
-  Injectable,
-  NotFoundException
-} from '@nestjs/common';
-import { PrismaClientService } from '@project/blog-models';
-import { BasePostgresRepository } from '@project/data-access';
-import {
-  Post,
-  PaginationResult
-} from '@project/core';
-import { Prisma } from '@prisma/client';
-import { BlogPostFactory } from './blog-post.factory';
+import {Injectable, NotFoundException} from '@nestjs/common';
+import {PrismaClientService} from '@project/blog-models';
+import {BasePostgresRepository} from '@project/data-access';
+import {PaginationResult, Post} from '@project/core';
+import {Prisma} from '@prisma/client';
+import {BlogPostFactory} from './blog-post.factory';
 import {BlogPostEntity} from "./blog-post.entity";
 import {BLOG_POST_DEFAULT_OPTIONS, MAX_POSTS_LIMIT} from "./blog-post.constant";
 import {BlogPostFilter, postFilterToPrismaFilter} from "./blog-post.filter";
@@ -23,20 +17,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     super(entityFactory, client);
   }
 
-  private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
-    return this.client.post.count({ where });
-  }
-
-  private calculatePostsPage(totalCount: number, limit: number): number {
-    return Math.ceil(totalCount / limit);
-  }
-
-  private includeTagsAndRelations(
-    includeOptions: Prisma.PostInclude = BLOG_POST_DEFAULT_OPTIONS
-  ) {
-    return includeOptions;
-  }
-
   public async save(entity: BlogPostEntity): Promise<void> {
     try {
       const pojoEntity = entity.toPOJO();
@@ -44,8 +24,8 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       const tagConnect = pojoEntity.tags?.length
         ? {
           connectOrCreate: pojoEntity.tags.map(tag => ({
-            where: { id: tag.id },
-            create: { id: tag.id, name: tag.name }
+            where: {id: tag.id},
+            create: {id: tag.id, name: tag.name}
           }))
         }
         : undefined;
@@ -59,7 +39,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         status: pojoEntity.status,
         isRepost: pojoEntity.isRepost,
         originalPost: pojoEntity.originalPostId
-          ? { connect: { id: pojoEntity.originalPostId } }
+          ? {connect: {id: pojoEntity.originalPostId}}
           : undefined,
         tags: tagConnect,
         likes: {
@@ -105,12 +85,12 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
       if (!pojoEntity.isRepost) {
         data.originalPost = pojoEntity.originalPostId
-          ? { connect: { id: pojoEntity.originalPostId } }
-          : { disconnect: true };
+          ? {connect: {id: pojoEntity.originalPostId}}
+          : {disconnect: true};
       }
 
       await this.client.post.update({
-        where: { id: pojoEntity.id },
+        where: {id: pojoEntity.id},
         data,
         include: this.includeTagsAndRelations()
       });
@@ -126,7 +106,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async findById(id: string): Promise<BlogPostEntity> {
     const record = await this.client.post.findUnique({
-      where: { id },
+      where: {id},
       include: this.includeTagsAndRelations()
     });
 
@@ -145,10 +125,10 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       where: {
         userId: authorId,
         status: 'PUBLISHED',
-        NOT: { isRepost: true }
+        NOT: {isRepost: true}
       },
       take: count,
-      orderBy: { createdAt: 'desc' },
+      orderBy: {createdAt: 'desc'},
       include: this.includeTagsAndRelations()
     });
 
@@ -180,7 +160,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
         where,
         take,
         skip,
-        orderBy: { createdAt: sortDirection },
+        orderBy: {createdAt: sortDirection},
         include: this.includeTagsAndRelations()
       }),
       this.getPostCount(where)
@@ -197,10 +177,10 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
 
   public async deleteById(id: string): Promise<void> {
     try {
-      await this.client.like.deleteMany({ where: { postId: id } });
-      await this.client.comment.deleteMany({ where: { postId: id } });
+      await this.client.like.deleteMany({where: {postId: id}});
+      await this.client.comment.deleteMany({where: {postId: id}});
       await this.client.post.delete({
-        where: { id }
+        where: {id}
       });
     } catch (err) {
       if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -215,11 +195,25 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
   public async findByIds(ids: string[]): Promise<BlogPostEntity[]> {
     const records = await this.client.post.findMany({
       where: {
-        id: { in: ids }
+        id: {in: ids}
       },
       include: this.includeTagsAndRelations()
     });
 
     return records.map(record => this.createEntityFromDocument(record));
+  }
+
+  private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
+    return this.client.post.count({where});
+  }
+
+  private calculatePostsPage(totalCount: number, limit: number): number {
+    return Math.ceil(totalCount / limit);
+  }
+
+  private includeTagsAndRelations(
+    includeOptions: Prisma.PostInclude = BLOG_POST_DEFAULT_OPTIONS
+  ) {
+    return includeOptions;
   }
 }

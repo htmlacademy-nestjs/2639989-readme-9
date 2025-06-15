@@ -1,6 +1,6 @@
-import { Expose } from 'class-transformer';
+import {Expose} from 'class-transformer';
 
-import { BlogPostRdo } from './blog-post.rdo';
+import {BlogPostRdo} from './blog-post.rdo';
 
 export class BlogPostWithPaginationRdo {
   @Expose()

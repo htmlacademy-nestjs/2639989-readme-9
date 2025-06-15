@@ -1,13 +1,6 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsUrl,
-  IsString,
-  MaxLength
-} from 'class-validator';
-import {
-  PostValidateMessage, TextLength
-} from '../../blog-post.constant';
+import {ApiPropertyOptional} from '@nestjs/swagger';
+import {IsOptional, IsString, IsUrl, MaxLength} from 'class-validator';
+import {PostValidateMessage, TextLength} from '../../blog-post.constant';
 
 export class UpdateLinkPayloadDto {
   @ApiPropertyOptional({

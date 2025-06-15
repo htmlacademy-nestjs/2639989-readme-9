@@ -1,14 +1,7 @@
-import {
-  IsIn,
-  IsNumber,
-  IsOptional,
-  IsPositive,
-  IsString,
-  IsUUID
-} from 'class-validator';
-import { Transform } from 'class-transformer';
-import { PostType } from '@project/core';
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import {IsIn, IsNumber, IsOptional, IsPositive, IsString, IsUUID} from 'class-validator';
+import {Transform} from 'class-transformer';
+import {PostType} from '@project/core';
+import {ApiPropertyOptional} from '@nestjs/swagger';
 import {AvailablePostType, MAX_POSTS_LIMIT} from "./blog-post.constant";
 
 export class BlogPostQuery {
@@ -18,7 +11,7 @@ export class BlogPostQuery {
     example: 1,
     default: 1
   })
-  @Transform(({ value }) => +value || 1)
+  @Transform(({value}) => +value || 1)
   @IsNumber()
   @IsPositive()
   @IsOptional()
@@ -30,7 +23,7 @@ export class BlogPostQuery {
     example: 10,
     default: 10
   })
-  @Transform(({ value }) => Math.min(parseInt(value, 10), MAX_POSTS_LIMIT))
+  @Transform(({value}) => Math.min(parseInt(value, 10), MAX_POSTS_LIMIT))
   @IsNumber()
   @IsPositive()
   @IsOptional()
@@ -44,11 +37,11 @@ export class BlogPostQuery {
     example: [AvailablePostType.TEXT, AvailablePostType.VIDEO]
   })
   @IsOptional()
-  @Transform(({ value }) =>
+  @Transform(({value}) =>
     Array.isArray(value) ? value : value ? [value] : undefined
   )
-  @IsString({ each: true })
-  @IsIn(Object.values(AvailablePostType), { each: true })
+  @IsString({each: true})
+  @IsIn(Object.values(AvailablePostType), {each: true})
   public postTypes?: PostType[];
 
   @ApiPropertyOptional({
@@ -58,10 +51,10 @@ export class BlogPostQuery {
     example: ['tag1', 'tag2']
   })
   @IsOptional()
-  @Transform(({ value }) =>
+  @Transform(({value}) =>
     Array.isArray(value) ? value : value ? [value] : undefined
   )
-  @IsUUID('all', { each: true })
+  @IsUUID('all', {each: true})
   public tagIds?: string[];
 
   @ApiPropertyOptional({
@@ -80,6 +73,6 @@ export class BlogPostQuery {
     default: false
   })
   @IsOptional()
-  @Transform(({ value }) => value === 'true' || value === true)
+  @Transform(({value}) => value === 'true' || value === true)
   public includeReposts?: boolean;
 }

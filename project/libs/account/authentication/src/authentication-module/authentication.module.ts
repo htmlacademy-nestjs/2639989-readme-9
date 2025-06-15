@@ -8,7 +8,7 @@ import {getJwtOptions} from "@project/account-config";
 import {JwtAccessStrategy} from "../strategies/jwt-access.strategy";
 
 @Module({
-  imports: [BlogUserModule,JwtModule.registerAsync({
+  imports: [BlogUserModule, JwtModule.registerAsync({
     inject: [ConfigService],
     useFactory: getJwtOptions,
   })],

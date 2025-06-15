@@ -4,8 +4,7 @@ import {BlogLikeService} from './blog-like.service';
 import {CreateBlogLikeDto} from './dto/create-blog-like.dto';
 import {BlogLikeExceptionMessage, BlogLikeResponseMessage} from './blog-like.constant';
 import {JwtAuthGuard} from "@project/authentication";
-import {UserDecorator} from "@project/core";
-import {TokenPayload} from "@project/core";
+import {TokenPayload, UserDecorator} from "@project/core";
 
 @ApiTags('likes')
 @Controller('likes')

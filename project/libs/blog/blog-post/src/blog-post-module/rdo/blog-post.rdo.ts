@@ -1,6 +1,6 @@
-import { Expose, Transform } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
-import { PostType, PostStatus } from '@prisma/client';
+import {Expose, Transform} from 'class-transformer';
+import {ApiProperty} from '@nestjs/swagger';
+import {PostStatus, PostType} from '@prisma/client';
 
 export class BlogPostRdo {
   @ApiProperty({
@@ -97,7 +97,7 @@ export class BlogPostRdo {
     example: 15
   })
   @Expose()
-  @Transform(({ value }) => value || 0)
+  @Transform(({value}) => value || 0)
   public commentsCount!: number;
 
   @ApiProperty({
@@ -105,7 +105,7 @@ export class BlogPostRdo {
     example: 42
   })
   @Expose()
-  @Transform(({ value }) => value || 0)
+  @Transform(({value}) => value || 0)
   public likesCount!: number;
 
   @ApiProperty({
@@ -113,6 +113,6 @@ export class BlogPostRdo {
     example: 120
   })
   @Expose()
-  @Transform(({ value }) => value || 0)
+  @Transform(({value}) => value || 0)
   public viewsCount!: number;
 }

@@ -1,14 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  MinLength,
-  MaxLength
-} from 'class-validator';
-import {
-  AuthenticationUserNameLength,
-  PostValidateMessage
-} from '../../blog-post.constant';
-import {TextLength} from "../../blog-post.constant";
+import {ApiProperty} from '@nestjs/swagger';
+import {IsString, MaxLength, MinLength} from 'class-validator';
+import {AuthenticationUserNameLength, PostValidateMessage, TextLength} from '../../blog-post.constant';
 
 export class QuotePayloadDto {
   @ApiProperty({
@@ -16,7 +8,7 @@ export class QuotePayloadDto {
     maxLength: TextLength.QuoteMax,
     example: 'Программирование — это разбиение чего-то большого и невозможного на что-то маленькое и реальное.'
   })
-  @IsString({ message: PostValidateMessage.PayloadRequired })
+  @IsString({message: PostValidateMessage.PayloadRequired})
   @MinLength(TextLength.QuoteMin, {
     message: PostValidateMessage.QuoteMinLengthNotValid
   })
@@ -30,7 +22,7 @@ export class QuotePayloadDto {
     maxLength: AuthenticationUserNameLength.Max,
     example: 'Jazzwant'
   })
-  @IsString({ message: PostValidateMessage.PayloadRequired })
+  @IsString({message: PostValidateMessage.PayloadRequired})
   @MinLength(AuthenticationUserNameLength.Min, {
     message: PostValidateMessage.QuoteAuthorMinLengthNotValid
   })

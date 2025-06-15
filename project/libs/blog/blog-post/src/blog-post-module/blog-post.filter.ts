@@ -1,5 +1,5 @@
-import { Prisma } from '@prisma/client';
-import { PostType } from '@project/core';
+import {Prisma} from '@prisma/client';
+import {PostType} from '@project/core';
 
 interface BlogPostFilter {
   postTypes?: PostType[];
@@ -21,7 +21,7 @@ export const postFilterToPrismaFilter = (filter: BlogPostFilter): Prisma.PostWhe
   if (filter.tagIds && filter.tagIds.length > 0) {
     where.tags = {
       some: {
-        id: { in: filter.tagIds }
+        id: {in: filter.tagIds}
       }
     };
   }
@@ -29,4 +29,4 @@ export const postFilterToPrismaFilter = (filter: BlogPostFilter): Prisma.PostWhe
   return where;
 };
 
-export { BlogPostFilter };
+export {BlogPostFilter};

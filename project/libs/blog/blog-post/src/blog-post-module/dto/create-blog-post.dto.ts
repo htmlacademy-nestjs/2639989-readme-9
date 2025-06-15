@@ -1,35 +1,29 @@
 import {ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
 import {
-  IsEnum,
+  ArrayMaxSize,
+  IsArray,
   IsBoolean,
+  IsEnum,
   IsOptional,
   IsString,
-  IsArray,
-  ValidateNested, Matches, MaxLength, ArrayMaxSize, MinLength
+  Matches,
+  MaxLength,
+  MinLength,
+  ValidateNested
 } from 'class-validator';
-import { Type } from 'class-transformer';
+import {Type} from 'class-transformer';
+import {PhotoPayloadDto} from './payloads/photo-payload.dto';
+import {LinkPayloadDto} from './payloads/link-payload.dto';
+import {QuotePayloadDto} from './payloads/quote-payload.dto';
+import {TextPayloadDto} from './payloads/text-payload.dto';
+import {VideoPayloadDto} from './payloads/video-payload.dto';
 import {
-  PhotoPayloadDto
-} from './payloads/photo-payload.dto';
-import {
-  LinkPayloadDto
-} from './payloads/link-payload.dto';
-import {
-  QuotePayloadDto
-} from './payloads/quote-payload.dto';
-import {
-  TextPayloadDto
-} from './payloads/text-payload.dto';
-import {
-  VideoPayloadDto
-} from './payloads/video-payload.dto';
-import {
-  PostValidateMessage,
-  TagLength,
-  MAX_TAGS_PER_POST,
-  AvailablePostType,
   AvailablePostStatus,
-  TAG_REGEX
+  AvailablePostType,
+  MAX_TAGS_PER_POST,
+  PostValidateMessage,
+  TAG_REGEX,
+  TagLength
 } from '../blog-post.constant';
 import {PostStatus, PostType} from "@project/core";
 
@@ -45,14 +39,20 @@ export class CreateBlogPostDto {
 
   @ApiProperty()
   @ValidateNested()
-  @Type(({ object }) => {
+  @Type(({object}) => {
     switch (object?.type) {
-      case AvailablePostType.TEXT: return TextPayloadDto;
-      case AvailablePostType.VIDEO: return VideoPayloadDto;
-      case AvailablePostType.QUOTE: return QuotePayloadDto;
-      case AvailablePostType.PHOTO: return PhotoPayloadDto;
-      case AvailablePostType.LINK: return LinkPayloadDto;
-      default: return TextPayloadDto;
+      case AvailablePostType.TEXT:
+        return TextPayloadDto;
+      case AvailablePostType.VIDEO:
+        return VideoPayloadDto;
+      case AvailablePostType.QUOTE:
+        return QuotePayloadDto;
+      case AvailablePostType.PHOTO:
+        return PhotoPayloadDto;
+      case AvailablePostType.LINK:
+        return LinkPayloadDto;
+      default:
+        return TextPayloadDto;
     }
   })
   public payload: any;
@@ -71,7 +71,7 @@ export class CreateBlogPostDto {
     example: ['tech', 'programming']
   })
   @IsArray()
-  @IsString({ each: true, message: PostValidateMessage.TagNotString })
+  @IsString({each: true, message: PostValidateMessage.TagNotString})
   @IsOptional()
   @ArrayMaxSize(MAX_TAGS_PER_POST, {
     message: PostValidateMessage.TooManyTags
@@ -90,7 +90,7 @@ export class CreateBlogPostDto {
   })
   public tags?: string[];
 
-  @ApiPropertyOptional({ default: false })
+  @ApiPropertyOptional({default: false})
   @IsBoolean()
   @IsOptional()
   public isRepost?: boolean = false;

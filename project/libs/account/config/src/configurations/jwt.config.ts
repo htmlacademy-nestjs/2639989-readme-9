@@ -1,5 +1,5 @@
 import * as Joi from 'joi';
-import { registerAs } from '@nestjs/config';
+import {registerAs} from '@nestjs/config';
 
 export interface JWTConfig {
   accessTokenSecret: string;
@@ -13,7 +13,7 @@ const validationSchema = Joi.object({
 
 
 function validateConfig(config: JWTConfig): void {
-  const { error } = validationSchema.validate(config, { abortEarly: true });
+  const {error} = validationSchema.validate(config, {abortEarly: true});
   if (error) {
     throw new Error(`[Account JWTConfig Validation Error]: ${error.message}`);
   }

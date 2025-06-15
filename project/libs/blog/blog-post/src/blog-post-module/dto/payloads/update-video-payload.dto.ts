@@ -1,17 +1,6 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsString,
-  MinLength,
-  MaxLength,
-  IsUrl,
-  Matches
-} from 'class-validator';
-import {
-  TitleLength,
-  VideoValidation,
-  PostValidateMessage
-} from '../../blog-post.constant';
+import {ApiPropertyOptional} from '@nestjs/swagger';
+import {IsOptional, IsString, IsUrl, Matches, MaxLength, MinLength} from 'class-validator';
+import {PostValidateMessage, TitleLength, VideoValidation} from '../../blog-post.constant';
 
 export class UpdateVideoPayloadDto {
   @ApiPropertyOptional({

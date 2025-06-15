@@ -1,19 +1,12 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsUrl,
-  IsString,
-  MaxLength,
-  IsOptional
-} from 'class-validator';
-import {
-  PostValidateMessage, TextLength
-} from '../../blog-post.constant';
+import {ApiProperty} from '@nestjs/swagger';
+import {IsOptional, IsString, IsUrl, MaxLength} from 'class-validator';
+import {PostValidateMessage, TextLength} from '../../blog-post.constant';
 
 export class LinkPayloadDto {
   @ApiProperty({
     example: 'https://example.com/article'
   })
-  @IsUrl({}, { message: PostValidateMessage.URLNotValid })
+  @IsUrl({}, {message: PostValidateMessage.URLNotValid})
   public url: string;
 
   @ApiProperty({

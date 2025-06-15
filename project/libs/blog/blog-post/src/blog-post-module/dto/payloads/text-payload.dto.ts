@@ -1,13 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  MinLength,
-  MaxLength
-} from 'class-validator';
-import {
-  TitleLength,
-  PostValidateMessage, TextLength
-} from '../../blog-post.constant';
+import {ApiProperty} from '@nestjs/swagger';
+import {IsString, MaxLength, MinLength} from 'class-validator';
+import {PostValidateMessage, TextLength, TitleLength} from '../../blog-post.constant';
 
 export class TextPayloadDto {
   @ApiProperty({
@@ -15,7 +8,7 @@ export class TextPayloadDto {
     maxLength: TitleLength.Max,
     example: 'Почему SOLID - это важно'
   })
-  @IsString({ message: PostValidateMessage.TitleRequired })
+  @IsString({message: PostValidateMessage.TitleRequired})
   @MinLength(TitleLength.Min, {
     message: PostValidateMessage.TitleMinLengthNotValid
   })
@@ -29,7 +22,7 @@ export class TextPayloadDto {
     maxLength: TextLength.AnnounceMax,
     example: 'Основные принципы SOLID разработки'
   })
-  @IsString({ message: PostValidateMessage.PayloadRequired })
+  @IsString({message: PostValidateMessage.PayloadRequired})
   @MinLength(TextLength.AnnounceMin, {
     message: PostValidateMessage.AnnounceMinLengthNotValid
   })
@@ -43,7 +36,7 @@ export class TextPayloadDto {
     maxLength: TextLength.TextMax,
     example: 'Принцип единственной ответственности гласит...'
   })
-  @IsString({ message: PostValidateMessage.PayloadRequired })
+  @IsString({message: PostValidateMessage.PayloadRequired})
   @MinLength(TextLength.TextMin, {
     message: PostValidateMessage.TextMinLengthNotValid
   })

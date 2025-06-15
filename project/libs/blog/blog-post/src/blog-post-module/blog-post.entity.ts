@@ -4,7 +4,7 @@ import {BlogLikeEntity, BlogLikeFactory} from "@project/blog-like";
 import {Prisma} from "@prisma/client";
 import {BlogCommentEntity, BlogCommentFactory} from "@project/blog-comment";
 import {BlogTagEntity, BlogTagFactory} from "@project/blog-tag";
-import { AvailablePostStatus } from './blog-post.constant';
+import {AvailablePostStatus} from './blog-post.constant';
 
 export class BlogPostEntity extends Entity implements StorableEntity<Post> {
   public authorId!: string;

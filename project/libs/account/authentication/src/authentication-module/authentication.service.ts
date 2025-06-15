@@ -1,6 +1,7 @@
 import {
   ConflictException,
-  HttpException, HttpStatus,
+  HttpException,
+  HttpStatus,
   Injectable,
   Logger,
   NotFoundException,
@@ -12,7 +13,7 @@ import dayjs from 'dayjs';
 import {AuthenticationExceptionMessage} from "./authentication.constant";
 import {LoginUserDto} from "../dto/login-user.dto";
 import {Token, TokenPayload, User} from "@project/core";
-import { JwtService } from '@nestjs/jwt';
+import {JwtService} from '@nestjs/jwt';
 
 @Injectable()
 export class AuthenticationService {
@@ -83,7 +84,7 @@ export class AuthenticationService {
 
     try {
       const accessToken = await this.jwtService.signAsync(payload);
-      return { accessToken };
+      return {accessToken};
     } catch (error) {
       this.logger.error('[Token generation error]: ' + error.message);
       throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);

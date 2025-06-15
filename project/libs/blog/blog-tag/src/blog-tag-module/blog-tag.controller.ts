@@ -9,7 +9,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query, UseGuards
+  Query,
+  UseGuards
 } from '@nestjs/common';
 import {ApiResponse, ApiTags} from '@nestjs/swagger';
 import {fillDto} from '@project/helpers';
