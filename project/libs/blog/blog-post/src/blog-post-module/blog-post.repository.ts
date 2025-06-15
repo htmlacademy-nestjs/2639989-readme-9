@@ -1,13 +1,12 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {PrismaClientService} from '@project/blog-models';
-import {Post} from '@project/core';
 import {BasePostgresRepository} from '@project/data-access';
-
-import {BlogPostEntity} from './blog-post.entity';
-import {BlogPostFactory} from './blog-post.factory';
-import {BlogPostFilter, postFilterToPrismaFilter} from './blog-post.filter';
-import {MAX_POSTS_LIMIT} from './blog-post.constant';
+import {PaginationResult, Post} from '@project/core';
 import {Prisma} from '@prisma/client';
+import {BlogPostFactory} from './blog-post.factory';
+import {BlogPostEntity} from "./blog-post.entity";
+import {BLOG_POST_DEFAULT_OPTIONS, MAX_POSTS_LIMIT} from "./blog-post.constant";
+import {BlogPostFilter, postFilterToPrismaFilter} from "./blog-post.filter";
 
 @Injectable()
 export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, Post> {
@@ -18,21 +17,97 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     super(entityFactory, client);
   }
 
-  public async find(filter?: BlogPostFilter): Promise<BlogPostEntity[]> {
-    const where = filter ? postFilterToPrismaFilter(filter) : undefined;
+  public async save(entity: BlogPostEntity): Promise<void> {
+    try {
+      const pojoEntity = entity.toPOJO();
 
-    const records = await this.client.post.findMany({
-      where,
-      take: MAX_POSTS_LIMIT,
-      orderBy: {createdAt: 'desc'}
-    });
+      const tagConnect = pojoEntity.tags?.length
+        ? {
+          connectOrCreate: pojoEntity.tags.map(tag => ({
+            where: {id: tag.id},
+            create: {id: tag.id, name: tag.name}
+          }))
+        }
+        : undefined;
 
-    return records.map((record) => this.createEntityFromDocument(record));
+      const data: Prisma.PostCreateInput = {
+        userId: pojoEntity.userId,
+        type: pojoEntity.type,
+        payload: pojoEntity.payload,
+        createdAt: new Date(),
+        publishedAt: new Date(),
+        status: pojoEntity.status,
+        isRepost: pojoEntity.isRepost,
+        originalPost: pojoEntity.originalPostId
+          ? {connect: {id: pojoEntity.originalPostId}}
+          : undefined,
+        tags: tagConnect,
+        likes: {
+          connect: []
+        },
+        comments: {
+          connect: []
+        }
+      };
+
+      const created = await this.client.post.create({
+        data,
+        include: this.includeTagsAndRelations()
+      });
+
+      entity.id = created.id;
+      entity.createdAt = created.createdAt;
+      entity.publishedAt = created.publishedAt;
+    } catch (err) {
+      throw new Error(`Не удалось создать пост: ${err.message}`);
+    }
+  }
+
+  public async update(entity: BlogPostEntity): Promise<void> {
+    try {
+      const pojoEntity = entity.toPOJO();
+
+      const tagConnect = pojoEntity.tags?.length
+        ? {
+          set: pojoEntity.tags.map(tag => ({
+            id: tag.id
+          }))
+        }
+        : undefined;
+
+      const data: Prisma.PostUpdateInput = {
+        payload: pojoEntity.payload,
+        publishedAt: pojoEntity.publishedAt,
+        status: pojoEntity.status,
+        isRepost: pojoEntity.isRepost,
+        tags: tagConnect
+      };
+
+      if (!pojoEntity.isRepost) {
+        data.originalPost = pojoEntity.originalPostId
+          ? {connect: {id: pojoEntity.originalPostId}}
+          : {disconnect: true};
+      }
+
+      await this.client.post.update({
+        where: {id: pojoEntity.id},
+        data,
+        include: this.includeTagsAndRelations()
+      });
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === 'P2025') {
+          throw new NotFoundException(`Пост с id ${entity.id} не найден.`);
+        }
+      }
+      throw new Error(`Не удалось обновить пост: ${err.message}`);
+    }
   }
 
   public async findById(id: string): Promise<BlogPostEntity> {
     const record = await this.client.post.findUnique({
-      where: {id}
+      where: {id},
+      include: this.includeTagsAndRelations()
     });
 
     if (!record) {
@@ -42,74 +117,103 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
     return this.createEntityFromDocument(record);
   }
 
-  public async save(postEntity: BlogPostEntity): Promise<void> {
-    try {
-      const data: Prisma.PostCreateInput = {
-        userId: postEntity.userId,
-        type: postEntity.type,
-        payload: postEntity.payload,
-        publishedAt: postEntity.publishedAt,
-        status: postEntity.status,
-        isRepost: postEntity.isRepost,
-        originalPost: postEntity.originalPostId
-          ? {connect: {id: postEntity.originalPostId}}
-          : undefined,
-      };
+  public async findRelatedPosts(
+    authorId: string,
+    count: number = MAX_POSTS_LIMIT
+  ): Promise<BlogPostEntity[]> {
+    const records = await this.client.post.findMany({
+      where: {
+        userId: authorId,
+        status: 'PUBLISHED',
+        NOT: {isRepost: true}
+      },
+      take: count,
+      orderBy: {createdAt: 'desc'},
+      include: this.includeTagsAndRelations()
+    });
 
-      const created = await this.client.post.create({data});
-
-      postEntity.id = created.id;
-      postEntity.createdAt = created.createdAt;
-    } catch (err) {
-      throw err;
-    }
+    return records.map(record => this.createEntityFromDocument(record));
   }
 
-  public async update(postEntity: BlogPostEntity): Promise<void> {
-    try {
-      const data: Prisma.PostCreateInput = {
-        id: postEntity.id,
-        userId: postEntity.userId,
-        type: postEntity.type,
-        payload: postEntity.payload,
-        createdAt: postEntity.createdAt,
-        publishedAt: postEntity.publishedAt,
-        status: postEntity.status,
-        isRepost: postEntity.isRepost,
-        originalPost: postEntity.originalPostId
-          ? {connect: {id: postEntity.originalPostId}}
-          : undefined,
-      };
+  public async find(
+    filter?: BlogPostFilter
+  ): Promise<PaginationResult<BlogPostEntity>> {
+    const where = filter ? postFilterToPrismaFilter(filter) : {};
+    const sortDirection = filter?.sortDirection || 'desc';
 
-      await this.client.post.update({
-        where: {id: postEntity.id},
-        data,
-      });
-    } catch (err) {
-      throw err;
+    const skip = filter?.page && filter?.limit
+      ? (filter.page - 1) * filter.limit
+      : undefined;
+    const take = filter?.limit;
+
+    where.status = 'PUBLISHED';
+    where.isRepost = filter?.includeReposts ? undefined : false;
+
+    if (filter?.postTypes) {
+      where.type = {
+        in: filter.postTypes
+      };
     }
+
+    const [records, postsCount] = await Promise.all([
+      this.client.post.findMany({
+        where,
+        take,
+        skip,
+        orderBy: {createdAt: sortDirection},
+        include: this.includeTagsAndRelations()
+      }),
+      this.getPostCount(where)
+    ]);
+
+    return {
+      entities: records.map(record => this.createEntityFromDocument(record)),
+      currentPage: filter?.page || 1,
+      totalPages: this.calculatePostsPage(postsCount, take),
+      itemsPerPage: take,
+      totalItems: postsCount
+    };
   }
 
   public async deleteById(id: string): Promise<void> {
     try {
-      console.log(id);
+      await this.client.like.deleteMany({where: {postId: id}});
+      await this.client.comment.deleteMany({where: {postId: id}});
       await this.client.post.delete({
         where: {id}
       });
     } catch (err) {
-      console.error(err);
-      throw new NotFoundException(`Пост с id ${id} не найден.`);
+      if (err instanceof Prisma.PrismaClientKnownRequestError) {
+        if (err.code === 'P2025') {
+          throw new NotFoundException(`Пост с id ${id} не найден.`);
+        }
+      }
+      throw new Error(`Не удалось удалить пост: ${err.message}`);
     }
   }
 
   public async findByIds(ids: string[]): Promise<BlogPostEntity[]> {
     const records = await this.client.post.findMany({
       where: {
-        id: {
-          in: ids
-        }
-      }
+        id: {in: ids}
+      },
+      include: this.includeTagsAndRelations()
     });
-    return records.map((record) => this.createEntityFromDocument(record));
+
+    return records.map(record => this.createEntityFromDocument(record));
+  }
+
+  private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
+    return this.client.post.count({where});
+  }
+
+  private calculatePostsPage(totalCount: number, limit: number): number {
+    return Math.ceil(totalCount / limit);
+  }
+
+  private includeTagsAndRelations(
+    includeOptions: Prisma.PostInclude = BLOG_POST_DEFAULT_OPTIONS
+  ) {
+    return includeOptions;
   }
 }

@@ -1,57 +1,114 @@
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Query} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, UseGuards} from '@nestjs/common';
+import {ApiResponse, ApiTags} from '@nestjs/swagger';
 import {fillDto} from '@project/helpers';
-import {CommentService} from './blog-comment.service';
-import {CreateCommentDto} from './dto/create-comment.dto';
-import {UpdateCommentDto} from './dto/update-comment.dto';
-import {CommentRdo} from './rdo/comment.rdo';
+import {BlogCommentService} from './blog-comment.service';
+import {CreateBlogCommentDto} from './dto/create-blog-comment.dto';
+import {BlogCommentRdo} from './rdo/blog-comment.rdo';
+import {
+  BlogCommentExceptionMessage,
+  BlogCommentResponseMessage,
+  BlogCommentValidateMessage,
+  CommentLength
+} from './blog-comment.constant';
+import {JwtAuthGuard} from "@project/authentication";
+import {TokenPayload, UserDecorator} from '@project/core';
 
+@ApiTags('comments')
 @Controller('comments')
 export class BlogCommentController {
   constructor(
-    private readonly commentService: CommentService
+    private readonly commentService: BlogCommentService
   ) {
   }
 
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: BlogCommentResponseMessage.CommentCreated,
+    type: BlogCommentRdo,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogCommentExceptionMessage.PostNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: BlogCommentValidateMessage.TextLengthNotValid,
+  })
+  @ApiResponse({
+    status: HttpStatus.UNAUTHORIZED,
+    description: BlogCommentResponseMessage.LoggedError,
+  })
+  @UseGuards(JwtAuthGuard)
   @Post('/')
   public async create(
-    @Body() dto: CreateCommentDto,
+    @UserDecorator() user: TokenPayload,
+    @Body() dto: CreateBlogCommentDto,
   ) {
-    const newComment = await this.commentService.createComment(dto);
-    return fillDto(CommentRdo, newComment.toPOJO());
+    const newComment = await this.commentService.createComment(user.sub, dto);
+    return fillDto(BlogCommentRdo, newComment.toPOJO());
   }
 
-  @Get('/post/:postId/')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: BlogCommentResponseMessage.CommentsFound,
+    type: [BlogCommentRdo],
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogCommentExceptionMessage.PostNotFound,
+  })
+  @Get('/post/:postId')
   public async findAllByPost(
     @Param('postId') postId: string,
     @Query('limit') limit?: number,
-    @Query('offset') offset?: number
+    @Query('page') page?: number
   ) {
-    const comments = await this.commentService.getCommentsByPost(postId, Number(limit) || 50, Number(offset) || 0);
-    return comments.map((c) => fillDto(CommentRdo, c.toPOJO()));
+    const actualLimit = Math.min(Number(limit) || CommentLength.DEFAULT_LIMIT, CommentLength.MAX_LIMIT);
+    const actualPage = Number(page) || 0;
+
+    const comments = await this.commentService.getCommentsByPost(
+      postId,
+      actualLimit,
+      actualPage * actualLimit
+    );
+
+    return comments.map(c => fillDto(BlogCommentRdo, c.toPOJO()));
   }
 
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: BlogCommentResponseMessage.CommentFound,
+    type: BlogCommentRdo,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogCommentExceptionMessage.CommentNotFound,
+  })
   @Get('/:id')
   public async findOne(@Param('id') id: string) {
     const comment = await this.commentService.getCommentById(id);
-    return fillDto(CommentRdo, comment.toPOJO());
+    return fillDto(BlogCommentRdo, comment.toPOJO());
   }
 
-  @Patch('/:id/:userId')
-  public async update(
-    @Param('id') id: string,
-    @Body() dto: UpdateCommentDto,
-    @Param('userId') userId: string
-  ) {
-    const updated = await this.commentService.updateComment(userId, id, dto);
-    return fillDto(CommentRdo, updated.toPOJO());
-  }
-
-  @Delete('/:id/:userId')
+  @ApiResponse({
+    status: HttpStatus.NO_CONTENT,
+    description: BlogCommentResponseMessage.CommentDeleted,
+  })
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: BlogCommentExceptionMessage.CommentNotFound,
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: BlogCommentExceptionMessage.Forbidden,
+  })
+  @UseGuards(JwtAuthGuard)
+  @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(
-    @Param('id') id: string,
-    @Param('userId') userId: string
+    @UserDecorator() user: TokenPayload,
+    @Param('id') id: string
   ) {
-    await this.commentService.deleteComment(userId, id);
+    await this.commentService.deleteComment(user.sub, id);
   }
 }

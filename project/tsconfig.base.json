@@ -57,6 +57,9 @@
       "@project/helpers": [
         "libs/shared/helpers/src/index.ts"
       ],
+      "@project/pipes": [
+        "libs/shared/pipes/src/index.ts"
+      ],
       "@project/post": [
         "libs/post/src/index.ts"
       ]

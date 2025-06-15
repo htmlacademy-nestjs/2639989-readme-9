@@ -1,47 +1,102 @@
-import {ApiProperty} from '@nestjs/swagger';
-import {PostStatus, PostType} from '@prisma/client';
+import {ApiProperty, ApiPropertyOptional} from '@nestjs/swagger';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+  ValidateNested
+} from 'class-validator';
+import {Type} from 'class-transformer';
+import {PhotoPayloadDto} from './payloads/photo-payload.dto';
+import {LinkPayloadDto} from './payloads/link-payload.dto';
+import {QuotePayloadDto} from './payloads/quote-payload.dto';
+import {TextPayloadDto} from './payloads/text-payload.dto';
+import {VideoPayloadDto} from './payloads/video-payload.dto';
+import {
+  AvailablePostStatus,
+  AvailablePostType,
+  MAX_TAGS_PER_POST,
+  PostValidateMessage,
+  TAG_REGEX,
+  TagLength
+} from '../blog-post.constant';
+import {PostStatus, PostType} from "@project/core";
 
 export class CreateBlogPostDto {
   @ApiProperty({
-    description: 'ID пользователя, создавшего пост',
-    example: 'b1a2c3d4-e5f6-...'
+    enum: AvailablePostType,
+    example: 'TEXT'
   })
-  public userId: string;
-
-  @ApiProperty({
-    description: 'Тип поста (TEXT, VIDEO, QUOTE, PHOTO, LINK)',
-    example: PostType.TEXT
+  @IsEnum(AvailablePostType, {
+    message: PostValidateMessage.TypeNotValid
   })
   public type: PostType;
 
-  @ApiProperty({
-    description: 'Произвольный JSON-payload для поста',
-    example: {text: 'Привет, мир!'}
+  @ApiProperty()
+  @ValidateNested()
+  @Type(({object}) => {
+    switch (object?.type) {
+      case AvailablePostType.TEXT:
+        return TextPayloadDto;
+      case AvailablePostType.VIDEO:
+        return VideoPayloadDto;
+      case AvailablePostType.QUOTE:
+        return QuotePayloadDto;
+      case AvailablePostType.PHOTO:
+        return PhotoPayloadDto;
+      case AvailablePostType.LINK:
+        return LinkPayloadDto;
+      default:
+        return TextPayloadDto;
+    }
   })
   public payload: any;
 
-  @ApiProperty({
-    description: 'Дата и время публикации',
-    example: '2025-06-06T12:00:00.000Z'
+  @ApiPropertyOptional({
+    enum: AvailablePostStatus,
+    default: AvailablePostStatus.PUBLISHED
   })
-  public publishedAt: Date;
+  @IsEnum(AvailablePostStatus, {
+    message: PostValidateMessage.StatusNotValid
+  })
+  @IsOptional()
+  public status: PostStatus = AvailablePostStatus.PUBLISHED;
 
-  @ApiProperty({
-    description: 'Статус поста (DRAFT или PUBLISHED)',
-    example: PostStatus.PUBLISHED
+  @ApiPropertyOptional({
+    example: ['tech', 'programming']
   })
-  public status: PostStatus;
+  @IsArray()
+  @IsString({each: true, message: PostValidateMessage.TagNotString})
+  @IsOptional()
+  @ArrayMaxSize(MAX_TAGS_PER_POST, {
+    message: PostValidateMessage.TooManyTags
+  })
+  @Matches(TAG_REGEX, {
+    each: true,
+    message: PostValidateMessage.TagPatternNotValid
+  })
+  @MinLength(TagLength.Min, {
+    each: true,
+    message: PostValidateMessage.TagMinLengthNotValid
+  })
+  @MaxLength(TagLength.Max, {
+    each: true,
+    message: PostValidateMessage.TagMaxLengthNotValid
+  })
+  public tags?: string[];
 
-  @ApiProperty({
-    description: 'Является ли пост репостом',
-    example: false,
-    required: false
-  })
-  public isRepost?: boolean;
+  @ApiPropertyOptional({default: false})
+  @IsBoolean()
+  @IsOptional()
+  public isRepost?: boolean = false;
 
-  @ApiProperty({
-    description: 'ID оригинального поста, если этот пост — репост',
-    example: 'a9b8c7d6-...'
-  })
+  @ApiPropertyOptional()
+  @IsString()
+  @IsOptional()
   public originalPostId?: string;
 }

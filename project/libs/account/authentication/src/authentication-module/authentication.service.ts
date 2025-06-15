@@ -1,18 +1,27 @@
-import {ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+  UnauthorizedException
+} from '@nestjs/common';
 import {BlogUserEntity, BlogUserRepository} from "@project/blog-user";
 import {CreateUserDto} from "../dto/create-user.dto";
 import dayjs from 'dayjs';
-import {AUTH_USER_EXISTS, AUTH_USER_NOT_FOUND, AUTH_USER_PASSWORD_WRONG} from "./authentication.constant";
+import {AuthenticationExceptionMessage} from "./authentication.constant";
 import {LoginUserDto} from "../dto/login-user.dto";
-import {dbConfig} from '@project/account-config';
-import {ConfigType} from "@nestjs/config";
+import {Token, TokenPayload, User} from "@project/core";
+import {JwtService} from '@nestjs/jwt';
 
 @Injectable()
 export class AuthenticationService {
+  private readonly logger = new Logger(AuthenticationService.name);
+
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
-    @Inject(dbConfig.KEY)
-    private readonly databaseConfig: ConfigType<typeof dbConfig>,
+    private readonly jwtService: JwtService
   ) {
   }
 
@@ -29,7 +38,7 @@ export class AuthenticationService {
       .findByEmail(email);
 
     if (existUser) {
-      throw new ConflictException(AUTH_USER_EXISTS);
+      throw new ConflictException(AuthenticationExceptionMessage.UserAlreadyExists);
     }
 
     const userEntity = await new BlogUserEntity(blogUser)
@@ -45,11 +54,11 @@ export class AuthenticationService {
     const existUser = await this.blogUserRepository.findByEmail(email);
 
     if (!existUser) {
-      throw new NotFoundException(AUTH_USER_NOT_FOUND);
+      throw new NotFoundException(AuthenticationExceptionMessage.UserNotFound);
     }
 
     if (!await existUser.comparePassword(password)) {
-      throw new UnauthorizedException(AUTH_USER_PASSWORD_WRONG);
+      throw new UnauthorizedException(AuthenticationExceptionMessage.UserPasswordWrong);
     }
 
     return existUser;
@@ -59,9 +68,26 @@ export class AuthenticationService {
     const user = await this.blogUserRepository.findById(id);
 
     if (!user) {
-      throw new NotFoundException(AUTH_USER_NOT_FOUND);
+      throw new NotFoundException(AuthenticationExceptionMessage.UserNotFound);
     }
 
     return user;
+  }
+
+  public async createUserToken(user: User): Promise<Token> {
+    const payload: TokenPayload = {
+      sub: user.id,
+      email: user.email,
+      lastname: user.lastname,
+      firstname: user.firstname,
+    };
+
+    try {
+      const accessToken = await this.jwtService.signAsync(payload);
+      return {accessToken};
+    } catch (error) {
+      this.logger.error('[Token generation error]: ' + error.message);
+      throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 }

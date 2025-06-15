@@ -1,7 +1,7 @@
 ### -----------------------------------------------
 ### Создание комментария (успешно)
 # Передаём userId и postId как части пути.
-# Ожидаем: 201 Created и тело — объект CommentRdo
+# Ожидаем: 201 Created и тело — объект BlogCommentRdo
 
 POST http://localhost:3000/api/comments/
 Content-Type: application/json
@@ -46,7 +46,7 @@ Content-Type: application/json
 ### -----------------------------------------------
 ### Получить список комментариев для поста (успешно)
 # GET /comments/post/:postId
-# Ожидаем: 200 OK, массив CommentRdo (userId не требуется)
+# Ожидаем: 200 OK, массив BlogCommentRdo (userId не требуется)
 GET http://localhost:3000/api/comments/post/6d308040-96a2-4162-bea6-2338e9976540?limit=10&offset=0
 Accept: application/json
 
@@ -58,7 +58,7 @@ Accept: application/json
 ### -----------------------------------------------
 ### Получить конкретный комментарий (успешно)
 # GET /comments/:id
-# Ожидаем: 200 OK, объект CommentRdo
+# Ожидаем: 200 OK, объект BlogCommentRdo
 GET http://localhost:3000/api/comments/99e6005f-a36d-4222-a1cd-acf39c308dab
 Accept: application/json
 
@@ -70,7 +70,7 @@ Accept: application/json
 ### -----------------------------------------------
 ### Обновить комментарий (успешно)
 # Передаём userId и id комментария в пути
-# Ожидаем: 200 OK, объект CommentRdo
+# Ожидаем: 200 OK, объект BlogCommentRdo
 PATCH http://localhost:3000/api/comments/99e6005f-a36d-4222-a1cd-acf39c308dab/658170cbb954e9f5b905ccf4
 Content-Type: application/json
 

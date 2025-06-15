@@ -1,46 +1,94 @@
 import {ApiPropertyOptional} from '@nestjs/swagger';
-import {PostStatus, PostType} from '@prisma/client';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsOptional,
+  Matches,
+  MaxLength,
+  MinLength,
+  ValidateNested
+} from 'class-validator';
+import {Type} from 'class-transformer';
+import {AvailablePostStatus, MAX_TAGS_PER_POST, PostValidateMessage, TAG_REGEX, TagLength} from '../blog-post.constant';
+import {UpdateTextPayloadDto} from './payloads/update-text-payload.dto';
+import {UpdateVideoPayloadDto} from './payloads/update-video-payload.dto';
+import {UpdateQuotePayloadDto} from './payloads/update-quote-payload.dto';
+import {UpdatePhotoPayloadDto} from './payloads/update-photo-payload.dto';
+import {UpdateLinkPayloadDto} from './payloads/update-link-payload.dto';
+import {PostStatus} from "@project/core";
 
 export class UpdateBlogPostDto {
   @ApiPropertyOptional({
-    description: 'ID пользователя, создавшего пост',
-    example: 'b1a2c3d4-e5f6-...'
+    description: 'Обновленный контент публикации'
   })
-  public userId?: string;
+  @ValidateNested()
+  @IsOptional()
+  @Type(({object}) => {
+    if (!object || !object.type) return null;
+    switch (object.type) {
+      case 'TEXT':
+        return UpdateTextPayloadDto;
+      case 'VIDEO':
+        return UpdateVideoPayloadDto;
+      case 'QUOTE':
+        return UpdateQuotePayloadDto;
+      case 'PHOTO':
+        return UpdatePhotoPayloadDto;
+      case 'LINK':
+        return UpdateLinkPayloadDto;
+      default:
+        return null;
+    }
+  })
+  public payload?:
+    | UpdateTextPayloadDto
+    | UpdateVideoPayloadDto
+    | UpdateQuotePayloadDto
+    | UpdatePhotoPayloadDto
+    | UpdateLinkPayloadDto;
 
   @ApiPropertyOptional({
-    description: 'Тип поста (TEXT, VIDEO, QUOTE, PHOTO, LINK)',
-    example: PostType.VIDEO
+    enum: AvailablePostStatus,
+    description: 'Новый статус публикации',
+    example: AvailablePostStatus.PUBLISHED
   })
-  public type?: PostType;
-
-  @ApiPropertyOptional({
-    description: 'Произвольный JSON-payload для поста',
-    example: {url: 'https://youtu.be/...'}
+  @IsEnum(AvailablePostStatus, {
+    message: PostValidateMessage.StatusNotValid
   })
-  public payload?: any;
-
-  @ApiPropertyOptional({
-    description: 'Дата и время публикации',
-    example: '2025-06-07T18:30:00.000Z'
-  })
-  public publishedAt?: Date;
-
-  @ApiPropertyOptional({
-    description: 'Статус поста (DRAFT или PUBLISHED)',
-    example: PostStatus.DRAFT
-  })
+  @IsOptional()
   public status?: PostStatus;
 
   @ApiPropertyOptional({
-    description: 'Является ли пост репостом',
-    example: true
+    description: 'Обновленные теги публикации',
+    example: ['новое', 'обновление'],
+    type: [String]
   })
-  public isRepost?: boolean;
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(MAX_TAGS_PER_POST, {
+    message: PostValidateMessage.TooManyTags
+  })
+  @Matches(TAG_REGEX, {
+    each: true,
+    message: PostValidateMessage.TagPatternNotValid
+  })
+  @MinLength(TagLength.Min, {
+    each: true,
+    message: PostValidateMessage.TagMinLengthNotValid
+  })
+  @MaxLength(TagLength.Max, {
+    each: true,
+    message: PostValidateMessage.TagMaxLengthNotValid
+  })
+  public tags?: string[];
 
   @ApiPropertyOptional({
-    description: 'ID оригинального поста, если этот пост — репост',
-    example: 'a9b8c7d6-...'
+    description: 'Сбросить количество репостов? (только для владельца)',
+    default: false
   })
-  public originalPostId?: string;
+  @IsBoolean()
+  @IsOptional()
+  public resetRepostCount?: boolean = false;
 }
