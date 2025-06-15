@@ -3,7 +3,8 @@ import {ApiResponse, ApiTags} from '@nestjs/swagger';
 import {BlogLikeService} from './blog-like.service';
 import {CreateBlogLikeDto} from './dto/create-blog-like.dto';
 import {BlogLikeExceptionMessage, BlogLikeResponseMessage} from './blog-like.constant';
-import {JwtAuthGuard, User} from "@project/authentication";
+import {JwtAuthGuard} from "@project/authentication";
+import {UserDecorator} from "@project/core";
 import {TokenPayload} from "@project/core";
 
 @ApiTags('likes')
@@ -33,7 +34,7 @@ export class BlogLikeController {
   @UseGuards(JwtAuthGuard)
   @Post('/')
   public async create(
-    @User() user: TokenPayload,
+    @UserDecorator() user: TokenPayload,
     @Body() dto: CreateBlogLikeDto
   ) {
     await this.blogLikeService.likePost(user.sub, dto);
@@ -63,7 +64,7 @@ export class BlogLikeController {
   @UseGuards(JwtAuthGuard)
   @Get('/post/:postId/status')
   public async getLikeStatus(
-    @User() user: TokenPayload,
+    @UserDecorator() user: TokenPayload,
     @Param('postId') postId: string
   ) {
     return this.blogLikeService.checkUserLike(user.sub, postId);
@@ -85,7 +86,7 @@ export class BlogLikeController {
   @Delete('/post/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(
-    @User() user: TokenPayload,
+    @UserDecorator() user: TokenPayload,
     @Param('postId') postId: string
   ) {
     await this.blogLikeService.unlikePost(user.sub, postId);

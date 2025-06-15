@@ -16,3 +16,5 @@ export { SortDirection } from './lib/interfaces/sort-direction.interface';
 export { PaginationResult } from './lib/interfaces/pagination.interface';
 export {Token} from './lib/interfaces/token.interface';
 export {TokenPayload} from './lib/interfaces/token-payload.interface';
+
+export {UserDecorator} from './lib/decorators/jwt-user.decorator';

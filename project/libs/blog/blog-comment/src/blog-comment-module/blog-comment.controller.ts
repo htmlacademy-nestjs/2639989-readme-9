@@ -10,8 +10,8 @@ import {
   BlogCommentValidateMessage,
   CommentLength
 } from './blog-comment.constant';
-import {JwtAuthGuard, User} from "@project/authentication";
-import { TokenPayload } from '@project/core';
+import {JwtAuthGuard} from "@project/authentication";
+import {TokenPayload, UserDecorator} from '@project/core';
 
 @ApiTags('comments')
 @Controller('comments')
@@ -41,7 +41,7 @@ export class BlogCommentController {
   @UseGuards(JwtAuthGuard)
   @Post('/')
   public async create(
-    @User() user: TokenPayload,
+    @UserDecorator() user: TokenPayload,
     @Body() dto: CreateBlogCommentDto,
   ) {
     const newComment = await this.commentService.createComment(user.sub, dto);
@@ -106,7 +106,7 @@ export class BlogCommentController {
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(
-    @User() user: TokenPayload,
+    @UserDecorator() user: TokenPayload,
     @Param('id') id: string
   ) {
     await this.commentService.deleteComment(user.sub, id);

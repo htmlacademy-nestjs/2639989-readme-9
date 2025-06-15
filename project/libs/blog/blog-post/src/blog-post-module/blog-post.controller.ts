@@ -19,8 +19,8 @@ import { BlogPostQuery } from './blog-post.query';
 import { BlogPostWithPaginationRdo } from './rdo/blog-post-with-pagination.rdo';
 import { CreateBlogPostDto } from './dto/create-blog-post.dto';
 import { UpdateBlogPostDto } from './dto/update-blog-post.dto';
-import {JwtAuthGuard, User} from "@project/authentication";
-import {TokenPayload} from "@project/core";
+import {JwtAuthGuard} from "@project/authentication";
+import {TokenPayload, UserDecorator} from "@project/core";
 
 @Controller('posts')
 export class BlogPostController {
@@ -66,7 +66,7 @@ export class BlogPostController {
   @UseGuards(JwtAuthGuard)
   @Get('/drafts')
   public async getUserDrafts(
-    @User() user: TokenPayload,
+    @UserDecorator() user: TokenPayload,
     @Query() query: BlogPostQuery
   ) {
     const postsWithPagination = await this.blogPostService.getPosts(query, user.sub, true);
@@ -81,7 +81,7 @@ export class BlogPostController {
   @UseGuards(JwtAuthGuard)
   @Post('/')
   public async create(
-    @User() user: TokenPayload,
+    @UserDecorator() user: TokenPayload,
     @Body() dto: CreateBlogPostDto
   ) {
     const newPost = await this.blogPostService.createPost(user.sub, dto);
@@ -92,7 +92,7 @@ export class BlogPostController {
   @Patch('/:id')
   public async update(
     @Param('id') id: string,
-    @User() user: TokenPayload,
+    @UserDecorator() user: TokenPayload,
     @Body() dto: UpdateBlogPostDto
   ) {
     const updatedPost = await this.blogPostService.updatePost(id, user.sub, dto);
@@ -104,7 +104,7 @@ export class BlogPostController {
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(
     @Param('id') id: string,
-    @User() user: TokenPayload,
+    @UserDecorator() user: TokenPayload,
   ) {
     await this.blogPostService.deletePost(id, user.sub);
   }
