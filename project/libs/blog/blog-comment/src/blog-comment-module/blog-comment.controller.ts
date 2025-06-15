@@ -1,4 +1,4 @@
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, Query, UseGuards} from '@nestjs/common';
 import {ApiResponse, ApiTags} from '@nestjs/swagger';
 import {fillDto} from '@project/helpers';
 import {BlogCommentService} from './blog-comment.service';
@@ -10,6 +10,8 @@ import {
   BlogCommentValidateMessage,
   CommentLength
 } from './blog-comment.constant';
+import {JwtAuthGuard, User} from "@project/authentication";
+import { TokenPayload } from '@project/core';
 
 @ApiTags('comments')
 @Controller('comments')
@@ -36,13 +38,13 @@ export class BlogCommentController {
     status: HttpStatus.UNAUTHORIZED,
     description: BlogCommentResponseMessage.LoggedError,
   })
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/')
   public async create(
-    @Param('userId') userId: string,
+    @User() user: TokenPayload,
     @Body() dto: CreateBlogCommentDto,
   ) {
-    const newComment = await this.commentService.createComment(userId, dto);
+    const newComment = await this.commentService.createComment(user.sub, dto);
     return fillDto(BlogCommentRdo, newComment.toPOJO());
   }
 
@@ -100,13 +102,13 @@ export class BlogCommentController {
     status: HttpStatus.FORBIDDEN,
     description: BlogCommentExceptionMessage.Forbidden,
   })
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(
-    @Param('id') id: string,
-    @Param('userId') userId: string,
+    @User() user: TokenPayload,
+    @Param('id') id: string
   ) {
-    await this.commentService.deleteComment(userId, id);
+    await this.commentService.deleteComment(user.sub, id);
   }
 }

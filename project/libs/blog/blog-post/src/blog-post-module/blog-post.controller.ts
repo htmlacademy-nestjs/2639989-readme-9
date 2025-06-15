@@ -9,11 +9,7 @@ import {
   Patch,
   Post,
   Query,
-  UseGuards,
-  UseInterceptors,
-  UploadedFiles,
-  ParseFilePipe,
-  FileTypeValidator, ForbiddenException,
+  UseGuards
 } from '@nestjs/common';
 import { fillDto } from '@project/helpers';
 
@@ -23,6 +19,8 @@ import { BlogPostQuery } from './blog-post.query';
 import { BlogPostWithPaginationRdo } from './rdo/blog-post-with-pagination.rdo';
 import { CreateBlogPostDto } from './dto/create-blog-post.dto';
 import { UpdateBlogPostDto } from './dto/update-blog-post.dto';
+import {JwtAuthGuard, User} from "@project/authentication";
+import {TokenPayload} from "@project/core";
 
 @Controller('posts')
 export class BlogPostController {
@@ -65,14 +63,13 @@ export class BlogPostController {
     return fillDto(BlogPostRdo, post.toPOJO());
   }
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/drafts')
   public async getUserDrafts(
-    @Param('id') id: string,
-    //@CurrentUser() user: TokenPayload,
+    @User() user: TokenPayload,
     @Query() query: BlogPostQuery
   ) {
-    const postsWithPagination = await this.blogPostService.getPosts(query, id, true);
+    const postsWithPagination = await this.blogPostService.getPosts(query, user.sub, true);
     return fillDto(BlogPostWithPaginationRdo, {
       ...postsWithPagination,
       entities: postsWithPagination.entities.map(
@@ -81,37 +78,34 @@ export class BlogPostController {
     });
   }
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/')
   public async create(
-    @Param('id') id: string,
-    //@CurrentUser() user: TokenPayload,
+    @User() user: TokenPayload,
     @Body() dto: CreateBlogPostDto
   ) {
-    const newPost = await this.blogPostService.createPost(id, dto);
+    const newPost = await this.blogPostService.createPost(user.sub, dto);
     return fillDto(BlogPostRdo, newPost.toPOJO());
   }
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch('/:id')
   public async update(
     @Param('id') id: string,
-    @Param('userId') userId: string,
-    //@CurrentUser() user: TokenPayload,
+    @User() user: TokenPayload,
     @Body() dto: UpdateBlogPostDto
   ) {
-    const updatedPost = await this.blogPostService.updatePost(id, userId, dto);
+    const updatedPost = await this.blogPostService.updatePost(id, user.sub, dto);
     return fillDto(BlogPostRdo, updatedPost.toPOJO());
   }
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(
     @Param('id') id: string,
-    @Param('userId') userId: string,
-    //@CurrentUser() user: TokenPayload
+    @User() user: TokenPayload,
   ) {
-    await this.blogPostService.deletePost(id, userId);
+    await this.blogPostService.deletePost(id, user.sub);
   }
 }

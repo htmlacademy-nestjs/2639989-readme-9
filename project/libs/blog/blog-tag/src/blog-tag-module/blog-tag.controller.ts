@@ -9,7 +9,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Query
+  Query, UseGuards
 } from '@nestjs/common';
 import {ApiResponse, ApiTags} from '@nestjs/swagger';
 import {fillDto} from '@project/helpers';
@@ -18,6 +18,7 @@ import {CreateTagDto} from './dto/create-tag.dto';
 import {UpdateTagDto} from './dto/update-tag.dto';
 import {TagRdo} from './rdo/tag.rdo';
 import {TagExceptionMessage, TagResponseMessage, TAGS_LIMIT} from './blog-tag.constant';
+import {JwtAuthGuard} from "@project/authentication";
 
 @ApiTags('Tags')
 @Controller('tags')
@@ -77,7 +78,7 @@ export class BlogTagController {
     status: HttpStatus.UNAUTHORIZED,
     description: TagResponseMessage.LoggedError
   })
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/')
   public async create(@Body() dto: CreateTagDto) {
     const newTag = await this.blogTagService.createTag(dto);
@@ -105,7 +106,7 @@ export class BlogTagController {
     status: HttpStatus.UNAUTHORIZED,
     description: TagResponseMessage.LoggedError
   })
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Patch('/:id')
   public async update(
     @Param('id') id: string,
@@ -131,7 +132,7 @@ export class BlogTagController {
     status: HttpStatus.UNAUTHORIZED,
     description: TagResponseMessage.LoggedError
   })
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete('/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(@Param('id') id: string) {

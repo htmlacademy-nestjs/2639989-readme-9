@@ -1,8 +1,10 @@
-import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post} from '@nestjs/common';
+import {Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Post, UseGuards} from '@nestjs/common';
 import {ApiResponse, ApiTags} from '@nestjs/swagger';
 import {BlogLikeService} from './blog-like.service';
 import {CreateBlogLikeDto} from './dto/create-blog-like.dto';
 import {BlogLikeExceptionMessage, BlogLikeResponseMessage} from './blog-like.constant';
+import {JwtAuthGuard, User} from "@project/authentication";
+import {TokenPayload} from "@project/core";
 
 @ApiTags('likes')
 @Controller('likes')
@@ -28,13 +30,13 @@ export class BlogLikeController {
     status: HttpStatus.UNAUTHORIZED,
     description: BlogLikeResponseMessage.LoggedError
   })
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('/')
   public async create(
-    @Param('userId') userId: string,
+    @User() user: TokenPayload,
     @Body() dto: CreateBlogLikeDto
   ) {
-    await this.blogLikeService.likePost(userId, dto);
+    await this.blogLikeService.likePost(user.sub, dto);
   }
 
   @ApiResponse({
@@ -58,13 +60,13 @@ export class BlogLikeController {
     status: HttpStatus.UNAUTHORIZED,
     description: BlogLikeResponseMessage.LoggedError
   })
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('/post/:postId/status')
   public async getLikeStatus(
-    @Param('userId') userId: string,
+    @User() user: TokenPayload,
     @Param('postId') postId: string
   ) {
-    return this.blogLikeService.checkUserLike(userId, postId);
+    return this.blogLikeService.checkUserLike(user.sub, postId);
   }
 
   @ApiResponse({
@@ -79,13 +81,13 @@ export class BlogLikeController {
     status: HttpStatus.UNAUTHORIZED,
     description: BlogLikeResponseMessage.LoggedError
   })
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Delete('/post/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   public async destroy(
-    @Param('userId') userId: string,
+    @User() user: TokenPayload,
     @Param('postId') postId: string
   ) {
-    await this.blogLikeService.unlikePost(userId, postId);
+    await this.blogLikeService.unlikePost(user.sub, postId);
   }
 }
