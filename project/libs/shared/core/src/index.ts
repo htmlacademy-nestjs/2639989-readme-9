@@ -9,6 +9,8 @@ export {PostType} from './lib/types/post.interface';
 export {PostStatus} from './lib/types/post.interface';
 export {Subscription} from './lib/types/subscription.interface';
 export {Tag} from './lib/types/tag.interface';
+export { File } from './lib/types/file.interface';
+export { StoredFile } from './lib/types/stored-file.interface';
 
 export {StorableEntity} from './lib/interfaces/storable-entity.interface';
 export {EntityFactory} from './lib/interfaces/entity-factory.interface';
