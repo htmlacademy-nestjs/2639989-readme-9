@@ -1,0 +1,20 @@
+{
+  "name": "file-config",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/file/config/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/file/config",
+        "tsConfig": "libs/file/config/tsconfig.lib.json",
+        "packageJson": "libs/file/config/package.json",
+        "main": "libs/file/config/src/index.ts",
+        "assets": ["libs/file/config/*.md"]
+      }
+    }
+  }
+}

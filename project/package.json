@@ -40,6 +40,8 @@
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
     "@types/bcrypt": "^5.0.2",
+    "@types/fs-extra": "^11.0.4",
+    "@types/multer": "^1.4.13",
     "@types/node": "~18.16.9",
     "@types/passport": "^1.0.17",
     "@types/passport-jwt": "^4.0.1",
