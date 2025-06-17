@@ -1,7 +1,8 @@
 export const AuthenticationExceptionMessage = {
   UserAlreadyExists: 'Пользователь с данным email уже существует!',
   UserNotFound: 'Пользователь не найден',
-  UserPasswordWrong: 'Пароль пользователя не правильный'
+  UserPasswordWrong: 'Пароль пользователя не правильный',
+  SamePassword: 'Пароль повторяет текущий',
 } as const;
 
 export const AuthenticationResponseMessage = {

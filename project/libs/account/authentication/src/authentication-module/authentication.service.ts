@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   HttpException,
   HttpStatus,
@@ -14,6 +15,7 @@ import {AuthenticationExceptionMessage} from "./authentication.constant";
 import {LoginUserDto} from "../dto/login-user.dto";
 import {Token, TokenPayload, User} from "@project/core";
 import {JwtService} from '@nestjs/jwt';
+import {ChangePasswordDto} from "../dto/change-password.dto";
 
 @Injectable()
 export class AuthenticationService {
@@ -89,5 +91,25 @@ export class AuthenticationService {
       this.logger.error('[Token generation error]: ' + error.message);
       throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+  }
+
+  public async changePassword(
+    userId: string,
+    dto: ChangePasswordDto
+  ): Promise<BlogUserEntity> {
+    const user = await this.getUser(userId);
+
+    if (!await user.comparePassword(dto.currentPassword)) {
+      throw new UnauthorizedException(AuthenticationExceptionMessage.UserPasswordWrong);
+    }
+
+    if (await user.comparePassword(dto.newPassword)) {
+      throw new BadRequestException(AuthenticationExceptionMessage.SamePassword);
+    }
+
+    const updatedUser = await user.setPassword(dto.newPassword);
+    await this.blogUserRepository.update(updatedUser);
+
+    return updatedUser;
   }
 }

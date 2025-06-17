@@ -42,6 +42,25 @@ export class BlogPostService {
     }
   }
 
+  public async getPostsByPeriod(
+    startDate: Date,
+    userId: string
+  ): Promise<BlogPostEntity[]> {
+    try {
+      const filter = {
+        startDate: startDate,
+        status: PostStatus.PUBLISHED,
+        authorId: userId
+      };
+
+      const paginationResult = await this.blogPostRepository.find(filter);
+
+      return paginationResult.entities;
+    } catch (err) {
+      throw new InternalServerErrorException('Не удалось загрузить посты за период');
+    }
+  }
+
   public async getPost(
     id: string,
   ): Promise<BlogPostEntity> {

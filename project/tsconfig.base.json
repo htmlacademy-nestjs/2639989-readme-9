@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@project/account-config": ["libs/account/config/src/index.ts"],
+      "@project/account-notify": ["libs/account/notify/src/index.ts"],
       "@project/authentication": ["libs/account/authentication/src/index.ts"],
       "@project/blog-comment": ["libs/blog/blog-comment/src/index.ts"],
       "@project/blog-like": ["libs/blog/blog-like/src/index.ts"],
@@ -28,10 +29,14 @@
       "@project/blog-user": ["libs/account/blog-user/src/index.ts"],
       "@project/core": ["libs/shared/core/src/index.ts"],
       "@project/data-access": ["libs/shared/data-access/src/index.ts"],
+      "@project/email-subscriber": [
+        "libs/notify/email-subscriber/src/index.ts"
+      ],
       "@project/file": ["libs/file/src/index.ts"],
       "@project/file-config": ["libs/file/config/src/index.ts"],
       "@project/file-uploader": ["libs/file/file-uploader/src/index.ts"],
       "@project/helpers": ["libs/shared/helpers/src/index.ts"],
+      "@project/notify-config": ["libs/notify/config/src/index.ts"],
       "@project/pipes": ["libs/shared/pipes/src/index.ts"],
       "@project/post": ["libs/post/src/index.ts"]
     }
