@@ -4,14 +4,14 @@ import {CreateUserDto} from "../dto/create-user.dto";
 import {LoginUserDto} from "../dto/login-user.dto";
 import {ApiResponse, ApiTags} from "@nestjs/swagger";
 import {AuthenticationResponseMessage} from "./authentication.constant";
+import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {LoggedUserRdo} from "../rdo/logged-user.rdo";
 import {UserRdo} from '../rdo/user.rdo';
 import {MongoIdValidationPipe} from "@project/pipes";
 import {fillDto} from "@project/helpers";
 import {NotifyService} from "@project/account-notify";
-import {JwtAuthGuard} from "@project/authentication";
 import {ChangePasswordDto} from "../dto/change-password.dto";
-import {UserDecorator} from "@project/core";
+import {TokenPayload, UserDecorator} from "@project/core";
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -34,6 +34,7 @@ export class AuthenticationController {
     const userToken = await this.authenticationService.createUserToken(newUser);
     const { email, firstname, lastname } = newUser;
     await this.notifyService.registerSubscriber({ email, firstname, lastname });
+    await this.notifyService.addSubscriber({ email, firstname, lastname });
     return fillDto(LoggedUserRdo, {...newUser.toPOJO(), ...userToken});
   }
 
@@ -83,12 +84,12 @@ export class AuthenticationController {
   @UseGuards(JwtAuthGuard)
   @Patch('password')
   public async changePassword(
-    @UserDecorator('sub') userId: string,
+    @UserDecorator() user: TokenPayload,
     @Body() dto: ChangePasswordDto
   ) {
-    const updatedUser = await this.authenticationService.changePassword(userId, dto);
+    const updatedUser = await this.authenticationService.changePassword(user.sub, dto);
 
-    await this.notifyService.registerSubscriber({
+    await this.notifyService.changePassword({
       email: updatedUser.email,
       firstname: updatedUser.firstname,
       lastname: updatedUser.lastname

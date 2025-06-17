@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .newsletter { font-family: Arial, sans-serif; }
+    .post { border-bottom: 1px solid #eee; padding: 15px 0; }
+    .post-title { font-size: 18px; color: #333; }
+    .post-meta { font-size: 14px; color: #666; }
+  </style>
+</head>
+<body>
+<div class="newsletter">
+  <h1>Добрый день, {{user.firstname}} {{user.lastname}}!</h1>
+  <p>Вот новые публикации по вашим подпискам за период {{created}}:</p>
+
+  {{#each posts}}
+    <div class="post">
+      <h3 class="post-title">
+        {{#if this.payload.title}}
+          {{this.payload.title}}
+        {{else if this.payload.text}}
+          {{this.payload.text}}
+        {{else if this.payload.description}}
+          <a href={{this.payload.url}}>{{this.payload.description}}</a>
+        {{else if this.payload.text}}
+          {{this.payload.text}}
+        {{/if}}
+      </h3>
+      <p class="post-meta">
+        Тип: {{this.type}}
+        Дата: {{this.publishedAt}}
+      </p>
+    </div>
+  {{/each}}
+</div>
+</body>
+</html>

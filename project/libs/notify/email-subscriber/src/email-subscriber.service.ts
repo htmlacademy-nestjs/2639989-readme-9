@@ -23,4 +23,10 @@ export class EmailSubscriberService {
 
     return emailSubscriber;
   }
+
+  public async checkSubscriber(email: string) {
+    const existsSubscriber = await this.emailSubscriberRepository.findByEmail(email);
+
+    return !!existsSubscriber;
+  }
 }

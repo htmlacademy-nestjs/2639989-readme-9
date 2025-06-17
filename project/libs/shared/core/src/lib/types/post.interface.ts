@@ -5,7 +5,7 @@ import {Prisma} from "@prisma/client";
 
 export interface Post {
   id?: string;
-  userId: string;
+  userId?: string;
   type: PostType;
   payload: Prisma.JsonValue;
   createdAt?: Date;

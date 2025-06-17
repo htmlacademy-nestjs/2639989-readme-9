@@ -4,7 +4,6 @@ import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
 import { getRabbitMQOptions } from '@project/helpers';
 
 import { NotifyService } from './notify.service';
-import { NotifyController } from './notify.controller';
 
 @Module({
   imports: [
@@ -12,7 +11,6 @@ import { NotifyController } from './notify.controller';
       getRabbitMQOptions('rabbit')
     )
   ],
-  controllers: [NotifyController],
   providers: [NotifyService],
   exports: [NotifyService]
 })

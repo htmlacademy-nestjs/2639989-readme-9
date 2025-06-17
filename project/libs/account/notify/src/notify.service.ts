@@ -16,7 +16,7 @@ export class NotifyService {
     private readonly rabbiOptions: ConfigType<typeof rabbitConfig>,
   ) {}
 
-  public async registerSubscriber(dto: CreateSubscriberDto) {
+  public async addSubscriber(dto: CreateSubscriberDto) {
     return this.rabbitClient.publish(
       this.rabbiOptions.exchange,
       RabbitRouting.AddSubscriber,
@@ -24,10 +24,26 @@ export class NotifyService {
     );
   }
 
+  public async registerSubscriber(dto: CreateSubscriberDto) {
+    return this.rabbitClient.publish(
+      this.rabbiOptions.exchange,
+      RabbitRouting.Register,
+      { ...dto }
+    );
+  }
+
+  public async changePassword(dto: CreateSubscriberDto) {
+    return this.rabbitClient.publish(
+      this.rabbiOptions.exchange,
+      RabbitRouting.ChangePassword,
+      { ...dto }
+    );
+  }
+
   public async sendNewsletter(dto: CreateNewsletterDto) {
     this.rabbitClient.publish(
       this.rabbiOptions.exchange,
-      RabbitRouting.AddSubscriber,
+      RabbitRouting.Newsletter,
       { ...dto });
   }
 }

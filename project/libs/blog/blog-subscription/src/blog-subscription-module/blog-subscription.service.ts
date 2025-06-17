@@ -2,7 +2,6 @@ import {BadRequestException, Injectable, InternalServerErrorException, NotFoundE
 import {BlogSubscriptionRepository} from './blog-subscription.repository';
 import {BlogSubscriptionEntity} from './blog-subscription.entity';
 import {CreateBlogSubscriptionDto} from './dto/create-blog-subscription.dto';
-import {SendNewsletterDto} from "./dto/send-newsletter.dto";
 import {NotifyService} from "@project/account-notify";
 import {BlogPostService} from "@project/blog-post";
 import { AuthenticationService } from '@project/authentication';
