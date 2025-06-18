@@ -56,6 +56,20 @@ export class BlogPostController {
     });
   }
 
+  @Get('/user/:userId/:startDate')
+  public async getUserPostsByDate(
+    @Param('userId') userId: string,
+    @Param('startDate') startDate: Date
+  ) {
+    const posts =
+      await this.blogPostService.getPostsByPeriod(startDate, userId);
+    return {
+      posts: posts.map(
+        (entity) => fillDto(BlogPostRdo, entity.toPOJO())
+      ),
+    };
+  }
+
   @Get('/:id')
   public async show(
     @Param('id') id: string

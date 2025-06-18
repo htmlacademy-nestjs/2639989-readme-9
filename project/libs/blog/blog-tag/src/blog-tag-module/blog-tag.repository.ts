@@ -7,7 +7,7 @@ import {BasePostgresRepository} from '@project/data-access';
 import {BlogTagEntity} from './blog-tag.entity';
 import {BlogTagFactory} from './blog-tag.factory';
 import {TagFilter, tagFilterToPrismaFilter} from './blog-tag.filter';
-import {MAX_TAGS_LIMIT} from './blog-tag.constant';
+import {TAGS_LIMIT} from './blog-tag.constant';
 
 @Injectable()
 export class BlogTagRepository extends BasePostgresRepository<BlogTagEntity, Tag> {
@@ -45,7 +45,7 @@ export class BlogTagRepository extends BasePostgresRepository<BlogTagEntity, Tag
 
     const documents = await this.client.tag.findMany({
       where,
-      take: MAX_TAGS_LIMIT
+      take: TAGS_LIMIT.Max
     });
 
 

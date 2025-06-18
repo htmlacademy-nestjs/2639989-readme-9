@@ -1,8 +1,8 @@
-POST http://localhost:3000/api/auth/register HTTP/1.1
+POST http://localhost:3001/api/auth/register HTTP/1.1
 Content-Type: application/json
 
 {
-  "email": "user@notfound.local",
+  "email": "user8@notfound.local",
   "dateOfBirth": "2012-02-22",
   "firstname": "Keks",
   "lastname": "Smith",

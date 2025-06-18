@@ -1,7 +1,6 @@
-version: '3.9'
 services:
   typoteka.account.mongo:
-    image: mongo:4.4
+    image: mongo:latest
     restart: always
     container_name: typoteka.account.mongo
 

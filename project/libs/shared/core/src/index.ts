@@ -9,6 +9,10 @@ export {PostType} from './lib/types/post.interface';
 export {PostStatus} from './lib/types/post.interface';
 export {Subscription} from './lib/types/subscription.interface';
 export {Tag} from './lib/types/tag.interface';
+export { File } from './lib/types/file.interface';
+export { StoredFile } from './lib/types/stored-file.interface';
+export {Subscriber} from './lib/types/subscriber.interface';
+export {Newsletter} from './lib/types/newsletter.interface'
 
 export {StorableEntity} from './lib/interfaces/storable-entity.interface';
 export {EntityFactory} from './lib/interfaces/entity-factory.interface';
@@ -18,3 +22,5 @@ export {Token} from './lib/interfaces/token.interface';
 export {TokenPayload} from './lib/interfaces/token-payload.interface';
 
 export {UserDecorator} from './lib/decorators/jwt-user.decorator';
+
+export { RabbitRouting } from './lib/types/rabbit-routing.enum';

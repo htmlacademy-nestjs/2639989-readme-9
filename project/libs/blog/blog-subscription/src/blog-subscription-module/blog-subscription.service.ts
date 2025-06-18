@@ -2,11 +2,17 @@ import {BadRequestException, Injectable, InternalServerErrorException, NotFoundE
 import {BlogSubscriptionRepository} from './blog-subscription.repository';
 import {BlogSubscriptionEntity} from './blog-subscription.entity';
 import {CreateBlogSubscriptionDto} from './dto/create-blog-subscription.dto';
+import {NotifyService} from "@project/account-notify";
+import {BlogPostService} from "@project/blog-post";
+import { AuthenticationService } from '@project/authentication';
 
 @Injectable()
 export class BlogSubscriptionService {
   constructor(
-    private readonly blogSubscriptionRepository: BlogSubscriptionRepository
+    private readonly blogSubscriptionRepository: BlogSubscriptionRepository,
+    private readonly blogPostService: BlogPostService,
+    private readonly userService: AuthenticationService,
+    private readonly notifyService: NotifyService
   ) {
   }
 
@@ -49,5 +55,35 @@ export class BlogSubscriptionService {
 
   public async getFollowersOfUser(followingId: string): Promise<BlogSubscriptionEntity[]> {
     return this.blogSubscriptionRepository.findAllByFollowing(followingId);
+  }
+
+  public async sendNewsletter(userId: string, startDate: Date) {
+    const subscriptions = await this.blogSubscriptionRepository.findAllByFollower(userId);
+    const authorIds = subscriptions.map(sub => sub.followingId);
+
+    const newPosts = [];
+    for(const author of authorIds) {
+      const authorPosts = await this.blogPostService.getPostsByPeriod(
+        startDate ? new Date(startDate) : this.getDefaultStartDate(),
+        author
+      );
+      newPosts.push(...authorPosts);
+    }
+
+    const user = await this.userService.getUser(userId);
+
+    await this.notifyService.sendNewsletter({
+      user: user,
+      posts: newPosts,
+      created: new Date()
+    });
+
+    return { success: true, count: newPosts.length };
+  }
+
+  private getDefaultStartDate(): Date {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    return date;
   }
 }

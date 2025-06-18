@@ -1,0 +1,24 @@
+{
+  "name": "account-notify",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/account/notify/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "outputPath": "dist/libs/account/notify",
+        "tsConfig": "libs/account/notify/tsconfig.lib.json",
+        "packageJson": "libs/account/notify/package.json",
+        "main": "libs/account/notify/src/index.ts",
+        "assets": [
+          "libs/account/notify/*.md"
+        ]
+      }
+    }
+  }
+}

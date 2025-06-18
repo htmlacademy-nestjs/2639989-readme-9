@@ -146,7 +146,7 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       : undefined;
     const take = filter?.limit;
 
-    where.status = 'PUBLISHED';
+    where.status = filter?.status;
     where.isRepost = filter?.includeReposts ? undefined : false;
 
     if (filter?.postTypes) {
