@@ -1,4 +1,4 @@
-import {Body, Controller, Get, HttpStatus, Param, Patch, Post, Req, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards} from '@nestjs/common';
 import {AuthenticationService} from "./authentication.service";
 import {CreateUserDto} from "../dto/create-user.dto";
 import {LoginUserDto} from "../dto/login-user.dto";
@@ -14,6 +14,7 @@ import {ChangePasswordDto} from "../dto/change-password.dto";
 import {TokenPayload, UserDecorator} from "@project/core";
 import {LocalAuthGuard} from "../guards/local-auth.guard";
 import {RequestWithUser} from "./request-with-user.interface";
+import {JwtRefreshGuard} from "../guards/jwt-refresh.guard";
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -69,6 +70,17 @@ export class AuthenticationController {
   public async show(@Param('id', MongoIdValidationPipe) id: string) {
     const existUser = await this.authenticationService.getUser(id);
     return existUser.toPOJO();
+  }
+
+  @UseGuards(JwtRefreshGuard)
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Получить новую пару JWT токенов'
+  })
+  public async refreshToken(@Req() { user }: RequestWithUser) {
+    return this.authenticationService.createUserToken(user);
   }
 
   @ApiResponse({
