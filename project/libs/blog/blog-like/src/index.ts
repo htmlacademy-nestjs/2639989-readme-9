@@ -4,3 +4,4 @@ export {BlogLikeFactory} from './blog-like-module/blog-like.factory';
 export {BlogLikeService} from './blog-like-module/blog-like.service';
 
 export {BlogLikeRdo} from './blog-like-module/rdo/blog-like.rdo';
+export {CreateBlogLikeDto} from './blog-like-module/dto/create-blog-like.dto';

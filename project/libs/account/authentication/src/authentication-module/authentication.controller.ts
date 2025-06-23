@@ -1,7 +1,6 @@
 import {Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards} from '@nestjs/common';
 import {AuthenticationService} from "./authentication.service";
 import {CreateUserDto} from "../dto/create-user.dto";
-import {LoginUserDto} from "../dto/login-user.dto";
 import {ApiResponse, ApiTags} from "@nestjs/swagger";
 import {AuthenticationResponseMessage} from "./authentication.constant";
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
@@ -15,6 +14,7 @@ import {TokenPayload, UserDecorator} from "@project/core";
 import {LocalAuthGuard} from "../guards/local-auth.guard";
 import {RequestWithUser} from "./request-with-user.interface";
 import {JwtRefreshGuard} from "../guards/jwt-refresh.guard";
+import {RequestWithTokenPayload} from "./request-with-token-payload.interface";
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -113,5 +113,11 @@ export class AuthenticationController {
       success: true,
       message: 'Пароль успешно изменен'
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('check')
+  public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
+    return payload;
   }
 }

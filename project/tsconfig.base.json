@@ -36,6 +36,7 @@
       "@project/file-config": ["libs/file/config/src/index.ts"],
       "@project/file-uploader": ["libs/file/file-uploader/src/index.ts"],
       "@project/helpers": ["libs/shared/helpers/src/index.ts"],
+      "@project/interceptors": ["libs/shared/interceptors/src/index.ts"],
       "@project/notify-config": ["libs/notify/config/src/index.ts"],
       "@project/pipes": ["libs/shared/pipes/src/index.ts"],
       "@project/post": ["libs/post/src/index.ts"]
