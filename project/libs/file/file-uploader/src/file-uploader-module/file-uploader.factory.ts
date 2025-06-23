@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 
-import { File, EntityFactory } from '@project/core';
-import { FileUploaderEntity } from './file-uploader.entity';
+import {EntityFactory, File} from '@project/core';
+import {FileUploaderEntity} from './file-uploader.entity';
 
 @Injectable()
 export class FileUploaderFactory implements EntityFactory<FileUploaderEntity> {

@@ -1,27 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Req,
-  UseFilters,
-  UseGuards,
-  HttpCode,
-  HttpStatus,
-  Param
-} from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiResponse,
-  ApiTags
-} from '@nestjs/swagger';
+import {Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Req, UseFilters, UseGuards} from '@nestjs/common';
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags} from '@nestjs/swagger';
 
-import { HttpService } from '@nestjs/axios';
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
-import { ApplicationServiceURL } from './app.config';
-import { CheckAuthGuard } from './guards/check-auth.guard';
+import {HttpService} from '@nestjs/axios';
+import {AxiosExceptionFilter} from './filters/axios-exception.filter';
+import {ApplicationServiceURL} from './app.config';
+import {CheckAuthGuard} from './guards/check-auth.guard';
 import {CreateNewsletterDto, CreateSubscriberDto} from '@project/email-subscriber';
 
 @ApiTags('Notifications Gateway')
@@ -30,13 +13,14 @@ import {CreateNewsletterDto, CreateSubscriberDto} from '@project/email-subscribe
 export class NotifyController {
   constructor(
     private readonly httpService: HttpService
-  ) {}
+  ) {
+  }
 
   @Post('/subscribe')
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Subscribe to email notifications' })
-  @ApiBody({ type: CreateSubscriberDto })
+  @ApiOperation({summary: 'Subscribe to email notifications'})
+  @ApiBody({type: CreateSubscriberDto})
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Subscription created'
@@ -49,11 +33,11 @@ export class NotifyController {
     @Req() req: Request,
     @Body() dto: CreateSubscriberDto
   ) {
-    const { data } = await this.httpService.axiosRef.post(
+    const {data} = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Notify}/subscribe`,
       dto,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
     return data;
@@ -62,8 +46,8 @@ export class NotifyController {
   @Post('/unsubscribe')
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Unsubscribe from email notifications' })
-  @ApiBody({ type: CreateSubscriberDto })
+  @ApiOperation({summary: 'Unsubscribe from email notifications'})
+  @ApiBody({type: CreateSubscriberDto})
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Subscription removed'
@@ -76,11 +60,11 @@ export class NotifyController {
     @Req() req: Request,
     @Body() dto: CreateSubscriberDto
   ) {
-    const { data } = await this.httpService.axiosRef.post(
+    const {data} = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Notify}/unsubscribe`,
       dto,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
     return data;
@@ -89,7 +73,7 @@ export class NotifyController {
   @Get('/subscriptions/:userId')
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get user subscriptions status' })
+  @ApiOperation({summary: 'Get user subscriptions status'})
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Subscription status',
@@ -99,10 +83,10 @@ export class NotifyController {
     @Req() req: Request,
     @Param('userId') userId: string
   ) {
-    const { data } = await this.httpService.axiosRef.get(
+    const {data} = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Notify}/subscriptions/${userId}`,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
     return data;
@@ -111,8 +95,8 @@ export class NotifyController {
   @Post('/send-newsletter')
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Send newsletter to subscribers' })
-  @ApiBody({ type: CreateNewsletterDto })
+  @ApiOperation({summary: 'Send newsletter to subscribers'})
+  @ApiBody({type: CreateNewsletterDto})
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Newsletter sent'
@@ -121,11 +105,11 @@ export class NotifyController {
     @Req() req: Request,
     @Body() dto: CreateNewsletterDto
   ) {
-    const { data } = await this.httpService.axiosRef.post(
+    const {data} = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Notify}/send-newsletter`,
       dto,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
     return data;
@@ -133,12 +117,12 @@ export class NotifyController {
 
   @Post('/internal/register')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Internal: Send registration email' })
-  @ApiBody({ type: CreateSubscriberDto })
+  @ApiOperation({summary: 'Internal: Send registration email'})
+  @ApiBody({type: CreateSubscriberDto})
   async internalRegister(
     @Body() dto: CreateSubscriberDto
   ) {
-    const { data } = await this.httpService.axiosRef.post(
+    const {data} = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Notify}/internal/register`,
       dto
     );
@@ -147,12 +131,12 @@ export class NotifyController {
 
   @Post('/internal/change-password')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: 'Internal: Send password change email' })
-  @ApiBody({ type: CreateSubscriberDto })
+  @ApiOperation({summary: 'Internal: Send password change email'})
+  @ApiBody({type: CreateSubscriberDto})
   async internalChangePassword(
     @Body() dto: CreateSubscriberDto
   ) {
-    const { data } = await this.httpService.axiosRef.post(
+    const {data} = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Notify}/internal/change-password`,
       dto
     );

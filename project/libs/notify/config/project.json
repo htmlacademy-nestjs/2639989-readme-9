@@ -7,13 +7,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/notify/config",
         "tsConfig": "libs/notify/config/tsconfig.lib.json",
         "packageJson": "libs/notify/config/package.json",
         "main": "libs/notify/config/src/index.ts",
-        "assets": ["libs/notify/config/*.md"]
+        "assets": [
+          "libs/notify/config/*.md"
+        ]
       }
     }
   }

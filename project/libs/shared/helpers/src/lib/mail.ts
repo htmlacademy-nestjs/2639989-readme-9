@@ -1,5 +1,5 @@
-import { ConfigService } from '@nestjs/config';
-import { resolve } from 'node:path';
+import {ConfigService} from '@nestjs/config';
+import {resolve} from 'node:path';
 import {MailerAsyncOptions} from "@nestjs-modules/mailer/dist/interfaces/mailer-async-options.interface";
 import {HandlebarsAdapter} from "@nestjs-modules/mailer/dist/adapters/handlebars.adapter";
 

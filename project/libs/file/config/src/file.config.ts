@@ -1,4 +1,4 @@
-import { registerAs } from '@nestjs/config';
+import {registerAs} from '@nestjs/config';
 import * as Joi from 'joi';
 import {DEFAULT_MONGO_PORT, DEFAULT_PORT, ENVIRONMENTS} from "./file-config.constant";
 
@@ -34,7 +34,7 @@ const validationSchema = Joi.object({
 });
 
 function validateConfig(config: FileVaultConfig): void {
-  const { error } = validationSchema.validate(config, { abortEarly: true });
+  const {error} = validationSchema.validate(config, {abortEarly: true});
   if (error) {
     throw new Error(`[Ошибка валидации конфига для сервиса файлов]: ${error.message}`);
   }

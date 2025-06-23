@@ -1,4 +1,4 @@
-import { UnauthorizedException } from '@nestjs/common';
+import {UnauthorizedException} from '@nestjs/common';
 
 export class TokenNotExistsException extends UnauthorizedException {
   constructor(tokenId: string) {

@@ -12,35 +12,29 @@ import {
   UseFilters,
   UseGuards
 } from '@nestjs/common';
-import { Request } from 'express';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiQuery,
-  ApiResponse,
-  ApiTags
-} from '@nestjs/swagger';
+import {Request} from 'express';
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags} from '@nestjs/swagger';
 
-import { HttpService } from '@nestjs/axios';
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
-import { ApplicationServiceURL } from './app.config';
-import { CheckAuthGuard } from './guards/check-auth.guard';
+import {HttpService} from '@nestjs/axios';
+import {AxiosExceptionFilter} from './filters/axios-exception.filter';
+import {ApplicationServiceURL} from './app.config';
+import {CheckAuthGuard} from './guards/check-auth.guard';
 import {CreateBlogCommentDto} from "@project/blog-comment";
+
 @ApiTags('Comments Gateway')
 @Controller('comments')
 @UseFilters(AxiosExceptionFilter)
 export class CommentsController {
   constructor(
     private readonly httpService: HttpService
-  ) {}
+  ) {
+  }
 
   @Post('/')
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Create new comment' })
-  @ApiBody({ type: CreateBlogCommentDto })
+  @ApiOperation({summary: 'Create new comment'})
+  @ApiBody({type: CreateBlogCommentDto})
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Comment created successfully',
@@ -58,19 +52,19 @@ export class CommentsController {
     @Req() req: Request,
     @Body() dto: CreateBlogCommentDto
   ) {
-    const { data } = await this.httpService.axiosRef.post(
+    const {data} = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Comments}/`,
       dto,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
     return data;
   }
 
   @Get('/post/:postId')
-  @ApiOperation({ summary: 'Get comments for post' })
-  @ApiParam({ name: 'postId', description: 'Post ID' })
+  @ApiOperation({summary: 'Get comments for post'})
+  @ApiParam({name: 'postId', description: 'Post ID'})
   @ApiQuery({
     name: 'limit',
     required: false,
@@ -102,16 +96,16 @@ export class CommentsController {
       page: page ? Number(page) : 0
     };
 
-    const { data } = await this.httpService.axiosRef.get(
+    const {data} = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Comments}/post/${postId}`,
-      { params }
+      {params}
     );
     return data;
   }
 
   @Get('/:id')
-  @ApiOperation({ summary: 'Get comment by ID' })
-  @ApiParam({ name: 'id', description: 'Comment ID' })
+  @ApiOperation({summary: 'Get comment by ID'})
+  @ApiParam({name: 'id', description: 'Comment ID'})
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Comment details',
@@ -122,7 +116,7 @@ export class CommentsController {
     description: 'Comment not found'
   })
   async getCommentById(@Param('id') id: string) {
-    const { data } = await this.httpService.axiosRef.get(
+    const {data} = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Comments}/${id}`
     );
     return data;
@@ -132,8 +126,8 @@ export class CommentsController {
   @UseGuards(CheckAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Delete comment' })
-  @ApiParam({ name: 'id', description: 'Comment ID' })
+  @ApiOperation({summary: 'Delete comment'})
+  @ApiParam({name: 'id', description: 'Comment ID'})
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
     description: 'Comment deleted'
@@ -153,7 +147,7 @@ export class CommentsController {
     await this.httpService.axiosRef.delete(
       `${ApplicationServiceURL.Comments}/${id}`,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
   }

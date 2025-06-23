@@ -1,4 +1,4 @@
-import { User, TokenPayload } from '@project/core';
+import {TokenPayload, User} from '@project/core';
 
 export function createJWTPayload(user: User): TokenPayload {
   return {

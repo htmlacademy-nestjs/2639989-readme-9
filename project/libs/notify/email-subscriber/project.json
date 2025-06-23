@@ -7,13 +7,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/notify/email-subscriber",
         "tsConfig": "libs/notify/email-subscriber/tsconfig.lib.json",
         "packageJson": "libs/notify/email-subscriber/package.json",
         "main": "libs/notify/email-subscriber/src/index.ts",
-        "assets": ["libs/notify/email-subscriber/*.md"]
+        "assets": [
+          "libs/notify/email-subscriber/*.md"
+        ]
       }
     }
   }

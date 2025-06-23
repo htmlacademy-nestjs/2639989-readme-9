@@ -35,9 +35,9 @@ export class AuthenticationController {
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authenticationService.register(dto);
     const userToken = await this.authenticationService.createUserToken(newUser);
-    const { email, firstname, lastname } = newUser;
-    await this.notifyService.registerSubscriber({ email, firstname, lastname });
-    await this.notifyService.addSubscriber({ email, firstname, lastname });
+    const {email, firstname, lastname} = newUser;
+    await this.notifyService.registerSubscriber({email, firstname, lastname});
+    await this.notifyService.addSubscriber({email, firstname, lastname});
     return fillDto(LoggedUserRdo, {...newUser.toPOJO(), ...userToken});
   }
 
@@ -52,7 +52,7 @@ export class AuthenticationController {
   })
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  public async login(@Req() { user }: RequestWithUser) {
+  public async login(@Req() {user}: RequestWithUser) {
     const userToken = await this.authenticationService.createUserToken(user);
     return fillDto(LoggedUserRdo, {...user.toPOJO(), ...userToken});
   }
@@ -79,7 +79,7 @@ export class AuthenticationController {
     status: HttpStatus.OK,
     description: 'Получить новую пару JWT токенов'
   })
-  public async refreshToken(@Req() { user }: RequestWithUser) {
+  public async refreshToken(@Req() {user}: RequestWithUser) {
     return this.authenticationService.createUserToken(user);
   }
 
@@ -117,7 +117,7 @@ export class AuthenticationController {
 
   @UseGuards(JwtAuthGuard)
   @Post('check')
-  public async checkToken(@Req() { user: payload }: RequestWithTokenPayload) {
+  public async checkToken(@Req() {user: payload}: RequestWithTokenPayload) {
     return payload;
   }
 }

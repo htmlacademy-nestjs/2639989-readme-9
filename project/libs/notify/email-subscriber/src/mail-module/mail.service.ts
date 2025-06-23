@@ -1,9 +1,9 @@
-import { MailerService } from '@nestjs-modules/mailer';
-import { Inject, Injectable } from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
+import {MailerService} from '@nestjs-modules/mailer';
+import {Inject, Injectable} from '@nestjs/common';
+import {ConfigType} from '@nestjs/config';
 
 import {Newsletter, Subscriber} from '@project/core';
-import { NotifyConfig } from '@project/notify-config';
+import {NotifyConfig} from '@project/notify-config';
 
 import {
   EMAIL_ADD_SUBSCRIBER_SUBJECT,
@@ -14,10 +14,11 @@ import {
 
 @Injectable()
 export class MailService {
-  constructor(private readonly mailerService: MailerService) {}
-
   @Inject(NotifyConfig.KEY)
   private readonly notifyConfig: ConfigType<typeof NotifyConfig>
+
+  constructor(private readonly mailerService: MailerService) {
+  }
 
   public async sendNotifyNewSubscriber(subscriber: Subscriber) {
     await this.mailerService.sendMail({

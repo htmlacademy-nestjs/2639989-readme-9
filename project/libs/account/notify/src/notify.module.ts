@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common';
-import { RabbitMQModule } from '@golevelup/nestjs-rabbitmq';
+import {Module} from '@nestjs/common';
+import {RabbitMQModule} from '@golevelup/nestjs-rabbitmq';
 
-import { getRabbitMQOptions } from '@project/helpers';
+import {getRabbitMQOptions} from '@project/helpers';
 
-import { NotifyService } from './notify.service';
+import {NotifyService} from './notify.service';
 
 @Module({
   imports: [
@@ -14,4 +14,5 @@ import { NotifyService } from './notify.service';
   providers: [NotifyService],
   exports: [NotifyService]
 })
-export class NotifyModule {}
+export class NotifyModule {
+}

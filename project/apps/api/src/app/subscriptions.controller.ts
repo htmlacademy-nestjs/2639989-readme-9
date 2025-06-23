@@ -6,25 +6,19 @@ import {
   HttpCode,
   HttpStatus,
   Param,
-  Post, Query,
+  Post,
+  Query,
   Req,
   UseFilters,
   UseGuards
 } from '@nestjs/common';
-import { Request } from 'express';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags
-} from '@nestjs/swagger';
+import {Request} from 'express';
+import {ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
 
-import { HttpService } from '@nestjs/axios';
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
-import { ApplicationServiceURL } from './app.config';
-import { CheckAuthGuard } from './guards/check-auth.guard';
+import {HttpService} from '@nestjs/axios';
+import {AxiosExceptionFilter} from './filters/axios-exception.filter';
+import {ApplicationServiceURL} from './app.config';
+import {CheckAuthGuard} from './guards/check-auth.guard';
 import {CreateBlogSubscriptionDto} from "@project/blog-subscription";
 
 @ApiTags('Subscriptions Gateway')
@@ -33,13 +27,14 @@ import {CreateBlogSubscriptionDto} from "@project/blog-subscription";
 export class SubscriptionsController {
   constructor(
     private readonly httpService: HttpService
-  ) {}
+  ) {
+  }
 
   @Post('/')
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Subscribe to user' })
-  @ApiBody({ type: CreateBlogSubscriptionDto })
+  @ApiOperation({summary: 'Subscribe to user'})
+  @ApiBody({type: CreateBlogSubscriptionDto})
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Subscription created'
@@ -56,11 +51,11 @@ export class SubscriptionsController {
     @Req() req: Request,
     @Body() dto: CreateBlogSubscriptionDto
   ) {
-    const { data } = await this.httpService.axiosRef.post(
+    const {data} = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Subscriptions}/`,
       dto,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
     return data;
@@ -69,8 +64,8 @@ export class SubscriptionsController {
   @Get('/follower/:followerId')
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get user subscriptions' })
-  @ApiParam({ name: 'followerId', description: 'Follower user ID' })
+  @ApiOperation({summary: 'Get user subscriptions'})
+  @ApiParam({name: 'followerId', description: 'Follower user ID'})
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Subscriptions list',
@@ -80,10 +75,10 @@ export class SubscriptionsController {
     @Req() req: Request,
     @Param('followerId') followerId: string
   ) {
-    const { data } = await this.httpService.axiosRef.get(
+    const {data} = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Subscriptions}/follower/${followerId}`,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
     return data;
@@ -92,8 +87,8 @@ export class SubscriptionsController {
   @Get('/following/:followingId')
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get user followers' })
-  @ApiParam({ name: 'followingId', description: 'Following user ID' })
+  @ApiOperation({summary: 'Get user followers'})
+  @ApiParam({name: 'followingId', description: 'Following user ID'})
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Followers list',
@@ -103,10 +98,10 @@ export class SubscriptionsController {
     @Req() req: Request,
     @Param('followingId') followingId: string
   ) {
-    const { data } = await this.httpService.axiosRef.get(
+    const {data} = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Subscriptions}/following/${followingId}`,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
     return data;
@@ -115,9 +110,9 @@ export class SubscriptionsController {
   @Get('/:followerId/:followingId')
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Check subscription status' })
-  @ApiParam({ name: 'followerId', description: 'Follower user ID' })
-  @ApiParam({ name: 'followingId', description: 'Following user ID' })
+  @ApiOperation({summary: 'Check subscription status'})
+  @ApiParam({name: 'followerId', description: 'Follower user ID'})
+  @ApiParam({name: 'followingId', description: 'Following user ID'})
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Subscription status',
@@ -132,10 +127,10 @@ export class SubscriptionsController {
     @Param('followerId') followerId: string,
     @Param('followingId') followingId: string
   ) {
-    const { data } = await this.httpService.axiosRef.get(
+    const {data} = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Subscriptions}/${followerId}/${followingId}`,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
     return data;
@@ -145,9 +140,9 @@ export class SubscriptionsController {
   @UseGuards(CheckAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Unsubscribe from user' })
-  @ApiParam({ name: 'followerId', description: 'Follower user ID' })
-  @ApiParam({ name: 'followingId', description: 'Following user ID' })
+  @ApiOperation({summary: 'Unsubscribe from user'})
+  @ApiParam({name: 'followerId', description: 'Follower user ID'})
+  @ApiParam({name: 'followingId', description: 'Following user ID'})
   @ApiResponse({
     status: HttpStatus.NO_CONTENT,
     description: 'Subscription removed'
@@ -164,7 +159,7 @@ export class SubscriptionsController {
     await this.httpService.axiosRef.delete(
       `${ApplicationServiceURL.Subscriptions}/${followerId}/${followingId}`,
       {
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
   }
@@ -172,8 +167,8 @@ export class SubscriptionsController {
   @Get('/feed/:userId')
   @UseGuards(CheckAuthGuard)
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Get user feed based on subscriptions' })
-  @ApiParam({ name: 'userId', description: 'User ID' })
+  @ApiOperation({summary: 'Get user feed based on subscriptions'})
+  @ApiParam({name: 'userId', description: 'User ID'})
   @ApiResponse({
     status: HttpStatus.OK,
     description: 'Feed posts',
@@ -184,11 +179,11 @@ export class SubscriptionsController {
     @Param('userId') userId: string,
     @Query() query: any
   ) {
-    const { data } = await this.httpService.axiosRef.get(
+    const {data} = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Subscriptions}/feed/${userId}`,
       {
         params: query,
-        headers: { 'Authorization': req.headers['authorization'] }
+        headers: {'Authorization': req.headers['authorization']}
       }
     );
     return data;

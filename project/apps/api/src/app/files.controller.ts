@@ -1,32 +1,13 @@
-import {
-  Controller,
-  Get,
-  Param,
-  Post,
-  Req,
-  UploadedFile,
-  UseFilters,
-  UseGuards,
-  UseInterceptors
-} from '@nestjs/common';
-import { Request } from 'express';
-import { FileInterceptor } from '@nestjs/platform-express';
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-  ApiTags
-} from '@nestjs/swagger';
+import {Controller, Get, Param, Post, Req, UploadedFile, UseFilters, UseGuards, UseInterceptors} from '@nestjs/common';
+import {Express, Request} from 'express';
+import {FileInterceptor} from '@nestjs/platform-express';
+import {ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiResponse, ApiTags} from '@nestjs/swagger';
 import 'multer';
-import { Express } from 'express';
 
-import { HttpService } from '@nestjs/axios';
-import { AxiosExceptionFilter } from './filters/axios-exception.filter';
-import { ApplicationServiceURL } from './app.config';
-import { CheckAuthGuard } from './guards/check-auth.guard';
+import {HttpService} from '@nestjs/axios';
+import {AxiosExceptionFilter} from './filters/axios-exception.filter';
+import {ApplicationServiceURL} from './app.config';
+import {CheckAuthGuard} from './guards/check-auth.guard';
 
 @ApiTags('Files Gateway')
 @Controller('files')
@@ -34,13 +15,14 @@ import { CheckAuthGuard } from './guards/check-auth.guard';
 export class FilesController {
   constructor(
     private readonly httpService: HttpService
-  ) {}
+  ) {
+  }
 
   @Post('/upload')
   @UseGuards(CheckAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Upload file' })
+  @ApiOperation({summary: 'Upload file'})
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
@@ -73,7 +55,7 @@ export class FilesController {
     const formData = new FormData();
     formData.append('file', new Blob([file.buffer]), file.originalname);
 
-    const { data } = await this.httpService.axiosRef.post(
+    const {data} = await this.httpService.axiosRef.post(
       `${ApplicationServiceURL.Files}/upload`,
       formData,
       {
@@ -87,8 +69,8 @@ export class FilesController {
   }
 
   @Get(':fileId')
-  @ApiOperation({ summary: 'Get file details' })
-  @ApiParam({ name: 'fileId', description: 'File ID' })
+  @ApiOperation({summary: 'Get file details'})
+  @ApiParam({name: 'fileId', description: 'File ID'})
   @ApiResponse({
     status: 200,
     description: 'File details',
@@ -101,15 +83,15 @@ export class FilesController {
   async getFile(
     @Param('fileId') fileId: string
   ) {
-    const { data } = await this.httpService.axiosRef.get(
+    const {data} = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Files}/${fileId}`
     );
     return data;
   }
 
   @Get(':fileId/download')
-  @ApiOperation({ summary: 'Download file' })
-  @ApiParam({ name: 'fileId', description: 'File ID' })
+  @ApiOperation({summary: 'Download file'})
+  @ApiParam({name: 'fileId', description: 'File ID'})
   @ApiResponse({
     status: 200,
     description: 'File content',
@@ -121,9 +103,9 @@ export class FilesController {
   async downloadFile(
     @Param('fileId') fileId: string
   ) {
-    const { data } = await this.httpService.axiosRef.get(
+    const {data} = await this.httpService.axiosRef.get(
       `${ApplicationServiceURL.Files}/${fileId}/download`,
-      { responseType: 'stream' }
+      {responseType: 'stream'}
     );
     return data;
   }

@@ -1,15 +1,15 @@
 import 'multer';
 import {Inject, Injectable, Logger, NotFoundException} from '@nestjs/common';
-import { ConfigType } from '@nestjs/config';
-import { ensureDir } from 'fs-extra';
-import { writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import { extension } from 'mime-types';
-import { randomUUID } from 'node:crypto';
+import {ConfigType} from '@nestjs/config';
+import {ensureDir} from 'fs-extra';
+import {writeFile} from 'node:fs/promises';
+import {join} from 'node:path';
+import {extension} from 'mime-types';
+import {randomUUID} from 'node:crypto';
 
-import { FileVaultConfig } from '@project/file-config';
+import {FileVaultConfig} from '@project/file-config';
 import dayjs from 'dayjs';
-import { StoredFile } from '@project/core';
+import {StoredFile} from '@project/core';
 import {FileUploaderRepository} from "./file-uploader.repository";
 import {FileUploaderEntity} from "./file-uploader.entity";
 import {FileUploaderFactory} from "./file-uploader.factory";
@@ -23,19 +23,7 @@ export class FileUploaderService {
     @Inject(FileVaultConfig.KEY)
     private readonly config: ConfigType<typeof FileVaultConfig>,
     private readonly fileRepository: FileUploaderRepository,
-  ) {}
-
-  private getUploadDirectoryPath(): string {
-    return this.config.uploadDirectory;
-  }
-
-  private getDestinationFilePath(filename: string): string {
-    return join(this.getUploadDirectoryPath(), this.getSubUploadDirectoryPath(), filename);
-  }
-
-  private getSubUploadDirectoryPath(): string {
-    const [year, month] = dayjs().format(this.DATE_FORMAT).split(' ');
-    return join(year, month);
+  ) {
   }
 
   public async writeFile(file: Express.Multer.File): Promise<StoredFile> {
@@ -44,7 +32,7 @@ export class FileUploaderService {
       const subDirectory = this.getSubUploadDirectoryPath();
       const fileExtension = extension(file.mimetype);
 
-      if(!fileExtension) {
+      if (!fileExtension) {
         throw new NotFoundException('File extension does not exist');
       }
 
@@ -87,10 +75,23 @@ export class FileUploaderService {
   public async getFile(fileId: string): Promise<FileUploaderEntity> {
     const existFile = await this.fileRepository.findById(fileId);
 
-    if (! existFile) {
+    if (!existFile) {
       throw new NotFoundException(`File with ${fileId} not found.`);
     }
 
     return existFile;
+  }
+
+  private getUploadDirectoryPath(): string {
+    return this.config.uploadDirectory;
+  }
+
+  private getDestinationFilePath(filename: string): string {
+    return join(this.getUploadDirectoryPath(), this.getSubUploadDirectoryPath(), filename);
+  }
+
+  private getSubUploadDirectoryPath(): string {
+    const [year, month] = dayjs().format(this.DATE_FORMAT).split(' ');
+    return join(year, month);
   }
 }

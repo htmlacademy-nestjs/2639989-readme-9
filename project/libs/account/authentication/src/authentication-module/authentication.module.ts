@@ -7,7 +7,7 @@ import {ConfigService} from "@nestjs/config";
 import {getJwtOptions} from "@project/account-config";
 import {JwtAccessStrategy} from "../strategies/jwt-access.strategy";
 import {NotifyModule} from "@project/account-notify";
-import { LocalStrategy } from '../strategies/local.strategy';
+import {LocalStrategy} from '../strategies/local.strategy';
 import {JwtRefreshStrategy} from "../strategies/jwt-refresh.strategy";
 
 @Module({

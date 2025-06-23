@@ -1,4 +1,4 @@
-import { Entity, JwtToken, StorableEntity } from '@project/core';
+import {Entity, JwtToken, StorableEntity} from '@project/core';
 
 export class RefreshTokenEntity extends Entity implements StorableEntity<JwtToken> {
   public tokenId: string;

@@ -1,4 +1,4 @@
-import { TokenPayload } from '@project/core';
+import {TokenPayload} from '@project/core';
 
 export interface RequestWithTokenPayload {
   user?: TokenPayload

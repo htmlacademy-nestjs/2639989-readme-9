@@ -7,13 +7,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/shared/interceptors",
         "tsConfig": "libs/shared/interceptors/tsconfig.lib.json",
         "packageJson": "libs/shared/interceptors/package.json",
         "main": "libs/shared/interceptors/src/index.ts",
-        "assets": ["libs/shared/interceptors/*.md"]
+        "assets": [
+          "libs/shared/interceptors/*.md"
+        ]
       }
     }
   }

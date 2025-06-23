@@ -7,13 +7,17 @@
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/libs/file/config",
         "tsConfig": "libs/file/config/tsconfig.lib.json",
         "packageJson": "libs/file/config/package.json",
         "main": "libs/file/config/src/index.ts",
-        "assets": ["libs/file/config/*.md"]
+        "assets": [
+          "libs/file/config/*.md"
+        ]
       }
     }
   }

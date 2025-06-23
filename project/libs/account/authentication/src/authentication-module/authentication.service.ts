@@ -2,7 +2,8 @@ import {
   BadRequestException,
   ConflictException,
   HttpException,
-  HttpStatus, Inject,
+  HttpStatus,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -13,13 +14,13 @@ import {CreateUserDto} from "../dto/create-user.dto";
 import dayjs from 'dayjs';
 import {AuthenticationExceptionMessage} from "./authentication.constant";
 import {LoginUserDto} from "../dto/login-user.dto";
-import {Token, TokenPayload, User} from "@project/core";
+import {Token, User} from "@project/core";
 import {JwtService} from '@nestjs/jwt';
 import {ChangePasswordDto} from "../dto/change-password.dto";
-import { jwtConfig } from '@project/account-config';
+import {jwtConfig} from '@project/account-config';
 import {ConfigType} from "@nestjs/config";
 import {createJWTPayload} from "@project/helpers";
-import { RefreshTokenService } from '../refresh-token-module/refresh-token.service';
+import {RefreshTokenService} from '../refresh-token-module/refresh-token.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -84,7 +85,7 @@ export class AuthenticationService {
 
   public async createUserToken(user: User): Promise<Token> {
     const accessTokenPayload = createJWTPayload(user);
-    const refreshTokenPayload = { ...accessTokenPayload, tokenId: crypto.randomUUID() };
+    const refreshTokenPayload = {...accessTokenPayload, tokenId: crypto.randomUUID()};
     await this.refreshTokenService.createRefreshSession(refreshTokenPayload);
 
     try {
@@ -94,7 +95,7 @@ export class AuthenticationService {
         expiresIn: this.jwtOptions.refreshTokenExpiresIn
       });
 
-      return { accessToken, refreshToken };
+      return {accessToken, refreshToken};
     } catch (error) {
       this.logger.error('[Token generation error]: ' + error.message);
       throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -124,7 +125,7 @@ export class AuthenticationService {
   public async getUserByEmail(email: string) {
     const existUser = await this.blogUserRepository.findByEmail(email);
 
-    if (! existUser) {
+    if (!existUser) {
       throw new NotFoundException(`Пользователь с email ${email} не найден`);
     }
 

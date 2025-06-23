@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import {IsOptional, IsDateString, IsDate} from 'class-validator';
+import {ApiProperty} from '@nestjs/swagger';
+import {IsDate} from 'class-validator';
 
 export class SendNewsletterDto {
   @ApiProperty({

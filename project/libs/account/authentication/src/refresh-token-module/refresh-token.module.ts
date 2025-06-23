@@ -1,14 +1,14 @@
-import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import {Module} from '@nestjs/common';
+import {MongooseModule} from '@nestjs/mongoose';
 
-import { RefreshTokenModel, RefreshTokenSchema } from './refresh-token.model';
-import { RefreshTokenService } from './refresh-token.service';
-import { RefreshTokenRepository } from './refresh-token.repository';
-import { RefreshTokenFactory } from './refresh-token.factory';
+import {RefreshTokenModel, RefreshTokenSchema} from './refresh-token.model';
+import {RefreshTokenService} from './refresh-token.service';
+import {RefreshTokenRepository} from './refresh-token.repository';
+import {RefreshTokenFactory} from './refresh-token.factory';
 
 @Module({
   imports: [MongooseModule.forFeature([
-    { name: RefreshTokenModel.name, schema: RefreshTokenSchema }
+    {name: RefreshTokenModel.name, schema: RefreshTokenSchema}
   ])],
   providers: [
     RefreshTokenService,
@@ -19,4 +19,5 @@ import { RefreshTokenFactory } from './refresh-token.factory';
     RefreshTokenService
   ]
 })
-export class RefreshTokenModule {}
+export class RefreshTokenModule {
+}

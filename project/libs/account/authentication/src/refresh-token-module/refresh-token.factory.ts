@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable} from '@nestjs/common';
 
-import { JwtToken, EntityFactory } from '@project/core';
+import {EntityFactory, JwtToken} from '@project/core';
 
-import { RefreshTokenEntity } from './refresh-token.entity';
+import {RefreshTokenEntity} from './refresh-token.entity';
 
 @Injectable()
 export class RefreshTokenFactory implements EntityFactory<RefreshTokenEntity> {

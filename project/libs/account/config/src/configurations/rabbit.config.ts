@@ -1,4 +1,4 @@
-import { registerAs } from '@nestjs/config';
+import {registerAs} from '@nestjs/config';
 import * as Joi from 'joi';
 
 const DEFAULT_RABBIT_PORT = 5672;
@@ -22,7 +22,7 @@ const validationSchema = Joi.object({
 });
 
 function validateConfig(config: RabbitConfig): void {
-  const { error } = validationSchema.validate(config, { abortEarly: true });
+  const {error} = validationSchema.validate(config, {abortEarly: true});
   if (error) {
     throw new Error(`[Rabbit Config Validation Error]: ${error.message}`);
   }

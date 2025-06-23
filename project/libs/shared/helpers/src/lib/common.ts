@@ -51,5 +51,5 @@ export function parseTime(time: string): TimeAndUnit {
     throw new Error(`[parseTime] Не могу получить значение, оно NaN.`);
   }
 
-  return { value, unit }
+  return {value, unit}
 }
