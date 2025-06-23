@@ -1,13 +1,13 @@
-import { Document } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import {Document} from 'mongoose';
+import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 
-import { Subscriber } from '@project/core';
+import {Subscriber} from '@project/core';
 
 @Schema({
   collection: 'email-subscribers',
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  toJSON: {virtuals: true},
+  toObject: {virtuals: true}
 })
 export class EmailSubscriberModel extends Document implements Subscriber {
   @Prop({
@@ -30,6 +30,6 @@ export class EmailSubscriberModel extends Document implements Subscriber {
 
 export const EmailSubscriberSchema = SchemaFactory.createForClass(EmailSubscriberModel);
 
-EmailSubscriberSchema.virtual('id').get(function() {
+EmailSubscriberSchema.virtual('id').get(function () {
   return this._id.toString();
 });

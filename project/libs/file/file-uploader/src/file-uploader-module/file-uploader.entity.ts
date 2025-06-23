@@ -1,4 +1,4 @@
-import { Entity, File, StorableEntity } from '@project/core';
+import {Entity, File, StorableEntity} from '@project/core';
 
 export class FileUploaderEntity extends Entity implements StorableEntity<File> {
   public originalName: string;
@@ -10,13 +10,13 @@ export class FileUploaderEntity extends Entity implements StorableEntity<File> {
   public updatedAt: Date;
   public subDirectory: string;
 
-  constructor (file?: File) {
+  constructor(file?: File) {
     super();
     this.populate(file);
   }
 
   public populate(file?: File): void {
-    if (! file) {
+    if (!file) {
       return;
     }
 

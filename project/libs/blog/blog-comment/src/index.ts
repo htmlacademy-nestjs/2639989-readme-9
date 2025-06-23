@@ -4,3 +4,4 @@ export {BlogCommentFactory} from './blog-comment-module/blog-comment.factory';
 export {BlogCommentService} from './blog-comment-module/blog-comment.service';
 
 export {BlogCommentRdo} from './blog-comment-module/rdo/blog-comment.rdo';
+export {CreateBlogCommentDto} from './blog-comment-module/dto/create-blog-comment.dto';

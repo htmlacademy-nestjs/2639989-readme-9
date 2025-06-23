@@ -1,13 +1,13 @@
-import { Document } from 'mongoose';
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import {Document} from 'mongoose';
+import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 
-import { File } from '@project/core';
+import {File} from '@project/core';
 
 @Schema({
   collection: 'files',
   timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true }
+  toJSON: {virtuals: true},
+  toObject: {virtuals: true}
 })
 export class FileModel extends Document implements File {
   @Prop({
@@ -49,6 +49,6 @@ export class FileModel extends Document implements File {
 
 export const FileSchema = SchemaFactory.createForClass(FileModel);
 
-FileSchema.virtual('id').get(function() {
+FileSchema.virtual('id').get(function () {
   return this._id.toString();
 });

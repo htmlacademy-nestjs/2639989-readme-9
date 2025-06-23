@@ -29,6 +29,7 @@
     "mongoose": "8.15.1",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.0"
   },
@@ -52,6 +53,7 @@
     "@types/nodemailer": "^6.4.17",
     "@types/passport": "^1.0.17",
     "@types/passport-jwt": "^4.0.1",
+    "@types/passport-local": "^1.0.38",
     "nx": "20.8.1",
     "prettier": "^2.6.2",
     "prisma": "^6.9.0",

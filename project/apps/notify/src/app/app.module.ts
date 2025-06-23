@@ -1,7 +1,7 @@
 import {Module} from '@nestjs/common';
 import {MongooseModule} from "@nestjs/mongoose";
 import {getMongooseOptions, NotifyConfigModule} from "@project/notify-config";
-import { EmailSubscriberModule } from '@project/email-subscriber';
+import {EmailSubscriberModule} from '@project/email-subscriber';
 
 @Module({
   imports: [

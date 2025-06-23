@@ -1,7 +1,6 @@
-import {Body, Controller, Get, HttpStatus, Param, Patch, Post, UseGuards} from '@nestjs/common';
+import {Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards} from '@nestjs/common';
 import {AuthenticationService} from "./authentication.service";
 import {CreateUserDto} from "../dto/create-user.dto";
-import {LoginUserDto} from "../dto/login-user.dto";
 import {ApiResponse, ApiTags} from "@nestjs/swagger";
 import {AuthenticationResponseMessage} from "./authentication.constant";
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
@@ -12,6 +11,10 @@ import {fillDto} from "@project/helpers";
 import {NotifyService} from "@project/account-notify";
 import {ChangePasswordDto} from "../dto/change-password.dto";
 import {TokenPayload, UserDecorator} from "@project/core";
+import {LocalAuthGuard} from "../guards/local-auth.guard";
+import {RequestWithUser} from "./request-with-user.interface";
+import {JwtRefreshGuard} from "../guards/jwt-refresh.guard";
+import {RequestWithTokenPayload} from "./request-with-token-payload.interface";
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -32,9 +35,9 @@ export class AuthenticationController {
   public async create(@Body() dto: CreateUserDto) {
     const newUser = await this.authenticationService.register(dto);
     const userToken = await this.authenticationService.createUserToken(newUser);
-    const { email, firstname, lastname } = newUser;
-    await this.notifyService.registerSubscriber({ email, firstname, lastname });
-    await this.notifyService.addSubscriber({ email, firstname, lastname });
+    const {email, firstname, lastname} = newUser;
+    await this.notifyService.registerSubscriber({email, firstname, lastname});
+    await this.notifyService.addSubscriber({email, firstname, lastname});
     return fillDto(LoggedUserRdo, {...newUser.toPOJO(), ...userToken});
   }
 
@@ -47,11 +50,11 @@ export class AuthenticationController {
     status: HttpStatus.UNAUTHORIZED,
     description: AuthenticationResponseMessage.LoggedError,
   })
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  public async login(@Body() dto: LoginUserDto) {
-    const verifiedUser = await this.authenticationService.verifyUser(dto);
-    const userToken = await this.authenticationService.createUserToken(verifiedUser);
-    return fillDto(LoggedUserRdo, {...verifiedUser.toPOJO(), ...userToken});
+  public async login(@Req() {user}: RequestWithUser) {
+    const userToken = await this.authenticationService.createUserToken(user);
+    return fillDto(LoggedUserRdo, {...user.toPOJO(), ...userToken});
   }
 
   @ApiResponse({
@@ -67,6 +70,17 @@ export class AuthenticationController {
   public async show(@Param('id', MongoIdValidationPipe) id: string) {
     const existUser = await this.authenticationService.getUser(id);
     return existUser.toPOJO();
+  }
+
+  @UseGuards(JwtRefreshGuard)
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Получить новую пару JWT токенов'
+  })
+  public async refreshToken(@Req() {user}: RequestWithUser) {
+    return this.authenticationService.createUserToken(user);
   }
 
   @ApiResponse({
@@ -99,5 +113,11 @@ export class AuthenticationController {
       success: true,
       message: 'Пароль успешно изменен'
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('check')
+  public async checkToken(@Req() {user: payload}: RequestWithTokenPayload) {
+    return payload;
   }
 }

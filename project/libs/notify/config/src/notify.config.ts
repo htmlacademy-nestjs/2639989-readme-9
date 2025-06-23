@@ -1,4 +1,4 @@
-import { registerAs } from '@nestjs/config';
+import {registerAs} from '@nestjs/config';
 import * as Joi from 'joi';
 
 const DEFAULT_PORT = 3002;
@@ -66,7 +66,7 @@ const validationSchema = Joi.object({
 });
 
 function validateConfig(config: NotifyConfig): void {
-  const { error } = validationSchema.validate(config, { abortEarly: true });
+  const {error} = validationSchema.validate(config, {abortEarly: true});
   if (error) {
     throw new Error(`[Notify Config Validation Error]: ${error.message}`);
   }

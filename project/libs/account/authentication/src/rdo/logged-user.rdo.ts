@@ -23,4 +23,10 @@ export class LoggedUserRdo {
   })
   @Expose()
   public accessToken: string;
+
+  @ApiProperty({
+    description: 'Токен обновления пользователя',
+  })
+  @Expose()
+  public refreshToken: string;
 }

@@ -1,10 +1,10 @@
 import 'multer';
-import { Express } from 'express';
+import {Express} from 'express';
 import {Controller, Get, Param, Post, UploadedFile, UseGuards, UseInterceptors} from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import {FileInterceptor} from '@nestjs/platform-express';
 
-import { FileUploaderService } from './file-uploader.service';
-import { fillDto } from '@project/helpers';
+import {FileUploaderService} from './file-uploader.service';
+import {fillDto} from '@project/helpers';
 import {UploadedFileRdo} from "./rdo/uploaded-file.rdo";
 import {MongoIdValidationPipe} from "@project/pipes";
 import {JwtAuthGuard} from "@project/authentication";
@@ -13,7 +13,8 @@ import {JwtAuthGuard} from "@project/authentication";
 export class FileUploaderController {
   constructor(
     private readonly fileUploaderService: FileUploaderService,
-  ) {}
+  ) {
+  }
 
   @UseGuards(JwtAuthGuard)
   @Post('/upload')

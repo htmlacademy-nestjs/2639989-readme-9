@@ -4,7 +4,7 @@ import {BlogSubscriptionEntity} from './blog-subscription.entity';
 import {CreateBlogSubscriptionDto} from './dto/create-blog-subscription.dto';
 import {NotifyService} from "@project/account-notify";
 import {BlogPostService} from "@project/blog-post";
-import { AuthenticationService } from '@project/authentication';
+import {AuthenticationService} from '@project/authentication';
 
 @Injectable()
 export class BlogSubscriptionService {
@@ -62,7 +62,7 @@ export class BlogSubscriptionService {
     const authorIds = subscriptions.map(sub => sub.followingId);
 
     const newPosts = [];
-    for(const author of authorIds) {
+    for (const author of authorIds) {
       const authorPosts = await this.blogPostService.getPostsByPeriod(
         startDate ? new Date(startDate) : this.getDefaultStartDate(),
         author
@@ -78,7 +78,7 @@ export class BlogSubscriptionService {
       created: new Date()
     });
 
-    return { success: true, count: newPosts.length };
+    return {success: true, count: newPosts.length};
   }
 
   private getDefaultStartDate(): Date {

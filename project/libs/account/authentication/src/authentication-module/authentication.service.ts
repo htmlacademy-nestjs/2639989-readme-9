@@ -3,6 +3,7 @@ import {
   ConflictException,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -13,9 +14,13 @@ import {CreateUserDto} from "../dto/create-user.dto";
 import dayjs from 'dayjs';
 import {AuthenticationExceptionMessage} from "./authentication.constant";
 import {LoginUserDto} from "../dto/login-user.dto";
-import {Token, TokenPayload, User} from "@project/core";
+import {Token, User} from "@project/core";
 import {JwtService} from '@nestjs/jwt';
 import {ChangePasswordDto} from "../dto/change-password.dto";
+import {jwtConfig} from '@project/account-config';
+import {ConfigType} from "@nestjs/config";
+import {createJWTPayload} from "@project/helpers";
+import {RefreshTokenService} from '../refresh-token-module/refresh-token.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -23,7 +28,9 @@ export class AuthenticationService {
 
   constructor(
     private readonly blogUserRepository: BlogUserRepository,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY) private readonly jwtOptions: ConfigType<typeof jwtConfig>,
+    private readonly refreshTokenService: RefreshTokenService
   ) {
   }
 
@@ -77,16 +84,18 @@ export class AuthenticationService {
   }
 
   public async createUserToken(user: User): Promise<Token> {
-    const payload: TokenPayload = {
-      sub: user.id,
-      email: user.email,
-      lastname: user.lastname,
-      firstname: user.firstname,
-    };
+    const accessTokenPayload = createJWTPayload(user);
+    const refreshTokenPayload = {...accessTokenPayload, tokenId: crypto.randomUUID()};
+    await this.refreshTokenService.createRefreshSession(refreshTokenPayload);
 
     try {
-      const accessToken = await this.jwtService.signAsync(payload);
-      return {accessToken};
+      const accessToken = await this.jwtService.signAsync(accessTokenPayload);
+      const refreshToken = await this.jwtService.signAsync(refreshTokenPayload, {
+        secret: this.jwtOptions.refreshTokenSecret,
+        expiresIn: this.jwtOptions.refreshTokenExpiresIn
+      });
+
+      return {accessToken, refreshToken};
     } catch (error) {
       this.logger.error('[Token generation error]: ' + error.message);
       throw new HttpException('Ошибка при создании токена.', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -111,5 +120,15 @@ export class AuthenticationService {
     await this.blogUserRepository.update(updatedUser);
 
     return updatedUser;
+  }
+
+  public async getUserByEmail(email: string) {
+    const existUser = await this.blogUserRepository.findByEmail(email);
+
+    if (!existUser) {
+      throw new NotFoundException(`Пользователь с email ${email} не найден`);
+    }
+
+    return existUser;
   }
 }

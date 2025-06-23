@@ -1,17 +1,17 @@
-import { Entity, StorableEntity, Subscriber } from '@project/core';
+import {Entity, StorableEntity, Subscriber} from '@project/core';
 
 export class EmailSubscriberEntity extends Entity implements StorableEntity<Subscriber> {
   public email: string;
   public firstname: string;
   public lastname: string;
 
-  constructor (subscriber?: Subscriber) {
+  constructor(subscriber?: Subscriber) {
     super();
     this.populate(subscriber);
   }
 
   public populate(subscriber?: Subscriber): void {
-    if (! subscriber) {
+    if (!subscriber) {
       return;
     }
 

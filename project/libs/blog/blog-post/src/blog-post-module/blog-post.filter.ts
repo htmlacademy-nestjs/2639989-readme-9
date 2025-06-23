@@ -30,7 +30,7 @@ export const postFilterToPrismaFilter = (filter: BlogPostFilter): Prisma.PostWhe
 
   if (filter.startDate) {
     (where.AND as Prisma.PostWhereInput[]).push({
-      publishedAt: { gte: filter.startDate }
+      publishedAt: {gte: filter.startDate}
     });
   }
 
