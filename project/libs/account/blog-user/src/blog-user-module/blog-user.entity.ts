@@ -3,6 +3,7 @@ import {compare, genSalt, hash} from "bcrypt";
 import {SALT_ROUNDS} from "./blog-user.constant";
 
 export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
+  public avatar: string;
   public email: string;
   public firstname: string;
   public lastname: string;
@@ -20,6 +21,7 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
     }
 
     this.id = user.id ?? '';
+    this.avatar = user.avatar;
     this.email = user.email;
     this.dateOfBirth = user.dateOfBirth;
     this.firstname = user.firstname;
@@ -30,6 +32,7 @@ export class BlogUserEntity extends Entity implements StorableEntity<AuthUser> {
   public toPOJO(): AuthUser {
     return {
       id: this.id,
+      avatar: this.avatar,
       email: this.email,
       firstname: this.firstname,
       lastname: this.lastname,

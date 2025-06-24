@@ -13,15 +13,15 @@ export class CreateUserDto {
   })
   @IsEmail({}, {message: AuthenticationValidateMessage.EmailNotValid})
   @IsNotEmpty({message: AuthenticationValidateMessage.EmailRequired})
-  public email: string;
+  public avatar: string;
 
   @ApiProperty({
-    description: 'Дата создания аккаунта пользователя',
-    example: '1981-03-12',
+    description: 'Уникальный адрес пользователя',
+    example: 'user@user.ru'
   })
-  @IsISO8601({}, {message: AuthenticationValidateMessage.DateBirthNotValid})
-  @IsNotEmpty({message: AuthenticationValidateMessage.DateBirthRequired})
-  public dateOfBirth: string;
+  @IsEmail({}, {message: AuthenticationValidateMessage.EmailNotValid})
+  @IsNotEmpty({message: AuthenticationValidateMessage.EmailRequired})
+  public email: string;
 
   @ApiProperty({
     description: 'Имя пользователя',
