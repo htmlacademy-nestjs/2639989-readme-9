@@ -71,7 +71,7 @@ export class BlogPostService {
     }
   }
 
-  public async createPost(userId, dto: CreateBlogPostDto): Promise<BlogPostEntity> {
+  public async createPost(userId: string, dto: CreateBlogPostDto): Promise<BlogPostEntity> {
     if (dto.isRepost && !dto.originalPostId) {
       throw new BadRequestException(
         'Для репоста необходимо указать оригинальный пост'
@@ -85,6 +85,14 @@ export class BlogPostService {
         if (post.id === dto.originalPostId) {
           throw new ConflictException('Нельзя репостить свой собственный пост');
         }
+
+        const userPosts =
+          await this.blogPostRepository.find({originalPostId: post.id, includeReposts: true});
+
+        if(userPosts.entities.length > 0) {
+          throw new ConflictException('Вы не можете репостить этот пост больше одного раза');
+        }
+
       } catch {
         throw new NotFoundException(
           `Оригинальный пост с ID ${dto.originalPostId} не найден`
