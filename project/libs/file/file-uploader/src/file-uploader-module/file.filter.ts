@@ -1,8 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 import {MulterOptions} from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
-import {ALLOWED_MIME_TYPES, AVATAR_MAX_SIZE} from "./authentication.constant";
+import {ALLOWED_MIME_TYPES, FILE_MAX_SIZE} from "./file-uploader.constant";
 
-export const AvatarFileFilter: MulterOptions['fileFilter'] = (
+export const FileFilter: MulterOptions['fileFilter'] = (
   req, file, callback
 ) => {
   if (!file.mimetype || !ALLOWED_MIME_TYPES.includes(file.mimetype)) {
@@ -12,9 +12,9 @@ export const AvatarFileFilter: MulterOptions['fileFilter'] = (
     );
   }
 
-  if (file.size > AVATAR_MAX_SIZE) {
+  if (file.size > FILE_MAX_SIZE) {
     return callback(
-      new BadRequestException('Размер аватара не должен превышать 500 KB.'),
+      new BadRequestException('Размер аватара не должен превышать 1024 KB (1 MB).'),
       false
     );
   }

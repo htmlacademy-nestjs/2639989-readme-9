@@ -15,7 +15,7 @@ import {
 import {AuthenticationService} from "./authentication.service";
 import {CreateUserDto} from "../dto/create-user.dto";
 import {ApiResponse, ApiTags} from "@nestjs/swagger";
-import {AuthenticationResponseMessage} from "./authentication.constant";
+import {AuthenticationResponseMessage, AVATAR_MAX_SIZE} from "./authentication.constant";
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {LoggedUserRdo} from "../rdo/logged-user.rdo";
 import {UserRdo} from '../rdo/user.rdo';
@@ -30,7 +30,6 @@ import {JwtRefreshGuard} from "../guards/jwt-refresh.guard";
 import {RequestWithTokenPayload} from "./request-with-token-payload.interface";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {AvatarFileFilter} from "./avatar.filter";
-import { AVATAR_MAX_SIZE } from './file-uploader.constant';
 import {Express} from "express";
 import {FileUploaderService} from "@project/file-uploader";
 
