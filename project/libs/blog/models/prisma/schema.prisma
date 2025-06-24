@@ -61,7 +61,7 @@ model Subscription {
   @@id([followerId, followingId])
 }
 
-enum AvailablePostType {
+enum PostType {
   TEXT
   VIDEO
   QUOTE
@@ -69,7 +69,7 @@ enum AvailablePostType {
   LINK
 }
 
-enum AvailablePostStatus {
+enum PostStatus {
   DRAFT
   PUBLISHED
 }

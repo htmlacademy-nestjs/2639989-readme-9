@@ -10,6 +10,7 @@ interface BlogPostFilter {
   sortDirection?: 'asc' | 'desc';
   page?: number;
   limit?: number;
+  originalPostId?: string;
   includeReposts?: boolean;
 }
 
@@ -32,6 +33,24 @@ export const postFilterToPrismaFilter = (filter: BlogPostFilter): Prisma.PostWhe
     (where.AND as Prisma.PostWhereInput[]).push({
       publishedAt: {gte: filter.startDate}
     });
+  }
+
+  if(filter.status){
+    where.status = filter.status;
+  }
+
+  if(!filter.includeReposts){
+    where.isRepost = false;
+  }
+
+  if(filter.originalPostId){
+    where.originalPostId = filter.originalPostId;
+  }
+
+  if (filter?.postTypes) {
+    where.type = {
+      in: filter.postTypes
+    };
   }
 
   return where;

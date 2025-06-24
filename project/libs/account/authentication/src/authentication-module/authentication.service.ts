@@ -34,12 +34,12 @@ export class AuthenticationService {
   ) {
   }
 
-  public async register(dto: CreateUserDto): Promise<BlogUserEntity> {
+  public async register(dto: CreateUserDto, avatarId: string): Promise<BlogUserEntity> {
     const {email, firstname, lastname, password} = dto;
 
     const blogUser = {
       email, firstname, lastname,
-      avatar: '', dateOfBirth: dayjs().toDate(),
+      avatar: avatarId, dateOfBirth: dayjs().toDate(),
       passwordHash: ''
     };
 
@@ -51,7 +51,7 @@ export class AuthenticationService {
     }
 
     const userEntity = await new BlogUserEntity(blogUser)
-      .setPassword(password)
+      .setPassword(password);
 
     await this.blogUserRepository.save(userEntity);
 

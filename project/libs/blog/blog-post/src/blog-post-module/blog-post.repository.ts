@@ -146,15 +146,6 @@ export class BlogPostRepository extends BasePostgresRepository<BlogPostEntity, P
       : undefined;
     const take = filter?.limit;
 
-    where.status = filter?.status;
-    where.isRepost = filter?.includeReposts ? undefined : false;
-
-    if (filter?.postTypes) {
-      where.type = {
-        in: filter.postTypes
-      };
-    }
-
     const [records, postsCount] = await Promise.all([
       this.client.post.findMany({
         where,

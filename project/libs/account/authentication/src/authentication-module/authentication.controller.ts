@@ -1,8 +1,21 @@
-import {Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, UseGuards} from '@nestjs/common';
+import 'multer';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Req, UploadedFile,
+  UseGuards,
+  UseInterceptors
+} from '@nestjs/common';
 import {AuthenticationService} from "./authentication.service";
 import {CreateUserDto} from "../dto/create-user.dto";
 import {ApiResponse, ApiTags} from "@nestjs/swagger";
-import {AuthenticationResponseMessage} from "./authentication.constant";
+import {AuthenticationResponseMessage, AVATAR_MAX_SIZE} from "./authentication.constant";
 import {JwtAuthGuard} from "../guards/jwt-auth.guard";
 import {LoggedUserRdo} from "../rdo/logged-user.rdo";
 import {UserRdo} from '../rdo/user.rdo';
@@ -15,11 +28,16 @@ import {LocalAuthGuard} from "../guards/local-auth.guard";
 import {RequestWithUser} from "./request-with-user.interface";
 import {JwtRefreshGuard} from "../guards/jwt-refresh.guard";
 import {RequestWithTokenPayload} from "./request-with-token-payload.interface";
+import {FileInterceptor} from "@nestjs/platform-express";
+import {AvatarFileFilter} from "./avatar.filter";
+import {Express} from "express";
+import {FileUploaderService} from "@project/file-uploader";
 
 @ApiTags('authentication')
 @Controller('auth')
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService,
+              private readonly fileUploaderService: FileUploaderService,
               private readonly notifyService: NotifyService,) {
   }
 
@@ -32,8 +50,13 @@ export class AuthenticationController {
     description: AuthenticationResponseMessage.UserExist,
   })
   @Post('register')
-  public async create(@Body() dto: CreateUserDto) {
-    const newUser = await this.authenticationService.register(dto);
+  @UseInterceptors(FileInterceptor('file', {
+    fileFilter: AvatarFileFilter,
+    limits: { fileSize: AVATAR_MAX_SIZE },
+  }))
+  public async create(@Body() dto: CreateUserDto, @UploadedFile() file: Express.Multer.File) {
+    const avatar = await this.fileUploaderService.saveFile(file);
+    const newUser = await this.authenticationService.register(dto, avatar.id);
     const userToken = await this.authenticationService.createUserToken(newUser);
     const {email, firstname, lastname} = newUser;
     await this.notifyService.registerSubscriber({email, firstname, lastname});
