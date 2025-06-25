@@ -4,7 +4,7 @@ import {
   AuthenticationUserPasswordLength,
   AuthenticationValidateMessage
 } from "../authentication-module/authentication.constant";
-import {IsEmail, IsISO8601, IsNotEmpty, IsString, Length} from "class-validator";
+import {IsEmail, IsNotEmpty, IsString, Length} from "class-validator";
 
 export class CreateUserDto {
   @ApiProperty({

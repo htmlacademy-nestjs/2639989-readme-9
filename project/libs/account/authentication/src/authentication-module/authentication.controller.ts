@@ -8,7 +8,8 @@ import {
   Param,
   Patch,
   Post,
-  Req, UploadedFile,
+  Req,
+  UploadedFile,
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
@@ -52,7 +53,7 @@ export class AuthenticationController {
   @Post('register')
   @UseInterceptors(FileInterceptor('avatar', {
     fileFilter: AvatarFileFilter,
-    limits: { fileSize: AVATAR_MAX_SIZE },
+    limits: {fileSize: AVATAR_MAX_SIZE},
   }))
   public async create(@Body() dto: CreateUserDto, @UploadedFile() file: Express.Multer.File) {
     const avatar = await this.fileUploaderService.saveFile(file);

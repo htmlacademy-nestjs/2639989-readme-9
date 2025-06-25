@@ -1,5 +1,5 @@
 import {ApiPropertyOptional} from '@nestjs/swagger';
-import {IsOptional, IsString, IsUrl, MaxLength, MinLength} from 'class-validator';
+import {IsOptional, IsString, MaxLength, MinLength} from 'class-validator';
 import {PostValidateMessage, TitleLength} from '../../blog-post.constant';
 
 export class UpdatePhotoPayloadDto {

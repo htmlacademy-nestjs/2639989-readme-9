@@ -9,8 +9,10 @@ import {
   Param,
   Patch,
   Post,
-  Query, UploadedFile,
-  UseGuards, UseInterceptors
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import {fillDto} from '@project/helpers';
 
@@ -104,7 +106,7 @@ export class BlogPostController {
   @Post('/')
   @UseInterceptors(FileInterceptor('photo', {
     fileFilter: PhotoFilter,
-    limits: { fileSize: PHOTO_MAX_SIZE },
+    limits: {fileSize: PHOTO_MAX_SIZE},
   }))
   public async create(
     @UserDecorator() user: TokenPayload,
@@ -113,7 +115,7 @@ export class BlogPostController {
   ) {
     let photoId: string;
 
-    if(dto.type === AvailablePostType.PHOTO){
+    if (dto.type === AvailablePostType.PHOTO) {
       if (!file) throw new BadRequestException(PostValidateMessage.PhotoNecessary);
       const photo = await this.fileUploaderService.saveFile(file);
       photoId = photo.id;
@@ -127,7 +129,7 @@ export class BlogPostController {
   @Patch('/:id')
   @UseInterceptors(FileInterceptor('photo', {
     fileFilter: PhotoFilter,
-    limits: { fileSize: PHOTO_MAX_SIZE },
+    limits: {fileSize: PHOTO_MAX_SIZE},
   }))
   public async update(
     @Param('id') id: string,
@@ -137,7 +139,7 @@ export class BlogPostController {
   ) {
     let photoId: string;
 
-    if(file){
+    if (file) {
       const photo = await this.fileUploaderService.saveFile(file);
       photoId = photo.id;
     }

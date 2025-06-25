@@ -90,7 +90,7 @@ export class BlogPostService {
         const userPosts =
           await this.blogPostRepository.find({originalPostId: post.id, includeReposts: true});
 
-        if(userPosts.entities.length > 0) {
+        if (userPosts.entities.length > 0) {
           throw new ConflictException('Вы не можете репостить этот пост больше одного раза');
         }
 
@@ -112,10 +112,10 @@ export class BlogPostService {
 
     const entity = new BlogPostEntity({...dto, userId, tags});
 
-    if(entity.type === AvailablePostType.PHOTO && !photoId)
+    if (entity.type === AvailablePostType.PHOTO && !photoId)
       throw new BadRequestException(PostValidateMessage.PhotoNecessary);
 
-    if(entity.type === AvailablePostType.PHOTO)
+    if (entity.type === AvailablePostType.PHOTO)
       entity.payload.fileId = photoId;
 
     try {

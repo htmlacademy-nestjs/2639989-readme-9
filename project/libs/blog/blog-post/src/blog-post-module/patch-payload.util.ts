@@ -1,8 +1,8 @@
-import { UpdateTextPayloadDto } from './dto/payloads/update-text-payload.dto';
-import { UpdateVideoPayloadDto } from './dto/payloads/update-video-payload.dto';
-import { UpdateQuotePayloadDto } from './dto/payloads/update-quote-payload.dto';
-import { UpdatePhotoPayloadDto } from './dto/payloads/update-photo-payload.dto';
-import { UpdateLinkPayloadDto } from './dto/payloads/update-link-payload.dto';
+import {UpdateTextPayloadDto} from './dto/payloads/update-text-payload.dto';
+import {UpdateVideoPayloadDto} from './dto/payloads/update-video-payload.dto';
+import {UpdateQuotePayloadDto} from './dto/payloads/update-quote-payload.dto';
+import {UpdatePhotoPayloadDto} from './dto/payloads/update-photo-payload.dto';
+import {UpdateLinkPayloadDto} from './dto/payloads/update-link-payload.dto';
 import {AvailablePostType} from "./blog-post.constant";
 import {PostType} from "@project/core";
 

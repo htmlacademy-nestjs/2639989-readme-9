@@ -35,15 +35,15 @@ export const postFilterToPrismaFilter = (filter: BlogPostFilter): Prisma.PostWhe
     });
   }
 
-  if(filter.status){
+  if (filter.status) {
     where.status = filter.status;
   }
 
-  if(!filter.includeReposts){
+  if (!filter.includeReposts) {
     where.isRepost = false;
   }
 
-  if(filter.originalPostId){
+  if (filter.originalPostId) {
     where.originalPostId = filter.originalPostId;
   }
 

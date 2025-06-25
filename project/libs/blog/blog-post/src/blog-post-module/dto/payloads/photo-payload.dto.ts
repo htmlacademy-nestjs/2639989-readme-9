@@ -1,5 +1,5 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {IsString, IsUrl, MaxLength, MinLength} from 'class-validator';
+import {IsString, MaxLength, MinLength} from 'class-validator';
 import {PostValidateMessage, TitleLength} from '../../blog-post.constant';
 
 export class PhotoPayloadDto {

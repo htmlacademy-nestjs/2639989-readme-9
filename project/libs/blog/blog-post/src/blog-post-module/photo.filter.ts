@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import {BadRequestException} from '@nestjs/common';
 import {MulterOptions} from "@nestjs/platform-express/multer/interfaces/multer-options.interface";
 import {ALLOWED_MIME_TYPES, PHOTO_MAX_SIZE} from "./blog-post.constant";
 
