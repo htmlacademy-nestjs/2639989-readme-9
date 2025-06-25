@@ -21,8 +21,8 @@ export class EmailSubscriberController {
     queue: getConfig().rabbit.queue,
   })
   public async create(subscriber: CreateSubscriberDto) {
-    this.subscriberService.addSubscriber(subscriber);
-    this.mailService.sendNotifyNewSubscriber(subscriber);
+    await this.subscriberService.addSubscriber(subscriber);
+    await this.mailService.sendNotifyNewSubscriber(subscriber);
   }
 
   @RabbitSubscribe({
@@ -31,7 +31,7 @@ export class EmailSubscriberController {
     queue: getConfig().rabbit.queue,
   })
   public async register(subscriber: CreateSubscriberDto) {
-    this.mailService.sendNotifyRegister(subscriber);
+    await this.mailService.sendNotifyRegister(subscriber);
   }
 
   @RabbitSubscribe({
@@ -40,7 +40,7 @@ export class EmailSubscriberController {
     queue: getConfig().rabbit.queue,
   })
   public async changePassword(subscriber: CreateSubscriberDto) {
-    this.mailService.sendNotifyChangePassword(subscriber);
+    await this.mailService.sendNotifyChangePassword(subscriber);
   }
 
   @RabbitSubscribe({
@@ -51,7 +51,7 @@ export class EmailSubscriberController {
   public async newsletter(newsletter: CreateNewsletterDto) {
     const isSubscriber = await this.subscriberService.checkSubscriber(newsletter.user.email);
     if (isSubscriber) {
-      this.mailService.sendNotifyNewsletter(newsletter);
+      await this.mailService.sendNotifyNewsletter(newsletter);
     }
   }
 }
