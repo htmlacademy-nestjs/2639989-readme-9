@@ -13,8 +13,9 @@ import {CreateBlogPostDto} from './dto/create-blog-post.dto';
 import {UpdateBlogPostDto} from './dto/update-blog-post.dto';
 import {PaginationResult} from '@project/core';
 import {BlogTagService} from '@project/blog-tag';
-import {MAX_POSTS_LIMIT, PostStatus} from './blog-post.constant';
+import {AvailablePostType, MAX_POSTS_LIMIT, PostStatus, PostValidateMessage} from './blog-post.constant';
 import {BlogPostQuery} from "./blog-post.query";
+import {patchPayloadByType} from "./patch-payload.util";
 
 @Injectable()
 export class BlogPostService {
@@ -71,7 +72,7 @@ export class BlogPostService {
     }
   }
 
-  public async createPost(userId: string, dto: CreateBlogPostDto): Promise<BlogPostEntity> {
+  public async createPost(userId: string, dto: CreateBlogPostDto, photoId?: string): Promise<BlogPostEntity> {
     if (dto.isRepost && !dto.originalPostId) {
       throw new BadRequestException(
         'Для репоста необходимо указать оригинальный пост'
@@ -89,7 +90,7 @@ export class BlogPostService {
         const userPosts =
           await this.blogPostRepository.find({originalPostId: post.id, includeReposts: true});
 
-        if(userPosts.entities.length > 0) {
+        if (userPosts.entities.length > 0) {
           throw new ConflictException('Вы не можете репостить этот пост больше одного раза');
         }
 
@@ -111,6 +112,12 @@ export class BlogPostService {
 
     const entity = new BlogPostEntity({...dto, userId, tags});
 
+    if (entity.type === AvailablePostType.PHOTO && !photoId)
+      throw new BadRequestException(PostValidateMessage.PhotoNecessary);
+
+    if (entity.type === AvailablePostType.PHOTO)
+      entity.payload.fileId = photoId;
+
     try {
       await this.blogPostRepository.save(entity);
       return entity;
@@ -125,7 +132,8 @@ export class BlogPostService {
   public async updatePost(
     id: string,
     userId: string,
-    dto: UpdateBlogPostDto
+    dto: UpdateBlogPostDto,
+    photoId?: string
   ): Promise<BlogPostEntity> {
     const existing = await this.getPost(id);
 
@@ -141,8 +149,14 @@ export class BlogPostService {
     }
 
     if (dto.payload !== undefined) {
-      existing.payload = dto.payload;
+      existing.payload = patchPayloadByType(
+        existing.type,
+        existing.payload,
+        dto.payload,
+        photoId
+      );
     }
+
     if (dto.status !== undefined) {
       existing.status = dto.status;
       if (dto.status === PostStatus.PUBLISHED && !existing.publishedAt) {

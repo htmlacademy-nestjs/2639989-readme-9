@@ -107,6 +107,10 @@ export class BlogTagService {
   public async deleteTag(id: string): Promise<void> {
     const tag = await this.getTag(id);
 
+    if(!tag){
+      throw new NotFoundException(TagExceptionMessage.NotFound);
+    }
+
     try {
       await this.blogTagRepository.deleteById(id);
     } catch (e) {

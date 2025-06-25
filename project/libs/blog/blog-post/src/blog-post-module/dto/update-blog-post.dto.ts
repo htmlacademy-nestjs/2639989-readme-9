@@ -11,7 +11,14 @@ import {
   ValidateNested
 } from 'class-validator';
 import {Type} from 'class-transformer';
-import {AvailablePostStatus, MAX_TAGS_PER_POST, PostValidateMessage, TAG_REGEX, TagLength} from '../blog-post.constant';
+import {
+  AvailablePostStatus,
+  AvailablePostType,
+  MAX_TAGS_PER_POST,
+  PostValidateMessage,
+  TAG_REGEX,
+  TagLength
+} from '../blog-post.constant';
 import {UpdateTextPayloadDto} from './payloads/update-text-payload.dto';
 import {UpdateVideoPayloadDto} from './payloads/update-video-payload.dto';
 import {UpdateQuotePayloadDto} from './payloads/update-quote-payload.dto';
@@ -28,15 +35,15 @@ export class UpdateBlogPostDto {
   @Type(({object}) => {
     if (!object || !object.type) return null;
     switch (object.type) {
-      case 'TEXT':
+      case AvailablePostType.TEXT:
         return UpdateTextPayloadDto;
-      case 'VIDEO':
+      case AvailablePostType.VIDEO:
         return UpdateVideoPayloadDto;
-      case 'QUOTE':
+      case AvailablePostType.QUOTE:
         return UpdateQuotePayloadDto;
-      case 'PHOTO':
+      case AvailablePostType.PHOTO:
         return UpdatePhotoPayloadDto;
-      case 'LINK':
+      case AvailablePostType.LINK:
         return UpdateLinkPayloadDto;
       default:
         return null;
