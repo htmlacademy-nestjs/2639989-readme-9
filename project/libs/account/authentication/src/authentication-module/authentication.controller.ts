@@ -50,7 +50,7 @@ export class AuthenticationController {
     description: AuthenticationResponseMessage.UserExist,
   })
   @Post('register')
-  @UseInterceptors(FileInterceptor('file', {
+  @UseInterceptors(FileInterceptor('avatar', {
     fileFilter: AvatarFileFilter,
     limits: { fileSize: AVATAR_MAX_SIZE },
   }))
