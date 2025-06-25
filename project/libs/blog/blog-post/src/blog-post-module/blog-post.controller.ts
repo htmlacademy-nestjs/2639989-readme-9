@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,8 +9,8 @@ import {
   Param,
   Patch,
   Post,
-  Query,
-  UseGuards
+  Query, UploadedFile,
+  UseGuards, UseInterceptors
 } from '@nestjs/common';
 import {fillDto} from '@project/helpers';
 
@@ -21,11 +22,17 @@ import {CreateBlogPostDto} from './dto/create-blog-post.dto';
 import {UpdateBlogPostDto} from './dto/update-blog-post.dto';
 import {JwtAuthGuard} from "@project/authentication";
 import {TokenPayload, UserDecorator} from "@project/core";
+import {FileUploaderService} from "@project/file-uploader";
+import {FileInterceptor} from "@nestjs/platform-express";
+import {PhotoFilter} from "./photo.filter";
+import {AvailablePostType, PHOTO_MAX_SIZE, PostValidateMessage} from "./blog-post.constant";
+import {Express} from "express";
 
 @Controller('posts')
 export class BlogPostController {
   constructor(
     private readonly blogPostService: BlogPostService,
+    private readonly fileUploaderService: FileUploaderService,
   ) {
   }
 
@@ -95,22 +102,47 @@ export class BlogPostController {
 
   @UseGuards(JwtAuthGuard)
   @Post('/')
+  @UseInterceptors(FileInterceptor('photo', {
+    fileFilter: PhotoFilter,
+    limits: { fileSize: PHOTO_MAX_SIZE },
+  }))
   public async create(
     @UserDecorator() user: TokenPayload,
-    @Body() dto: CreateBlogPostDto
+    @Body() dto: CreateBlogPostDto,
+    @UploadedFile() file: Express.Multer.File
   ) {
-    const newPost = await this.blogPostService.createPost(user.sub, dto);
+    let photoId: string;
+
+    if(dto.type === AvailablePostType.PHOTO){
+      if (!file) throw new BadRequestException(PostValidateMessage.PhotoNecessary);
+      const photo = await this.fileUploaderService.saveFile(file);
+      photoId = photo.id;
+    }
+
+    const newPost = await this.blogPostService.createPost(user.sub, dto, photoId);
     return fillDto(BlogPostRdo, newPost.toPOJO());
   }
 
   @UseGuards(JwtAuthGuard)
   @Patch('/:id')
+  @UseInterceptors(FileInterceptor('photo', {
+    fileFilter: PhotoFilter,
+    limits: { fileSize: PHOTO_MAX_SIZE },
+  }))
   public async update(
     @Param('id') id: string,
     @UserDecorator() user: TokenPayload,
-    @Body() dto: UpdateBlogPostDto
+    @Body() dto: UpdateBlogPostDto,
+    @UploadedFile() file: Express.Multer.File
   ) {
-    const updatedPost = await this.blogPostService.updatePost(id, user.sub, dto);
+    let photoId: string;
+
+    if(file){
+      const photo = await this.fileUploaderService.saveFile(file);
+      photoId = photo.id;
+    }
+
+    const updatedPost = await this.blogPostService.updatePost(id, user.sub, dto, photoId);
     return fillDto(BlogPostRdo, updatedPost.toPOJO());
   }
 

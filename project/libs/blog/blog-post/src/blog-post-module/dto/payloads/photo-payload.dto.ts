@@ -16,10 +16,4 @@ export class PhotoPayloadDto {
     message: PostValidateMessage.TitleMaxLengthNotValid
   })
   public title: string;
-
-  @ApiProperty({
-    example: 'https://example.com/photo.jpg'
-  })
-  @IsUrl({}, {message: PostValidateMessage.URLNotValid})
-  public photoUrl: string;
 }

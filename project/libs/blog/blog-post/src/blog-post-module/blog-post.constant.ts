@@ -46,6 +46,7 @@ export const PostValidateMessage = {
   TagMaxLengthNotValid: `Тег должен быть от ${TagLength.Min} до ${TagLength.Max} символов`,
   TooManyTags: `Максимальное количество тегов: ${MAX_TAGS_PER_POST}`,
   StatusNotValid: 'Статус должен быть DRAFT или PUBLISHED',
+  PhotoNecessary: 'Фото обязательно для поста типа "Фото"'
 } as const;
 
 export const VideoValidation = {
@@ -98,3 +99,7 @@ export const PostStatus = {
   DRAFT: 'DRAFT',
   PUBLISHED: 'PUBLISHED'
 } as const;
+
+export const PHOTO_MAX_SIZE = 1024 * 1024;
+export const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png'];
+
